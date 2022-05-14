@@ -34,6 +34,7 @@ Location Name | El nombre del mapa a donde el personaje irá. __Valores permitid
 Location Time | La hora a la que el personaje _comenzará_ a moverse. __Valores permitidos:__ Entre las 10:30 y 21:40.
 Location Position | La posición en la que el personaje se pondrá al llegar (similar a `ArrivalPosition`, pero para un lugar que tú indiques). __Valores permitidos:__ Cualquiera, mientras esté dentro del rango del mapa (ver [este link](https://stardewvalleywiki.com/Modding:Maps#Tile_coordinates) para más información.)
 Location Dialogue | El diálogo que dirá el personaje en ese lugar.
+
 Hay tres listas llamadas `Location<número>`: de esas, **sólo la tercera es opcional** (de lo contrario, el formato sería muy complicado.)
 
 ### Diálogo
