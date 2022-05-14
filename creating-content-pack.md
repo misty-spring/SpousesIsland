@@ -1,0 +1,66 @@
+### Creating a Content Pack
+The method to create content packs is the same as for any framework: you just need a manifest and a content file.
+[A template of the content.json file can be found here](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json).
+
+## Contents
+
+* [Explanation](#explanation)
+
+  * [Data model](#data-model)
+
+  * [Dialogue](#dialogue)
+
+  * [Schedule](#schedule)
+
+* [Translating](#translating-your-mod)
+
+## Explanation
+Spouses' Island patches the game files in two different ways:
+- Dialogues are always added, regardless of day.
+- Schedules are only edited if it's an "island day".
+
+### Data model
+Spouses' Island's content pack uses a data model with the following information:
+
+name | description
+-----|------------
+Name | The name of the spouse you're adding the schedule for.
+ArrivalPosition | The position where the spouse will stand at when they reach the island. Uses three numbers (x, y, facing position). For more information, read the wiki.
+ArrivalDialogue | If you interact with the spouse once they arrive to the island house, they'll say this dialogue.
+Location Name | The name of the map the spouse will go to.
+Location Time | The time at which the spouse will begin moving.
+Location Position | The position the spouse stands at once they reach the location.
+Location Dialogue | The dialogue the spouse will say in that location.
+
+There are three `Location<number>` lists: from those, **only the third one is optional.**
+
+### Dialogue
+The dialogue field follows the same convention as game dialogue. For more information, see [Modding Dialogue](https://stardewvalleywiki.com/Modding:Dialogue#Format) in the stardew valley wiki.
+Dialogue is added when the file is requested (e.g if the game wants to load `"Characters/Dialogue/Krobus"`, it will be edited then passed to the game).
+
+An example of a dialogue string would be:
+```json
+"ArrivalDialogue" : "Do you think we can explore this volcano?$0#$b#Willy said we shouldn't get close..$2#$b#But I still brought my sword.$1",
+```
+You don't need to add any dialogue name/key; the mod will handle that internally.
+
+### Schedule
+The schedule follows the same convention as the game's schedules.
+To handle that for you, it uses the following information: 
+- Name (of the map your spouse will go to)
+- Time (which your spouse will start moving at)
+- Position (where they'll stand once they arrive)
+For more information on how schedules work, [see here](https://stardewvalleywiki.com/Modding:Schedule_data#Schedule_points).
+
+## Translating your mod
+As of the time being, Spouses' Island doesn't translate mods- but this will be implemented in the future.
+For now, if you *really* want to translate your mod / can't wait for the update, you can make a separate content pack- and change the following:
+`"Spousename" : "<Name of spouse>.<languagecode>",`
+Where <name of spouse> is their name, and <languagecode> the full code for the language you'll translate to.
+For example:
+ ```json
+"Spousename" : "Krobus.es-ES",
+```
+ For more information on language codes, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes.md).
+ 
+ **Keep in mind i'll be adding translation support soon, so i'd suggest waiting for that**!
