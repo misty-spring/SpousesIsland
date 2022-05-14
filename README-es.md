@@ -3,9 +3,9 @@
 Para decidir si se visitará la isla, este mod usa un número random- y lo compara con la probabilidad(%) puesta por el usuario. Este número cambia cada día en el juego.
 
 ## Contenidos
-* [Para jugadores](#para jugadores)
+* [Para jugadores](#para-jugadores)
   * [Instalar](#instalar)
-  * [Desisntalar](#remover-el-mod)
+  * [Desinstalar](#remover-el-mod)
   * [Compatibilidad](#compatibilidad)
 * [Para autores](#para-autores)
   * [Cómo usar](#como-usar)
