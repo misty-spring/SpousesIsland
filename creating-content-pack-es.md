@@ -47,15 +47,15 @@ Por ejemplo:
 ```
 No necesitas agregar una clave de diálogo; el mod hará eso internamente.
 
-### Schedule
-The schedule follows the same convention as the game's schedules.
-To handle that for you, it uses the following information: 
-- Name (of the map your spouse will go to)
-- Time (which your spouse will start moving at)
-- Position (where they'll stand once they arrive)
-For more information on how schedules work, [see here](https://stardewvalleywiki.com/Modding:Schedule_data#Schedule_points).
+### Rutina
+La rutina sigue la misma convención que las del juego base.
+Para manejar eso por ti, el mod necesita la siguiente información: 
+- Nombre (Del mapa o lugar al que tu pareja irá).
+- Hora (la hora a la cual el personaje comenzará a moverse).
+- Posición (la coordenada a la que llegarán).
+Para más información sobre cómo funcionan las rutinas, [ve aquí](https://stardewvalleywiki.com/Modding:Schedule_data#Schedule_points).
 
-## Translating your mod
+## Traducciones
 Por el momento, Spouses' Island no tiene soporte para traducciones. Esto será agregado en el futuro.
 Sin embargo, si (por alguna razón) no puedes esperar, puedes cambiar esto en tu paquete de contenido:
 `"Spousename" : "<Nombre>.<extensión>",`
