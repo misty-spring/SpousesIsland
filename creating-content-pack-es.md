@@ -56,14 +56,32 @@ Para manejar eso por ti, el mod necesita la siguiente información:
 Para más información sobre cómo funcionan las rutinas, [ve aquí](https://stardewvalleywiki.com/Modding:Schedule_data#Schedule_points).
 
 ## Traducciones
-Por el momento, Spouses' Island no tiene soporte para traducciones. Esto será agregado en el futuro.
-Sin embargo, si (por alguna razón) no puedes esperar, puedes cambiar esto en tu paquete de contenido:
-`"Spousename" : "<Nombre>.<extensión>",`
-Donde <extensión> es la extensión del idioma.
-Por ejemplo:
- ```json
-"Spousename" : "Krobus.es-ES",
+Para traducir tu mod, sólo agrega una entrada a "Translations":
+```json
+"Translations": [
+    {
+        "Key":"",
+        "Arrival":"",
+        "Location1":"",
+        "Location2":"",
+        "Location3":""
+    }
+]
 ```
-Si quieres ver todas las extensiones posibles, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes.md) (el enlace está en inglés, pero las extensiones son las mismas sin importar el idioma que use el usuario).
- 
- **Ten en cuenta que se agregará soporte para traducciones pronto, por lo cual recomendaría esperar**!
+Cada "{}" cuenta como una traducción diferente. Puedes agregar múltiples para un sólo paquete de contenido, y tiene soporte para idiomas mod. (Sólo necesitas agregar el diálogo aquí)
+
+Ejemplo:
+```json
+"Translations": [
+    {
+        "Key":"es",
+        "Arrival":"Hola, @. El clima aquí es muy cálido.#$b#¿Harás algo más tarde?",
+        "Location1":"¿Crees que podríamos quedarnos hasta mañana, @? $1",
+        "Location2":"%Spouse está observando el atardecer.",
+        "Location3":"Se está haciendo tarde...$0"
+    }
+]
+```
+El mod reconocerá que es una traducción al español, y la agregará al idioma respectivo.
+Las traducciones siguen el mismo formato de diálogo que el del juego.
+Para más información en los idiomas que el juego tiene, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes-es.md).
