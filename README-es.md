@@ -47,7 +47,7 @@ Para que el mod reconozca tu contenido, necesitas agregar esto al `manifest.json
 ```
 ...y Spouses' Island agregará tu contenido de manera automática.
 
-Puedes usar [esto](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json) como plantilla del content.json. Para más información, revisa [Cómo crear un paquete de contenido](https://github.com/misty-spring/SpousesIsland/blob/main/creating-content-pack.md).
+Puedes usar [esto](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json) como plantilla del content.json. Para más información, revisa [Cómo crear un paquete de contenido](https://github.com/misty-spring/SpousesIsland/blob/main/creating-content-pack-es.md).
 
 Finalmente, pon manifest.json y content.json en una carpeta- como harías con cualquier otro mod.
 
