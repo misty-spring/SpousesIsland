@@ -21,7 +21,18 @@
                 "Time": ,
                 "Position": "",
                 "Dialogue": ""
-            }
+            },
+            //optional- if you want to add translations.
+            //"Key": the language key. e.g "es" for Spanish, "zh" for Chinese, etc.
+            "Translations": [
+                {
+                    "Key":"",
+                    "Arrival":"",
+                    "Location1":"",
+                    "Location2":"",
+                    "Location3":""
+                }
+            ]
         }
     ]
 }
