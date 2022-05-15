@@ -2,7 +2,7 @@
 El método para crear paquetes de contenido es como el de cualquier framework: necesitas un manifest.json y un content.json.
 [Aquí se encuentra una plantilla del content.json que necesitarás.](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json).
 
-## Contents
+## Contenido
 
 * [Explicación](#explicacion)
 
