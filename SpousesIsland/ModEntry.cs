@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
@@ -361,7 +361,7 @@ namespace SpousesIsland
             );
 
             ContentPackData data = new ContentPackData();
-            //   write content template: this.Helper.Data.WriteJsonFile("ContentTemplate.json", data);
+            //this.Helper.Data.WriteJsonFile("ContentTemplate.json", data);
             foreach (IContentPack contentPack in this.Helper.ContentPacks.GetOwned())
             {
                 this.Monitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}", LogLevel.Debug);
@@ -1739,11 +1739,9 @@ namespace SpousesIsland
 
             
             //framework
-
-            //if file wasnt already edited:
-            // edit the character's dialogue. then, add name to "edited" list
             foreach (ContentPackData cpd in CustomSchedule.Values)
             {
+                //add dialogue
                 string temp0 = "Characters/Dialogue" + cpd.Spousename;
                 if (e.Name.IsEquivalentTo(temp0))
                 {
@@ -1755,10 +1753,28 @@ namespace SpousesIsland
                         DialoguesEdited.Add(cpd.Spousename);
                     }
                 }
-            }
-            // if island day, edit the character's schedule + inform of it
-            foreach (ContentPackData cpd in CustomSchedule.Values) 
-            {
+
+                //add translations
+                foreach (DialogueTranslation kpv in cpd.Translations)
+                {
+                    string temp2 = $"Characters/schedules/{cpd.Spousename}" + Commands.ParseLangCode(kpv.Key);
+                    if (e.NameWithoutLocale.IsEquivalentTo(temp2) && Commands.IsListValid(kpv))
+                    {
+                        e.Edit(asset =>
+                        {
+                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                            data["marriage_islandhouse"] = kpv.Arrival;
+                            data["marriage_loc1"] = kpv.Location1;
+                            data["marriage_loc2"] = kpv.Location2;
+                            if (kpv.Location3 is not null)
+                            {
+                                data["marriage_loc3"] = kpv.Location3;
+                            };
+                        });
+                    }
+                }
+
+                //add schedule if visit day
                 if (Config.CustomChance >= RandomizedInt)
                 {
                     this.Monitor.Log("Parsing name string and editing schedule.", LogLevel.Trace);
@@ -1766,29 +1782,29 @@ namespace SpousesIsland
                     if (e.NameWithoutLocale.IsEquivalentTo(temp1))
                     {
                         e.Edit(asset =>
-                          {
-                              IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                              if (cpd.Location3 is not null)
-                              {
-                                  string temp_loc3 = $"{cpd.Location3.Time} {cpd.Location3.Name} {cpd.Location3.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc3\"/";
-                                  data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/{temp_loc3}a2150 IslandFarmHouse {cpd.ArrivalPosition}";
-                              }
-                              else
-                              {
-                                  string marriage_Mon = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/a2150 IslandFarmHouse {cpd.ArrivalPosition}";
-                                  data["marriage_Mon"] = marriage_Mon;
-                              }
-                              data["marriage_Tue"] = "GOTO marriage_Mon";
-                              data["marriage_Wed"] = "GOTO marriage_Mon";
-                              data["marriage_Thu"] = "GOTO marriage_Mon";
-                              data["marriage_Fri"] = "GOTO marriage_Mon";
-                              data["marriage_Sat"] = "GOTO marriage_Mon";
-                              data["marriage_Sun"] = "GOTO marriage_Mon";
-                          }
+                        {
+                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                            if (cpd.Location3 is not null)
+                            {
+                                string temp_loc3 = $"{cpd.Location3.Time} {cpd.Location3.Name} {cpd.Location3.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc3\"/";
+                                data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/{temp_loc3}a2150 IslandFarmHouse {cpd.ArrivalPosition}";
+                            }
+                            else
+                            {
+                                string marriage_Mon = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/a2150 IslandFarmHouse {cpd.ArrivalPosition}";
+                                data["marriage_Mon"] = marriage_Mon;
+                            }
+                            data["marriage_Tue"] = "GOTO marriage_Mon";
+                            data["marriage_Wed"] = "GOTO marriage_Mon";
+                            data["marriage_Thu"] = "GOTO marriage_Mon";
+                            data["marriage_Fri"] = "GOTO marriage_Mon";
+                            data["marriage_Sat"] = "GOTO marriage_Mon";
+                            data["marriage_Sun"] = "GOTO marriage_Mon";
+                        }
                       );
                         this.Monitor.LogOnce($"Edited the marriage schedule of {cpd.Spousename}.", LogLevel.Debug);
                         if (!SchedulesEdited.Contains(cpd.Spousename))
-                            {
+                        {
                             SchedulesEdited.Add(cpd.Spousename);
                         }
                     }
@@ -2178,6 +2194,7 @@ namespace SpousesIsland
         internal List<string> ChildNamesList = new List<string>();
         internal List<Child> Children = new List<Child>();
         internal Texture2D KbcSamples() => Helper.ModContent.Load<Texture2D>("assets/kbcSamples.png");
+        //internal GameLocation ifh = Game1.getLocationFromName("IslandFarmHouse");
         internal string SpouseT()
         {
             var SpousesGrlTitle = this.Helper.Translation.Get("config.Vanillas.name");
