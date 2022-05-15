@@ -1,3 +1,5 @@
+(For a version in Spanish, [see here](https://github.com/misty-spring/SpousesIsland/blob/main/README-es.md). / Para una versión en Español, [ve aquí](https://github.com/misty-spring/SpousesIsland/blob/main/README-es.md).)
+
 **Spouses' Island** is a Stardew Valley mod, which allows the player's spouse to visit the island. Comes with integrated schedules for the vanilla spouses, and offers support for custom schedules (including mod NPCs).
 
 To choose if it's an island day, this mod uses a randomized number- and compares it with the chance(%) set by the user. This number changes every in-game day.
