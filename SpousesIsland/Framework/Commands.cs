@@ -44,7 +44,7 @@ namespace SpousesIsland.Framework
         /// </summary>
         internal static string ParseLangCode(string key)
         {
-            switch(key)
+            switch(key.ToLower())
             {
                 case "de":
                     return ".de-DE";
