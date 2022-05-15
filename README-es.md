@@ -59,7 +59,7 @@ El [validador de json](https://smapi.io/json) te dirá si hay errores en el form
 ## Traducciones
 Si quieres contribuir a traducir el mod, hay algunas opciones:
 * Parchar el mod con ContentPatcher (this allows you to translate dialogue, but commands will stay in english)
-* Crear un .json en /i18n (una plantilla(vacía) se encuentra [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/i18n_template.json). Para el archivo en inglés, ve [aquí]().)
+* Crear un .json en /i18n (una plantilla(vacía) se encuentra [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/i18n_template.json). Para el archivo en inglés, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).)
 La segunda opción te permite traducir el mod completamente; puedes subir la traducción a nexusmods, o pasármela para integrarla al mod directamente (se mantendrán creditos por el aporte).
 
 El mod actualmente está disponible en Español e Inglés. Puedes ver las traducciones hechas por usuarios en la [página del mod](https://www.nexusmods.com/stardewvalley/mods/11037).
