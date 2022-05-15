@@ -427,6 +427,10 @@ namespace SpousesIsland
                     editor.PatchMap(sourceMap, sourceArea: new Rectangle(0, 0, 2, 4), targetArea: new Rectangle(35, 13, 2, 4), patchMode: PatchMapMode.Overlay);
 
                 });
+            if (e.Name.IsEquivalentTo("Maps/IslandFarmHouse") && Config.CustomRoom == true && (Config.Allow_Children == false || IntKids is 0))
+            {
+                e.LoadFromModFile<Map>("assets/Maps/FarmHouse_Custom.tbin", AssetLoadPriority.Medium);
+            }
             // add path + npcwarp
             if (e.Name.IsEquivalentTo("Maps/Island_FieldOffice"))
                 e.Edit(asset => {
