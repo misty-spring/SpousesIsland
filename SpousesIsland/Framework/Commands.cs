@@ -1,4 +1,4 @@
-﻿using StardewModdingAPI;
+using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 using StardewModdingAPI.Events;
@@ -39,6 +39,9 @@ namespace SpousesIsland.Framework
             data["marriage_Sun"] = "GOTO marriage_Mon";
         }
 
+        /// <summary>
+        /// Checks a translation's key. If it's one of the game's language codes, returns its filename/extension. If not, returns the language code as-is.
+        /// </summary>
         internal static string ParseLangCode(string key)
         {
             switch(key)
@@ -74,6 +77,12 @@ namespace SpousesIsland.Framework
             }
         }
 
+        /// <summary>
+        /// Checks the values of the contentpack provided. If any conflict with each other, returns a detailed error and the value "false" (to indicate the pack isn't valid).
+        /// </summary>
+        /// <param name="cpd">The content pack being parsed.</param>
+        /// <param name="monitor">Monitor, used to inform of any errors</param>
+        /// <returns></returns>
         internal static bool ParseContentPack(ContentPackData cpd, IMonitor monitor)
         {
             
@@ -160,6 +169,14 @@ namespace SpousesIsland.Framework
                 return false; 
             }    
         }
+        
+        /// <summary>
+        /// Compares the integers provided. If conditions apply, returns true (to reload assets).
+        /// </summary>
+        /// <param name="Previous"> The Random number chosen the previous in-game day.</param>
+        /// <param name="CustomChance"> The custom number set by the user.</param>
+        /// <param name="Current"> Today(in-game)'s randomly chosen number. Values range from 0-100.</param>
+        /// <returns></returns>
         internal static bool ParseReloadCondition(int Previous, int CustomChance, int Current)
         {
             if ((CustomChance < Current && CustomChance >= Previous) || CustomChance >= Current)
@@ -168,6 +185,21 @@ namespace SpousesIsland.Framework
             }
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Checks the validity of a specified DialogueTranslation. If the values aren't null or whitespace, returns true.
+        /// </summary>
+        internal static bool IsListValid(DialogueTranslation kpv)
+        {
+            if (!string.IsNullOrWhiteSpace(kpv.Key) && !string.IsNullOrWhiteSpace(kpv.Location1) && !string.IsNullOrWhiteSpace(kpv.Location2))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
