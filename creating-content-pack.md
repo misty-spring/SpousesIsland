@@ -53,14 +53,32 @@ To handle that for you, it uses the following information:
 For more information on how schedules work, [see here](https://stardewvalleywiki.com/Modding:Schedule_data#Schedule_points).
 
 ## Translating your mod
-As of the time being, Spouses' Island doesn't translate mods- but this will be implemented in the future.
-For now, if you *really* want to translate your mod / can't wait for the update, you can make a separate content pack- and change the following:
-`"Spousename" : "<Name of spouse>.<languagecode>",`
-Where <name of spouse> is their name, and <languagecode> the full code for the language you'll translate to.
-For example:
- ```json
-"Spousename" : "Krobus.es-ES",
+To translate your mod, simply add an entry to the "Translations" section:
+```json
+"Translations": [
+    {
+        "Key":"",
+        "Arrival":"",
+        "Location1":"",
+        "Location2":"",
+        "Location3":""
+    }
+]
 ```
- For more information on language codes, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes.md).
- 
- **Keep in mind i'll be adding translation support soon, so i'd suggest waiting for that**!
+Every "{}" counts as a different translation. So you can add multiple at once for a single content pack. You only need to add the translated dialogue. (Also supports modded languages)
+
+For example:
+```json
+"Translations": [
+    {
+        "Key":"es",
+        "Arrival":"Hola, @. El clima aquí es muy cálido.#$b#¿Harás algo más tarde?",
+        "Location1":"¿Crees que podríamos quedarnos hasta mañana, @? $1",
+        "Location2":"%Spouse está observando el atardecer.",
+        "Location3":"Se está haciendo tarde...$0"
+    }
+]
+```
+The mod will recognize this as the translation for spanish, and add it to the respective language.
+These dialogues also follow the same convention as the game's dialogue.
+For more information on language codes, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes.md).
