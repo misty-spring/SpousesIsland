@@ -47,7 +47,7 @@ Para que el mod reconozca tu contenido, necesitas agregar esto al `manifest.json
 ```
 ...y Spouses' Island agregará tu contenido de manera automática.
 
-Puedes usar [esto](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json) como plantilla del content.json. Para más información, revisa [Cómo crear un paquete de contenido](https://github.com/misty-spring/SpousesIsland/blob/main/creating-content-pack-es.md).
+Puedes usar [esto](https://github.com/misty-spring/SpousesIsland/blob/main/docs/content_template.json) como plantilla del content.json. Para más información, revisa [Cómo crear un paquete de contenido](https://github.com/misty-spring/SpousesIsland/blob/main/docs/creating-content-pack-es.md).
 
 Finalmente, pon manifest.json y content.json en una carpeta- como harías con cualquier otro mod.
 
@@ -59,7 +59,7 @@ El [validador de json](https://smapi.io/json) te dirá si hay errores en el form
 ## Traducciones
 Si quieres contribuir a traducir el mod, hay algunas opciones:
 * Parchar el diálogo con ContentPatcher ([aquí hay una plantilla](https://github.com/misty-spring/SpousesIsland/blob/main/docs/translate-in-contentpatcher-example.json), y aquí el [diálogo](https://github.com/misty-spring/SpousesIsland/blob/main/docs/default_for_contentpatcher.json)).
-* Crear un .json en /i18n (una plantilla(vacía) se encuentra [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/i18n_template.json). Para el archivo en inglés, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).)
+* Crear un .json en /i18n (una plantilla(vacía) se encuentra [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/docs/i18n_template.json). Para el archivo en inglés, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).)
 La segunda opción te permite traducir el mod completamente; puedes subir la traducción a nexusmods, o pasármela para integrarla al mod directamente (se mantendrán creditos por el aporte).
 
 El mod actualmente está disponible en Español e Inglés. Puedes ver las traducciones hechas por usuarios en la [página del mod](https://www.nexusmods.com/stardewvalley/mods/11037).
