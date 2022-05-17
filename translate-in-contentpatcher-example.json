@@ -190,9 +190,9 @@
       }
     },
   {"LogName":"Babysitter dialogue - load",
-      "Action": "EditData",
+      "Action": "Load",
       "Target":"Characters/Dialogue/Devan",
-      "FromFile":"assets/",
+      "FromFile":"assets/Dialogue.json",
       "When":{
         "HasValue": "{{Relationship:Devan}}"
       }
