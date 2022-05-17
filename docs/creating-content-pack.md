@@ -27,12 +27,13 @@ name | description
 Name | The name of the spouse you're adding the schedule for.
 ArrivalPosition | The position where the spouse will stand at when they reach the island. Uses three numbers (x, y, facing position). For more information, read the wiki.
 ArrivalDialogue | If you interact with the spouse once they arrive to the island house, they'll say this dialogue.
-Location Name | The name of the map the spouse will go to.
-Location Time | The time at which the spouse will begin moving.
+Location Name | The name of the map the spouse will go to. **Allowed values: Any game map.**
+Location Time | The time at which the spouse will begin moving. **Allowed values: Between 1030-2140**.
 Location Position | The position the spouse stands at once they reach the location.
 Location Dialogue | The dialogue the spouse will say in that location.
 
 There are three `Location<number>` lists: from those, **only the third one is optional.**
+You can add multiple characters in the same contentpack. For an example, [see here](https://github.com/misty-spring/SpousesIsland/blob/main/docs/example-contentpack.json).
 
 ### Dialogue
 The dialogue field follows the same convention as game dialogue. For more information, see [Modding Dialogue](https://stardewvalleywiki.com/Modding:Dialogue#Format) in the stardew valley wiki.
