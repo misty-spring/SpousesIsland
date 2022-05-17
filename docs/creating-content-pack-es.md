@@ -1,6 +1,6 @@
 ### Creando un paquete de contenido
 El método para crear paquetes de contenido es como el de cualquier framework: necesitas un manifest.json y un content.json.
-[Aquí se encuentra una plantilla del content.json que necesitarás.](https://github.com/misty-spring/SpousesIsland/blob/main/content_template.json).
+[Aquí se encuentra una plantilla del content.json que necesitarás.](https://github.com/misty-spring/SpousesIsland/blob/main/docs/content_template.json).
 
 ## Contenido
 
@@ -84,4 +84,4 @@ Ejemplo:
 ```
 El mod reconocerá que es una traducción al español, y la agregará al idioma respectivo.
 Las traducciones siguen el mismo formato de diálogo que el del juego.
-Para más información en los idiomas que el juego tiene, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/languagecodes-es.md).
+Para más información en los idiomas que el juego tiene, ve [aquí](https://github.com/misty-spring/SpousesIsland/blob/main/docs/languagecodes-es.md).
