@@ -22,7 +22,8 @@
                 "Position": "39 41 0",
                 "Dialogue": "Do you ever think of fighting these slimes, @?"
             }
-            //if you don't add translations, the default dialogue will be used for all languages. / si no agregas traducciones, el mismo diálogo se usará para todos los idiomas.
+            //if you don't add translations, the dialogue will be used for all languages. 
+            //si no agregas traducciones, el mismo diálogo se usará para todos los idiomas.
         },
         {
             "Spousename" : "Alex",
@@ -46,7 +47,8 @@
                 "Position": "12 27 2",
                 "Dialogue": "Nothing's better than the beach on a hot day like this.$1"
             },
-//if you add translation(s), the default dialogue will be used for english- and the translations below for their respective language / si agregas traducciones, el diálogo de arriba se usará para inglés, y las traducciones para su idioma respectivo
+//if you add translation(s), the default dialogue will be used for english- and the translations below for their respective language 
+//si agregas traducciones, el diálogo de arriba se usará para inglés, y las traducciones para su idioma respectivo
             "Translations": [
                 {
                     "Key":"es",
