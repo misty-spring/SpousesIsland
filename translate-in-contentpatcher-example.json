@@ -1,0 +1,501 @@
+{
+   "Format": "1.25.0",
+  "Changes": [
+  {"LogName": "Abigail dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Abigail",
+      "Entries": {
+        "marriage_islandhouse": "Ah, hi @.$0#$b#Wow, this weather is hot....$0",
+        "marriage_loc1": "Do you think we can explore this volcano?$0#$b#Willy said we shouldn't get close..$2#$b#But I still brought my sword.$1",
+        "marriage_loc3": "Do you ever think of fighting these slimes, @?"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },  
+  {"LogName": "Alex dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Alex",
+      "Entries": {
+        "marriage_islandhouse": "Oh, hey @. I'm finally here.$0#$b#I can't wait to spend the day with you.$1",
+        "marriage_loc1": "%Alex is lifting weights.",
+        "marriage_loc3": "Nothing's better than the beach on a hot day like this.$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Elliott dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Elliott",
+      "Entries": {
+        "marriage_islandhouse": "Oh, @! That was quite the ride!$8#$b#It's a pleasure to see you again.$1",
+        "marriage_loc1": "%Elliott is reading.",
+        "marriage_loc3": "Ah, the view here is quite virtuous$0.#$b#I can feel an idea incoming...$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Emily dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Emily",
+      "Entries": {
+        "marriage_islandhouse": "Hi, @!#$b#This island is full of parrots, it's lovely!",
+        "marriage_loc1": "%Emily seems lost in her thoughts.",
+        "marriage_loc3": "@, do you feel it?$0#$b#These crystals are full of powerful energy.$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Haley dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Haley",
+      "Entries": {
+        "marriage_islandhouse": "@, can we go see the island today?$0#$b#There's something about this place that makes me feel at ease.",
+        "marriage_loc1": "Hi, honey. I'm so glad you're here.$0#$b#I love how sunny the weather is.$1",
+        "marriage_loc3": "%Haley is taking pictures."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Harvey dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Harvey",
+      "Entries": {
+        "marriage_islandhouse": "Hi, honey.$l#$b#This is so much nicer than being cooped up in the clinic all day.$1",
+        "marriage_loc1": "I'll stay inside for a while, @.$0#$b#Make sure you stay hydrated in this weather, alright?$1",
+        "marriage_loc3": "%Harvey is engrossed in a book."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Krobus dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Krobus",
+      "Entries": {
+        "marriage_islandhouse": "Good morning, @.$0#$b#The weather here is so damp, i feel right at home.$h#$e#And the sun is strong...$8",
+        "marriage_loc1": "You said there were caves here...i'll visit them later.$0",
+        "marriage_loc3": "I've never seen crystals like these!$0#$b#My people loved crystals, you know.$0#$e#...$2#$b#...You're right. Maybe there's others like me out there.#$b#Thank you, @.$h"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Krobus dialogue - funleave",
+      "Action":"EditData",
+      "Target":"Characters/Dialogue/MarriageDialogueKrobus",
+      "Entries":{
+        "funLeave_Krobus":  "I'll go outside today...if i'm quick, your people won't notice.$0#$b#Thanks to you, i've become curious of humans' \"Entertainment activities\".$1"
+      },
+      "When":{
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Leah dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Leah",
+      "Entries": {
+        "marriage_islandhouse": "It's so quiet and peaceful here.$0#$b#It's the perfect weather for some wine.$1",
+        "marriage_loc1": "The view here is inspiring, i just have to draw it.$0",
+        "marriage_loc3": "%Leah is drawing."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Maru dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Maru",
+      "Entries": {
+        "marriage_islandhouse": "Hey! What's up?$0#$b#I can't wait to see the stars at night.$1",
+        "marriage_loc1": "@! Have you seen this?$9#$b#It seem there hasn't been volcanic activity in a while.",
+        "marriage_loc3": "Professor Snail has been telling us about Ginger Island's history.$0#$b#It's amazing.$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Penny dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Penny",
+      "Entries": {
+        "marriage_islandhouse": "Hi @.$h#$b#This island is so beautiful...",
+        "marriage_loc1": "Oh, I'm reading the book about a sailor i told you about.$0#$b#It's very interesting.$1",
+        "marriage_loc3": "Honey, Professor Snail's stories about the island are amazing.$0#$b#I didn't know they had so many traditions!$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Sam dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Sam",
+      "Entries": {
+        "marriage_islandhouse": "Hi, @.$0#$b#It's a nice island... isn't it?$1",
+        "marriage_loc1": "Hey... have you ever gone inside?$0#$b#...$0#$b#Really?$8",
+        "marriage_loc3": "I'm feeling pretty good here."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Sebastian dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Sebastian",
+      "Entries": {
+        "marriage_islandhouse": "Hey, I'm glad you're here.$h#$b#How have you been coping with this heat?",
+        "marriage_loc1": "Man, this looks just like in 'Cave Saga X'...",
+        "marriage_loc3": "I'm not one for crowded places.$0#$b#This place is perfect.$h"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Shane dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Shane",
+      "Entries": {
+        "marriage_islandhouse": "Hey, @.$1#$b#The tropical plants here are great.$1",
+        "marriage_loc1": "Charlie seems to like this place.$8",
+        "marriage_loc3": "Hmm...this place isn't so bad."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Claire dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Claire",
+      "Entries": {
+        "marriage_islandhouse": "Hello, dear.$0#$b#I'm ready for this island's hot weather!$1",
+        "marriage_loc1": "%Claire is reading a screenplay.",
+        "marriage_loc3": "The birds here...$0#$b#There's so many of them. I can hear them chirping.$1"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Lance dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Lance",
+      "Entries": {
+        "marriage_islandhouse": "Hello, my dear. This house is just as cozy as our farmland's.",
+        "marriage_loc1": "The caldera in this volcano holds inmense arcane power.#$b#Only the most powerful of mages can cast the spells it requires.",
+        "marriage_loc3": "The gentle waves of this beach...I've become accustomed to their sound."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Magnus dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Wizard",
+      "Entries": {
+        "marriage_islandhouse": "Hello, dearest! I'm overjoyed to see you.$1#$b#This place is quite wonderful. You've made the house quite cozy.",
+        "marriage_loc1": "The creatures of this island are aware of our presence. It has alerted them.#$b#Their arcane power is inmense...",
+        "marriage_loc3": "The forge in this place...the rituals it requires are only mastered by a handful.#$b#Even with such mastery, the results are near impossible to predict."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Olivia dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Olivia",
+      "Entries": {
+        "marriage_islandhouse": "Hi, sweetie. How is this weather treating you?$0#$b#We should invite Victor here someday.",
+        "marriage_loc1": "Sautine City might have some competition...this place is just unique.$1#$b#You remembered i wanted a house in this island...didn't you, dear?$4",
+        "marriage_loc3": "My, the ocean in this island is so clear. I would love to paint it some day."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Sophia dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Sophia",
+      "Entries": {
+        "marriage_islandhouse": "@, can we stay here tonight?#$b#I'm really enjoying this trip.$0#$b#We can? Yay!$1",
+        "marriage_loc1": "Oh, @! Look, there's some fishes in the water.$1#$b#They're nibbling at something.$1#$e#...H-hey, be careful if you go to that volcano over there, okay?$0",
+        "marriage_loc3": "This? It's a manga i picked up the other day.$0#$b#Wanna read it together?$0"
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName": "Victor dialogue",
+      "Action": "EditData",
+      "Target": "Characters/Dialogue/Victor",
+      "Entries": {
+        "marriage_islandhouse": "Hi, love. This beach is beautiful!#$b#Compared to Pelican Town, this weather is really hot...",
+        "marriage_loc1": "So, this is the volcano dwarves used as an energy source...#$b#maybe we could go in someday.",
+        "marriage_loc3": "Have you seen the bones here, @?#$b#These are quite ancient."
+      },
+      "When":
+      {
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Babysitter NPCDisp",
+      "Action": "EditData",
+      "Target":"Data/NPCDispositions",
+      "Entries":{
+        "Devan": "adult/polite/outgoing/neutral/undefined/not-datable/null/Town/fall 3/Gus 'boss'/Saloon 44 6/Devan"
+      },
+      "When":{
+        "HasValue": "{{Relationship:Devan}}",
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Babysitter dialogue - load",
+      "Action": "EditData",
+      "Target":"Characters/Dialogue/Devan",
+      "Entries":{
+        "intro":"Good morning. I'm the babysitter your spouse called, I'll be taking care of your children for the day.$0#$b#Don't worry, your spouse has told me everything i need to know of.$1",
+        "Mon": "Hello, @.",
+        "cc":"I've heard a lot about this place from Emily.#$b#She said Pelican Town has changed thanks to you, @.",
+        "aboutstay":"Did i tell you Gus is my boss?$0#$b#He's letting me stay at a spare room, in exchange of working at the saloon.#$b#I clean everything before clients arrive.$1#$b#It's a big place, so Gus doesn't mind the help.",
+        "spring_Sat_1":"The other day, i saw something strange on the ground.$0#$b#When i checked what it was, it turned out to be some rice shoots.#$b#Who would even leave those on the ground?$2",
+        "summer_Sat_1":"The other day, i saw something strange on the ground.$0#$b#When i checked what it was, it turned out to be a strange doll.#$b#Who would even leave that on the ground?$2",
+        "fall_Sat_1":"The other day, i saw something strange on the ground.$0#$b#When i checked what it was, it turned out to be a blackberry.#$b#If only it wasn't all mashed up...$2",
+        "winter_Sat_1":"The other day, i saw something strange on the ground.$0#$b#When i checked what it was, it turned out to be crystal fruit.#$b#Lucky, right?$1",
+        "Thu_1":"Have you seen the train pass by?#$b#I've been told it's not that common over here.",
+        "woods":"Hi, @. This place is lovely, isn't it? $0#$b#What, how i got here? Well. walking? how else?$1#$b#...what do you mean monsters? $6#$e#Are you sure you're not seeing things? Havent' seen any.$0#$b#I'll take care, i promise.",
+        "archaeologyHouse":"When i don't have anything to do, i pass by the Museum.$0#$b#Sometimes you'll find a really good book.",
+        "forest":"Being under the shadow of this tree is great.#$b#Specially when the sun is strong.#$e#Don't you like this forest, @?",
+        "forest_2":"Do you hear that?#$b#It's getting late.",
+        "statue":"I wonder, who was this person...$7#$b#Must have been someone important to be made this kind of statue.#$e#The place looks in ruins, so it must've been long ago.$0",
+        "reading":"You want to know what im reading?$0#$b#Well...isn't it obvious? I want to know about the valley.$1#$e#%Devan is concentrating on the book.#$b#%You look at the cover. It says \"Flora and fauna in Stardew Valley.\"",
+        "spring_15":"Are you going to find salmonberries this year, @?%revealtasteDevan296#$b#Leah told me of a good spot where the juiciest grow.",
+        "spring_18":"And there goes another spring...i'll miss the salmonberries. They were so good this year. %revealtasteDevan296",
+        "CommunityCenter1":"Hi, @. Did you come take a break too?#$b#This place is huge. They even have a map.#$b#Look, pelican town is here!#$b#%Devan urges you to come closer, and points to a part of the map.#$b#%That's pelican town!",
+        "CommunityCenter2":"Do you think i could use this?$0#$b#..What's with that face?$6#$#One day i'll master it, you'll see.",
+        "leahHouse":"I wonder what Leah is painting this time.",
+        "leahHouse_2":"%Devan seems busy talking to Leah.",
+        "spring_Tue":"A salad with some leek, or a soup with spring onion... Oh, hi.$0#$b#I was thinking of what to have today.$1",
+        "spring_Wed":"Hey. The town looks so nice at this time of the year.#$b#How's your farm looking? I bet it's a lot of work.",
+        "spring_Thu":"I wonder how the strawberries will come out this year...they're so tasty.",
+        "spring_Fri":"%...#$b#%Devan seems lost in thought.#$b#Ah, @. Didn't see you there.$6#$e#Isn't this time of the year nostalgic?",
+        "spring_Sat":"I don't see many of the saloon clients, but Gus has told me about some.#$b#Apparently, a woman called 'Pam' visits often.",
+        "spring_Sun":"Do you ever take a day off?$0#$b#A farm sounds like hard work.$0#$e#Though, i don't have free days either...$2#$b#At least the workload isn't that bad.",
+        "summer_Tue":"Hey, are you going to plant blueberries this summer?$0#$b#I know a good Blueberry Tart recipe.$1#$e#Maybe one day i'll share it with you.",
+        "summer_Wed":"I've heard there's an important event this season.#$b#The Luau...that's when the governor visits, right?#$e#I heard that once, someone put a pound of anchovies in the soup...$2",
+        "summer_Thu":"I clean the saloon in the mornings.#$b#A lot of people stay in the saloon until past 2AM, so it's more effective this way.#$e#Gladly, the noise doesn't get so much to my room.",
+        "summer_Fri":"It's not too nice to stay inside at this time of the year.$0#$b#My room in the salon is after a few halls, so it doesn't have the best ventilation.$0#$e#And i have to get past a bunch of barrels before going out, too...$2",
+        "summer_Sat":"Hi. Are you going to the beach anywhere soon?$0#$b#Elliott's cabin is right in front of it. It must be nice in this type of weather.$0#$e#Maybe i'll pay him a visit soon.$1",
+        "summer_Sun":"I've heard a lot of driftwood shows up in this season of the year.#$b#I bet Leah must be happy.",
+        "fall_Tue":"I spend the mornings cleaning thoroughly, so i enjoy the afternoon as much as i can.#$b#The railroad is specially calm in comparison to the saloon.",
+        "fall_Wed":"This season is perfect for growing grapes and cranberries.$0#$b#Trust me, they're very efficient.$1",
+        "fall_Thu":"Gus is preparing a special plate today...#$b#If you're interested, feel free to pass by the saloon.$1",
+        "fall_Fri":"Have you grown fairy roses?#$b#I've heard they smell fantastic.",
+        "fall_Sat":"It's kind of windy at this time of the year, isn't it?#$b#A lot of leaves fall off the trees, too.",
+        "fall_Sun":"The smell of pumpkins is so nice...#$b#What kind of things do you grow in your farm, @?",
+        "winter_Tue":"It's hard to find fresh ingredients in this season.#$b#Gladly, Gus has a lot of storage.",
+        "winter_Wed":"Hi, @. How are you handling the weather?$0#$b#Well, i feel i'm going to catch a cold...$2",
+        "winter_Thu":"If anything saves this weather, it's the crystal fruit.#$b#It's the one thing i look forward to in winter.",
+        "winter_Fri":"This town is so cold...#$b#Compared to other places, i find it more than chilly.#$e#Or maybe the other towns i've visited were simply warmer.",
+        "winter_Sat":"Hello. What-$0#$b#%Devan sneezes.#$b#Sorry. I don't handle this weather very well.$0#$e#How come you never get sick...?$0",
+        "winter_Sun":"It's so cold today...$0#$b#You better warm up.$0#$e#Luckily, the saloon has good insulation.$1",
+        "nightmarket":"This traveling cart...$0#$b#I've never seen one like it before.$0#$b#And it's led by a pig, too...$6",
+        "winterstar": "Ah, hello.$0#$b#Have you tried Gus' candy canes? They turned out great.$0#$b#He prepared for a while to find the best ingredients.$1",
+        "icefes": "The best of this festival, you say...?$0#$b#I love to see everyone's snowmen.$0#$e#But, specially, i like Leah's ice sculptures.$1",
+        "spiritseve": "Ive heard they made an impossible labyrinth over there...$0#$b#Maybe i'll go check it out later.$1",
+        "sdvfair": "%Devan is watching the chickens.",
+        "sdvfair_saw8h": "These chickens look very well cared for.$0#$b#It shows that Marnie loves them very much.$1",
+        "moonjellies": "Moonlight jellies... i'd never heard of that.$0#$b#Can't wait to see them.$1",
+        "luau": "%Devan seems to be having fun with Emily.",
+        "flowerdance": "Mm...delicious.$8#$b#@, try some. I bet you'll love it.$1",
+        "eggfestival": "Will you participate in the festival?#$b#Me? Not really. I prefer watching everyone compete. It's more exciting."
+      },
+      "When":{
+        "HasValue": "{{Relationship:Devan}}",
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Babysitter lockedroom dialogue",
+      "Action":"EditData",
+      "Target":"Strings/StringsFromMaps",
+      "Entries":{
+        "Saloon.DevanBook":  "A book about trains in detail."
+      }
+    },
+  {"LogName":"Babysitter GiftTastes",
+      "Action":"EditData",
+      "Target":"Data/NPCGiftTastes",
+      "Entries":{
+        "Devan": "I love this! How did you know?/395 432 424 296/Thanks, @. This is great./399 410 403 240/...I'm not sure i can use this./86 84 80 446/...Ugh, is this a joke?/287 288 348 346 303 459 873/Thanks, i'll save it./82 440 349 246/"
+      },
+      "When":{
+        "HasValue": "{{Relationship:Devan}}",
+        "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Mail",
+     "Action":"EditData",
+     "Target":"Data/mail",
+     "Entries":{
+      "Devan": "{{PlayerName}},^I found this while buying groceries, and thought of you. I bet it'll be useful for your farm.   ^   -Devan%item object 270 1 424 1 256 2 419 1 264 1 400 1 254 1 %%[#]A Gift From Devan"
+     },
+     "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+     }
+    },
+  {"LogName":"EggFes dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/spring13",
+    "Entries":{
+     "Devan": "Will you participate in the festival?#$b#Me? Not really. I prefer watching everyone compete. It's more exciting."
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Fl. dance dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/spring24",
+    "Entries":{
+     "Devan": "Mm...delicious.$8#$b#@, try some. I bet you'll love it.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Luau dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/summer11",
+    "Entries":{
+     "Devan": "%Devan seems to be having fun with Emily."
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"MoonJellies dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/summer28",
+    "Entries":{
+     "Devan": "Moonlight jellies... i'd never heard of that.$0#$b#Can't wait to see them.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"SDVFair dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/fall16",
+    "Entries":{
+     "Devan": "These chickens look very well cared for...$0#$b#It shows that Marnie loves them very much.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Spirit dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/fall27",
+    "Entries":{
+     "Devan": "Ive heard they made an impossible labyrinth over there...$0#$b#Maybe i'll go check it out later.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"IceFes dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/winter8",
+    "Entries":{
+      "Devan": "The best of this festival, you say...?$0#$b#I love to see everyone's snowmen.$0#$e#But, specially, i like Leah's ice sculptures.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Win.Star dialogue",
+    "Action":"EditData",
+    "Target":"Data/Festivals/winter25",
+    "Entries":{
+     "Devan": "Ah, hello.$0#$b#Have you tried Gus' candy canes? They turned out great.$0#$b#He prepared for a while to find the best ingredients.$1"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Event: Railroad",
+    "Action":"EditData",
+    "Target":"Data/Events/Railroad",
+    "Entries":{
+     "11037500/F/f Devan 500/p Devan": "breezy/32 45/Devan 39 41 2 farmer 29 47 0/skippable/pause 500/move farmer 0 -6 0/move farmer 5 0 1 continue/viewport move 1 -1 3000/pause 500/emote Devan 16/pause 1000/quickQuestion @?#What are you doing?#Are you waiting for someone?#(break)speak Devan \"I'm waiting for a train to pass by$0.#$b#They don't show up often, but the wait is worth it.$0#$b#Like birdwatching, but with trains.\"(break)speak Devan \"No, not really.\"/speak Devan \"I'm waiting for a train to pass by$0.#$b#They don't show up often, but the wait is worth it.$0#$b#Like birdwatching, but with trains.\"/quickQuestion #Have you seen any so far?#What's the point, anyways?#That sounds boring.(break)speak Devan \"Two, up until now.$0#$b#The last train was full of coal, and some bits dropped as it passed by...$2#$b#So I hope to see the train better next time.\"\\friendship Devan 20(break)speak Devan \"These machines are amazing. Did you know? They can run on 4 types of energy: Horse-pulled, Steam, Diesel, and Electricity.$1#$b#I used to live in a location where you could only get by train.$0\"(break)speak Devan \"Well, what's the point in farming?$5\"\\friendship Devan -50/pause 1000/emote Devan 40/speak Devan \"...At any rate, you can stay if you want.$0#$b#But i'm warning you, something may fall when the train comes.$0#$e#I hope you have something to cover yourself with.$1\"/emote farmer 28/end"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Event: Forest",
+    "Action":"EditData",
+    "Target":"Data/Events/Forest",
+    "Entries":{
+     "110371500/F/f Devan 1500/p Devan": "continue/34 25/Devan 34 25 2 farmer 33 25 2/skippable/pause 4000/speak Devan \"Hey, @.\"/pause 2000/speak Devan \"You know, i used to be a teacher there- at the town where i grew in. $0#$b#We were far from the big city, and sustained ourselves by farming.$0#$b#...Then things changed.$2\"/stopMusic/pause 500/playMusic desolate/speak Devan \"With time, the our water source dried up. People started moving out, because farming wasn't possible anymore...$2#$b#I stayed. I didn't want to leave my students behind, but their families needed to. And it was for their sake, too.#$b#When I moved to the city, I lost contact. It was hard to find a new job, and it all began to pile up.$2\"/pause 500/speak devan \"Then, I heard of the valley.$7\"/pause 2000/speak Devan \"When i arrived, i didn't have where to stay...but by some coincidence, i met Gus. He offered a spare room i could stay at- in exchange of working there.#$b#He said, many people had the same experience as i did.\"/stopMusic/pause 500/playMusic spring_night_ambient/pause 2000/quickQuestion Why did you move here, @?#I wanted to escape the city, too.#It was my grandfather's farm.#I wanted money.(break)speak Devan \"I see. So it's true...it's as if this place appears when you most need it.$7\"\\friendship Devan 50(break)speak Devan \"So, he left it to you? Makes sense.\"(break)speak Devan \"Really? That's it? $6#$b#You could make much more money at the city.\"\\friendship Devan -20(break)speak Devan \"Anyways, thanks for hearing my story.\"/end"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Event: LeahHouse",
+    "Action":"EditData",
+    "Target":"Data/Events/LeahHouse",
+    "Entries":{
+     "110371000/F/f Devan 1000/p Leah": "jaunty/7 6/Leah 9 5 2 Devan 10 7 2 farmer 7 20 0/skippable/animate Leah false true 500 32 33 34/animate Devan false true 5000 20/pause 5000/speak Leah \"Stay still. I'm almost done.\"/speak Devan \"How longer? My arms are starting to hurt...$2#$b#The river sounds so nice...i might fall asleep.$1\"/speak Leah \"If you do that, i'll have to start over.$2\"/emote Devan 28/warp farmer 7 9/playSound doorClose/pause 500/speak Leah \"Hello, @. Sorry... I'm busy right now.$0#$b#Devan is helping me with a difficult pose i want to draw. I was having a hard time with this one.\"/speak Devan \"Hey, so about 'that'...$2#$b#What i commissioned last week. How is progress coming along?$1\"/speak Leah \"It's done. It came out just like you asked.\"/stopAnimation Leah 35/pause 500/animate Leah false false 500 8 9 10 11/playSound pickUpItem/pause 1000/stopAnimation Leah 0/addObject 8 5 99/pause 100/stopAnimation Devan 8/pause 600/speak Devan \"...$6#$b#...I swear to Yoba, it's amazing. It looks just like what i had in mind. $1\"/speak Leah \"After we're done here, you can take it home.\"/emote Devan 20/end"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    },
+  {"LogName":"Event: Saloon",
+    "Action":"EditData",
+    "Target":"Data/Events/Saloon",
+    "Entries":{
+     "110372000/f Devan 2000/p Devan/t 2000 2600": "Saloon1/7 20/Devan 3 19 2 Elliott 2 20 1 Gus 10 18 2 Emily 15 17 0 Clint 19 23 3 Shane 21 17 2 Willy 17 22 2 farmer 4 21 0/skippable/showFrame Devan 36/pause 3000/speak Devan \"...Yeah, and that's what we did.\"/pause 100/emote farmer 32/pause 500/speak Elliott \"You seem a bit too amused...that crab almost tore my hair off.$2#$b#Though, you didn't escape their claws either.$1\"/speak Devan \"It's a bit hot...i'll go outside for a bit.\"/question fork goWithDevan staywithElliott \"@, do you want to come with me?#I'll go with you.#I'll stay with Elliott.\"/fork goWithDevan 2000_goWithDevan/fork staywithElliott 2000_staywithElliott",
+     "2000_goWithDevan":"skippable/stopMusic/changeLocation Town/viewport 45 72/globalFadeToClear 2000/pause 500/warp farmer 45 71 2/playSound doorClose/move farmer 0 1/move farmer -2 0/faceDirection farmer 2 continue/pause 1000/warp Devan 45 71/move Devan 0 1/playSound doorClose/pause 1500/speak Devan \"Hey, @.#$e#I wanted to tell you something.#$e#You know...the town where i grew wasnt always so lonely.$0#$b#We used to be a tight knit community. The farms made money selling their goods, and would sell them to many places in Ferngill.\"/pause 500/speak Devan \"It was normal to see trains there. Sometimes, while i'd work at the school, i'd hear its whistle as it passed by.$0#$b#...Truth be told, i miss being teacher.$2#$b#I wonder if those kids, and their families, found a better place...$7\"/pause 1000/speak Devan \"Sitting to watch for trains calmed me down. It reminded me of home. I had no idea if i'd fit here, and i was scared­.$2#$b#But, @... nowadays, i feel i'm part of the community.$7#$b#You've been a valuable friend to me­.$1#$b#I loved the town i grew in, and i'll miss it... but it's okay to move on, too. This is my home now.\"/emote Devan 20/speak Devan \"...Elliot must be getting bored. We should head back.#$e#Hey, do you want a drink?$6#$b#My treat.$1\"/end dialogue Devan \"...$7#$b#Thank you for coming with us today, @.$0#$b#I really appreciate your company.$1\"",
+     "2000_staywithElliott": "skippable/speak Devan \"Sure.#$b#I won't take too long.$1\"/pause 500/move Devan 3 0/move Devan 0 4/move Devan 8 0/move Devan 0 1/playSound doorClose/warp Devan -20 -20/pause 500/stopMusic/speak Elliott \"I get the feeling we'll have a while to talk.#$e#...@?$1#$b#Lately, i've noticed something quite intriguing.\"/pause 1000/speak Elliott \"...At first, Devan didn't talk much with our neighbors.#$b#They seemed...off, to be honest. Quite too distant.$2#$e#Except when Leah is around. Then, Devan loosens up a bit.\"/pause 500/emote Elliott 40/pause 500/speak Elliott \"However...\"/pause 300/speak Elliott \"Ever since you two became friends, Devan seems happier.#$b#You've made Devan feel at home here.\"/pause 800/speak Elliott \"It's quite refreshing.$1\"/pause 200/playSound doorClose/[make devan visible]/move Devan 0 -2/speak Devan \"Hey, the breeze outside is very refreshing.#$b#Did i take too long?#$e#...Hey, what's with that face?$6\"/pause 100/emote farmer 40/emote Elliott 40/pause 500/speak Elliott \"Not much. We were making small talk while waiting.#$b#I'd like to continue telling @ about when we tried the crab pots by ourselves.\"/emote Devan 20/pause 200/move Devan 0 -1/move Devan -5 0/end"
+    },
+    "When":{
+      "HasValue": "{{Relationship:Devan}}",
+      "Language": "// your language code here//"
+      }
+    }
+ ]
+}
