@@ -22,6 +22,8 @@ Spouses' Island parcha los archivos del juego de dos maneras:
 En los días de visita, la(s) pareja(s) del personaje caminarán hacia la tienda de Willy (a las 6:20). Al llegar, entran al cuarto del fondo (de la misma manera que los NPC hacen cuando visitan la playa). Luego de esto, camina hacia la casa de la isla.
 Desde ese punto, todo lo que el personaje haga es configurable por el modder (e.j., a qué hora y a dónde ir). Los personajes vuelven a la casa a las 21:50 y proceden a dormir en la cama del jugador.
 
+Puedes crear contenido para múltiples personajes en el mismo paquete. ([Ejemplo](https://github.com/misty-spring/SpousesIsland/blob/main/docs/example-contentpack.json))
+
 ### Datos
 Spouses' Island's usa los siguientes datos:
 
@@ -36,6 +38,8 @@ Location Position | La posición en la que el personaje se pondrá al llegar (si
 Location Dialogue | El diálogo que dirá el personaje en ese lugar.
 
 Hay tres listas llamadas `Location<número>`: de esas, **sólo la tercera es opcional** (de lo contrario, el formato sería muy complicado.)
+
+Si quieres un ejemplo de cómo se vería un paquete de contenido, [puedes ver este](https://github.com/misty-spring/SpousesIsland/blob/main/docs/example-contentpack.json). (Tiene dos rutinas- una con y sin traducciones).
 
 ### Diálogo
 El diálogo sigue el mismo formato que los diálogos del juego. Para más información, puedes ver [Modding Dialogue](https://stardewvalleywiki.com/Modding:Dialogue#Format) en la wiki.
