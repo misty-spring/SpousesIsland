@@ -33,6 +33,7 @@ Location Position | The position the spouse stands at once they reach the locati
 Location Dialogue | The dialogue the spouse will say in that location.
 
 There are three `Location<number>` lists: from those, **only the third one is optional.**
+
 You can add multiple characters in the same contentpack. For an example, [see here](https://github.com/misty-spring/SpousesIsland/blob/main/docs/example-contentpack.json).
 
 ### Dialogue
