@@ -60,8 +60,7 @@ The [json parser](https://smapi.io/json) will tell you of any problem within the
 
 ## Translations
 If you'd like to contribute translating to the mod, there's a few options:
-* Patching the mod via ContentPatcher (this allows you to translate dialogue, but commands will stay in english)
-* Making a i18n .json file (for a template(empty), see [here](https://github.com/misty-spring/SpousesIsland/blob/main/i18n_template.json). For the default i18n file, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).)
-The second option gives you access to translating commands, but not dialogue. If you choose that last option: you can upload said translation on nexus, or you can send it to me for direct implementation (credit for translation will be mantained).
+* Patching the mod via ContentPatcher- this lets you translate dialogue. [See a template here](https://github.com/misty-spring/SpousesIsland/blob/main/translate-in-contentpatcher-example.json).
+* Making a i18n .json file- this lets you translate commands. (for a template, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/i18n_template.json). For the default i18n file, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).) About this second one: You can upload the translation on nexus, or you can send it to me for direct implementation (credit for translation will be mantained).
 ## Known issues
 Children can't use NPC warps. However, this is a bug on ChildToNPC's side (which i can't do much about).
