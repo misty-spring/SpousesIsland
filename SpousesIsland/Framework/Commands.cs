@@ -1,10 +1,5 @@
 using StardewModdingAPI;
-using System;
 using System.Collections.Generic;
-using StardewModdingAPI.Events;
-using StardewModdingAPI.Utilities;
-using StardewValley;
-using System.Linq;
 
 namespace SpousesIsland.Framework
 {
@@ -12,18 +7,13 @@ namespace SpousesIsland.Framework
     {
         public static void EditDialogue(ContentPackData cpd, IAssetData asset, IMonitor monitor)
         {
-            monitor.Log("EditDialogue(ContentPackData cpd, IAssetData asset, IMonitor monitor)", LogLevel.Trace);
             IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
             data["marriage_islandhouse"] = cpd.ArrivalDialogue;
             data["marriage_loc1"] = cpd.Location1.Dialogue;
             data["marriage_loc2"] = cpd.Location2.Dialogue;
-            if(cpd.Location3.Dialogue is not null)
+            if (cpd.Location3?.Dialogue is not null)
             {
                 data["marriage_loc3"] = cpd.Location3.Dialogue;
-            };
-            if (data.TryGetValue("marriage_loc1", out _) is false || data.TryGetValue("marriage_loc2", out _) is false)
-            {
-                monitor.Log($"Something went wrong when editing {cpd.Spousename}'s dialogue. Please check the log for more details.", LogLevel.Error);
             };
         }
         public static void EditSchedule(ContentPackData cpd, IAssetData asset)
@@ -44,7 +34,7 @@ namespace SpousesIsland.Framework
         /// </summary>
         internal static string ParseLangCode(string key)
         {
-            switch(key.ToLower())
+            switch (key.ToLower())
             {
                 case "de":
                     return ".de-DE";
@@ -78,14 +68,13 @@ namespace SpousesIsland.Framework
         }
 
         /// <summary>
-        /// Checks the values of the contentpack provided. If any conflict with each other, returns a detailed error and the value "false" (to indicate the pack isn't valid).
+        /// Checks the values of the contentpack provided. If any conflict, returns a detailed error and the value "false" (to indicate the pack isn't valid).
         /// </summary>
         /// <param name="cpd">The content pack being parsed.</param>
         /// <param name="monitor">Monitor, used to inform of any errors</param>
         /// <returns></returns>
         internal static bool ParseContentPack(ContentPackData cpd, IMonitor monitor)
         {
-            
             bool tempbool = false;
             if (cpd.ArrivalPosition is null)
             {
@@ -95,6 +84,21 @@ namespace SpousesIsland.Framework
             if (cpd.ArrivalDialogue is null)
             {
                 monitor.Log($"There's no arrival dialogue in {cpd.Spousename}'s schedule!", LogLevel.Error);
+                tempbool = true;
+            }
+            if (cpd.Location1?.Time >= cpd.Location2?.Time)
+            {
+                monitor.Log($"Location1's Time ({cpd.Location1.Time}) conflicts with Location2's Time ({cpd.Location2.Time})! This will cause errors. (Make sure the values aren't the same, and that Time1 happens before Time2.)", LogLevel.Warn);
+                tempbool = true;
+            }
+            if (cpd.Location1?.Time >= cpd.Location3?.Time)
+            {
+                monitor.Log($"Location1's Time ({cpd.Location1.Time}) conflicts with Location3's Time ({cpd.Location3.Time})! This will cause errors. (Make sure the values aren't the same, and that Time1 happens before Time3.)", LogLevel.Warn);
+                tempbool = true;
+            }
+            if (cpd.Location2?.Time >= cpd.Location3?.Time)
+            {
+                monitor.Log($"Location2's Time ({cpd.Location2.Time}) conflicts with Location3's Time ({cpd.Location3.Time})! This will cause errors. (Make sure the values aren't the same, and that Time2 happens before Time3.)", LogLevel.Warn);
                 tempbool = true;
             }
             if (cpd.Location1.Name is null)
@@ -160,16 +164,40 @@ namespace SpousesIsland.Framework
                     tempbool = true;
                 }
             }
+
+            int TranslationN = 0;
+            foreach (DialogueTranslation kpv in cpd.Translations)
+            {
+                TranslationN++;
+                if (!IsListValid(kpv))
+                {
+                    if (kpv.Key is null)
+                    {
+                        monitor.LogOnce($"Translation key missing in {cpd.Spousename}'s content. The translation won't be added. (Array {TranslationN} in list)", LogLevel.Warn);
+                        tempbool = true;
+                    }
+                    if (kpv.Location1 is null)
+                    {
+                        monitor.LogOnce($"Location1 missing in {cpd.Spousename}'s content. The translation won't be added. (Array {TranslationN} in list)", LogLevel.Warn);
+                        tempbool = true;
+                    }
+                    if (kpv.Location2 is null)
+                    {
+                        monitor.LogOnce($"Location2 missing in {cpd.Spousename}'s content. The translation won't be added. (Array {TranslationN} in list)", LogLevel.Warn);
+                        tempbool = true;
+                    }
+                };
+            }
             if (tempbool is true)
-            { 
-                return true; 
+            {
+                return true;
             }
             else
-            { 
-                return false; 
-            }    
+            {
+                return false;
+            }
         }
-        
+
         /// <summary>
         /// Compares the integers provided. If conditions apply, returns true (to reload assets).
         /// </summary>
@@ -201,5 +229,40 @@ namespace SpousesIsland.Framework
                 return false;
             }
         }
+        internal static bool IsLoc3Valid(ContentPackData cpd)
+        {
+            if (cpd.Location3?.Time is not 0 && !string.IsNullOrWhiteSpace(cpd.Location3?.Name) && !string.IsNullOrWhiteSpace(cpd.Location3?.Position) && !string.IsNullOrWhiteSpace(cpd.Location3?.Dialogue))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        internal static bool ShouldReloadDevan(bool Leah, bool Elliott, bool CCC)
+        {
+            if (Leah is true || Elliott is true || CCC is true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        internal static bool HasMod(string ModID, IModHelper Helper)
+        {
+            if (Helper.ModRegistry.Get(ModID) is not null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
+
+
