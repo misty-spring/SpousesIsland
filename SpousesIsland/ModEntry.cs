@@ -382,6 +382,10 @@ namespace SpousesIsland
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
+            /*this is set at the top so it doesn't overwrite krobus data by accident*/
+            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus") && Config.CustomChance >= RandomizedInt)
+            { e.LoadFromModFile<Dictionary<string, string>>("assets/Spouses/Empty.json", AssetLoadPriority.Low); }
+
             /*First is framework data, then NPC stuff.*/
             foreach (ContentPackData cpd in CustomSchedule.Values)
             {
@@ -444,7 +448,7 @@ namespace SpousesIsland
                         e.Edit(asset =>
                         {
                             IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/{temp_loc3}a2150 IslandFarmHouse {cpd.ArrivalPosition}";
+                            data["marriage_Mon"] = $"620 IslandFarmHouse {cpd.ArrivalPosition} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_islandhouse\"/{cpd.Location1.Time} {cpd.Location1.Name} {cpd.Location1.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc1\"/{cpd.Location2.Time} {cpd.Location2.Name} {cpd.Location2.Position} \"Characters\\Dialogue\\{cpd.Spousename}:marriage_loc2\"/{temp_loc3}a2150 IslandFarmHouse {cpd.ArrivalPosition}";
                             data["marriage_Tue"] = "GOTO marriage_Mon";
                             data["marriage_Wed"] = "GOTO marriage_Mon";
                             data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -972,7 +976,7 @@ namespace SpousesIsland
                         e.Edit(asset =>
                         {
                             IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data["Mon"] = "620 FishShop 4 7 0/900 IslandSouth 1 11 /940 IslandWest 77 43 0/1020 IslandFarmHouse 20 10 3/1100 IslandWest 74 43 3/1400 IslandWest 83 36 3/1700 IslandWest 91 37 2/a1900 IslandFarmHouse 15 12 0/2000 IslandFarmHouse 30 15 2/2100 IslandFarmHouse 35 14 3";
+                            data["Mon"] = "620 IslandFarmHouse 20 10 3/1100 IslandWest 74 43 3/1400 IslandWest 83 36 3/1700 IslandWest 91 37 2/a1900 IslandFarmHouse 15 12 0/2000 IslandFarmHouse 30 15 2/2100 IslandFarmHouse 35 14 3";
                             data["Tue"] = "GOTO Mon";
                             data["Wed"] = "GOTO Mon";
                             data["Thu"] = "GOTO Mon";
@@ -984,7 +988,7 @@ namespace SpousesIsland
                         e.Edit(asset =>
                         {
                             IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data["Mon"] = "620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 20 8 0/1030 IslandFarmHouse 22 6 1/1100 IslandWest 75 46 3/1400 IslandWest 84 38 0/1700 IslandWest 93 36 0/a1900 IslandFarmHouse 15 14 0/2000 IslandFarmHouse 27 14 2/2100 IslandFarmHouse 36 14 2";
+                            data["Mon"] = "620 IslandFarmHouse 20 8 0/1030 IslandFarmHouse 22 6 1/1100 IslandWest 75 46 3/1400 IslandWest 84 38 0/1700 IslandWest 93 36 0/a1900 IslandFarmHouse 15 14 0/2000 IslandFarmHouse 27 14 2/2100 IslandFarmHouse 36 14 2";
                             data["Tue"] = "GOTO Mon";
                             data["Wed"] = "GOTO Mon";
                             data["Thu"] = "GOTO Mon";
@@ -1005,7 +1009,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 16 9 0 \"Strings\\schedules\\Abigail:marriage_islandhouse\"/1100 IslandNorth 44 28 0 \"Strings\\schedules\\Abigail:marriage_loc1\"/a1800 {SGIValues.RandomMap_nPos(Random, "Abigail", HasExGIM, Config.ScheduleRandom)}/2000 IslandWest 39 41 0 \"Strings\\schedules\\Abigail:marriage_loc3\"/a2200 IslandFarmHouse 16 9 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 16 9 0 \"Strings\\schedules\\Abigail:marriage_islandhouse\"/1100 IslandNorth 44 28 0 \"Strings\\schedules\\Abigail:marriage_loc1\"/a1800 {SGIValues.RandomMap_nPos(Random, "Abigail", HasExGIM, Config.ScheduleRandom)}/2000 IslandWest 39 41 0 \"Strings\\schedules\\Abigail:marriage_loc3\"/a2200 IslandFarmHouse 16 9 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1017,7 +1021,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1000 IslandFarmHouse 19 6 0 \"Strings\\schedules\\Alex:marriage_islandhouse\"/1100 IslandWest 85 39 2 alex_lift_weights \"Strings\\schedules\\Alex:marriage_loc1\"/1300 {SGIValues.RandomMap_nPos(Random, "Alex", HasExGIM, Config.ScheduleRandom)}/1500 IslandWest 64 83 2/a1900 IslandSouth 12 27 2 \"Strings\\schedules\\Alex:marriage_loc3\"/a2200 IslandFarmHouse 19 6 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 19 6 0 \"Strings\\schedules\\Alex:marriage_islandhouse\"/1100 IslandWest 85 39 2 alex_lift_weights \"Strings\\schedules\\Alex:marriage_loc1\"/1300 {SGIValues.RandomMap_nPos(Random, "Alex", HasExGIM, Config.ScheduleRandom)}/1500 IslandWest 64 83 2/a1900 IslandSouth 12 27 2 \"Strings\\schedules\\Alex:marriage_loc3\"/a2200 IslandFarmHouse 19 6 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1029,7 +1033,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 9 9 2 \"Strings\\schedules\\Elliott:marriage_islandhouse\"/1100 IslandWest 102 77 2 elliott_read/1400 IslandWest 73 83 2 \"Strings\\schedules\\Elliott:marriage_loc2\"/a1900 {SGIValues.RandomMap_nPos(Random, "Elliott", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 9 9 2";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 9 9 2 \"Strings\\schedules\\Elliott:marriage_islandhouse\"/1100 IslandWest 102 77 2 elliott_read/1400 IslandWest 73 83 2 \"Strings\\schedules\\Elliott:marriage_loc2\"/a1900 {SGIValues.RandomMap_nPos(Random, "Elliott", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 9 9 2";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1041,7 +1045,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 12 10 \"Strings\\schedules\\Emily:marriage_islandhouse\"/1100 IslandWest 53 52 2 \"Strings\\schedules\\Emily:marriage_loc1\"/1400 IslandWest 89 79 2 emily_exercise/1700 {SGIValues.RandomMap_nPos(Random, "Emily", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 12 10";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 12 10 \"Strings\\schedules\\Emily:marriage_islandhouse\"/1100 IslandWest 53 52 2 \"Strings\\schedules\\Emily:marriage_loc1\"/1400 IslandWest 89 79 2 emily_exercise/1700 {SGIValues.RandomMap_nPos(Random, "Emily", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 12 10";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1053,7 +1057,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 8 6 2 \"Strings\\schedules\\Haley:marriage_islandhouse\"/1100 IslandNorth 32 74 0 \"Strings\\schedules\\Haley:marriage_loc1\"/1400 {SGIValues.RandomMap_nPos(Random, "Haley", HasExGIM, Config.ScheduleRandom)}/1900 IslandWest 80 45 2/a2200 IslandFarmHouse 8 6 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 8 6 2 \"Strings\\schedules\\Haley:marriage_islandhouse\"/1100 IslandNorth 32 74 0 \"Strings\\schedules\\Haley:marriage_loc1\"/1400 {SGIValues.RandomMap_nPos(Random, "Haley", HasExGIM, Config.ScheduleRandom)}/1900 IslandWest 80 45 2/a2200 IslandFarmHouse 8 6 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1065,7 +1069,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 16 13 0 \"Strings\\schedules\\Harvey:marriage_islandhouse\"/1100 IslandFarmHouse 3 5 0 \"Strings\\schedules\\Harvey:marriage_loc1\"/1400 IslandWest 89 75 2 harvey_excercise/1600 {SGIValues.RandomMap_nPos(Random, "Harvey", HasExGIM, Config.ScheduleRandom)}/a2100 IslandFarmHouse 16 13";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 16 13 0 \"Strings\\schedules\\Harvey:marriage_islandhouse\"/1100 IslandFarmHouse 3 5 0 \"Strings\\schedules\\Harvey:marriage_loc1\"/1400 IslandWest 89 75 2 harvey_excercise/1600 {SGIValues.RandomMap_nPos(Random, "Harvey", HasExGIM, Config.ScheduleRandom)}/a2100 IslandFarmHouse 16 13";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1097,7 +1101,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 21 13 1 \"Strings\\schedules\\Leah:marriage_islandhouse\"/1100 IslandNorth 50 25 0 leah_draw \"Strings\\schedules\\Leah:marriage_loc1\"/1400 IslandNorth 21 16 0/1600 {SGIValues.RandomMap_nPos(Random, "Leah", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 21 13 1";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 21 13 1 \"Strings\\schedules\\Leah:marriage_islandhouse\"/1100 IslandNorth 50 25 0 leah_draw \"Strings\\schedules\\Leah:marriage_loc1\"/1400 IslandNorth 21 16 0/1600 {SGIValues.RandomMap_nPos(Random, "Leah", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 21 13 1";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1109,7 +1113,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 18 15 2 \"Strings\\schedules\\Maru:marriage_islandhouse\"/1100 IslandWest 95 45 2/1400 IslandNorth 50 25 0 \"Strings\\schedules\\Maru:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Maru", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 18 15 2";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 18 15 2 \"Strings\\schedules\\Maru:marriage_islandhouse\"/1100 IslandWest 95 45 2/1400 IslandNorth 50 25 0 \"Strings\\schedules\\Maru:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Maru", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 18 15 2";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1122,7 +1126,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 9 12 1 \"Strings\\schedules\\Penny:marriage_islandhouse\"/1100 IslandFarmHouse 3 6 0/1400 IslandWest 83 37 3 penny_read \"Strings\\schedules\\Penny:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Penny", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 9 12 1";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 9 12 1 \"Strings\\schedules\\Penny:marriage_islandhouse\"/1100 IslandFarmHouse 3 6 0/1400 IslandWest 83 37 3 penny_read \"Strings\\schedules\\Penny:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Penny", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 9 12 1";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1134,7 +1138,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 22 6 2 \"Strings\\schedules\\Sam:marriage_islandhouse\"/1100 IslandFarmHouse 8 9 0 sam_guitar/1400 IslandNorth 36 27 0 sam_skateboarding \"Strings\\schedules\\Sam:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Sam", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 22 6 2";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 22 6 2 \"Strings\\schedules\\Sam:marriage_islandhouse\"/1100 IslandFarmHouse 8 9 0 sam_guitar/1400 IslandNorth 36 27 0 sam_skateboarding \"Strings\\schedules\\Sam:marriage_loc1\"/1700 {SGIValues.RandomMap_nPos(Random, "Sam", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 22 6 2";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1146,7 +1150,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 25 14 3 \"Strings\\schedules\\Sebastian:marriage_islandhouse\"/1100 IslandWest 88 14 0/1400 IslandWestCave1 6 4 0 \"Strings\\schedules\\Sebastian:marriage_loc1\"/1600 {SGIValues.RandomMap_nPos(Random, "Sebastian", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 25 14 3";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 25 14 3 \"Strings\\schedules\\Sebastian:marriage_islandhouse\"/1100 IslandWest 88 14 0/1400 IslandWestCave1 6 4 0 \"Strings\\schedules\\Sebastian:marriage_loc1\"/1600 {SGIValues.RandomMap_nPos(Random, "Sebastian", HasExGIM, Config.ScheduleRandom)}/a2200 IslandFarmHouse 25 14 3";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1158,7 +1162,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 20 5 0 \"Strings\\schedules\\Shane:marriage_islandhouse\"/1100 IslandWest 87 52 0 shane_charlie \"Strings\\schedules\\Shane:marriage_loc1\"/a1420 IslandWest 77 39 0/1430 IslandFarmHouse 15 9 0 shane_drink/a1900 {SGIValues.RandomMap_nPos(Random, "Shane", HasExGIM, Config.ScheduleRandom)}/a2150 IslandWest 82 43/2200 IslandFarmHouse 20 5 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 20 5 0 \"Strings\\schedules\\Shane:marriage_islandhouse\"/1100 IslandWest 87 52 0 shane_charlie \"Strings\\schedules\\Shane:marriage_loc1\"/a1420 IslandWest 77 39 0/1430 IslandFarmHouse 15 9 0 shane_drink/a1900 {SGIValues.RandomMap_nPos(Random, "Shane", HasExGIM, Config.ScheduleRandom)}/a2150 IslandWest 82 43/2200 IslandFarmHouse 20 5 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1171,7 +1175,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 5 6 0 \"Characters\\Dialogue\\Claire:marriage_islandhouse\"/1100 IslandFarmHouse 17 12 2 Claire_Read \"Characters\\Dialogue\\Claire:marriage_loc1\"/1400 IslandEast 19 40 0 \"Characters\\Dialogue\\Claire:marriage_loc3\"/1600 {SGIValues.RandomMap_nPos(Random, "Claire", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 5 6 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 5 6 0 \"Characters\\Dialogue\\Claire:marriage_islandhouse\"/1100 IslandFarmHouse 17 12 2 Claire_Read \"Characters\\Dialogue\\Claire:marriage_loc1\"/1400 IslandEast 19 40 0 \"Characters\\Dialogue\\Claire:marriage_loc3\"/1600 {SGIValues.RandomMap_nPos(Random, "Claire", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 5 6 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1183,7 +1187,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 13 13 1 \"Characters\\Dialogue\\Lance:marriage_islandhouse\"/1100 IslandNorth 37 30 0/1400 Caldera 24 23 2 \"Characters\\Dialogue\\Lance:marriage_loc2\"/1600 {SGIValues.RandomMap_nPos(Random, "Lance", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 13 13 1";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 13 13 1 \"Characters\\Dialogue\\Lance:marriage_islandhouse\"/1100 IslandNorth 37 30 0/1400 Caldera 24 23 2 \"Characters\\Dialogue\\Lance:marriage_loc2\"/1600 {SGIValues.RandomMap_nPos(Random, "Lance", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 13 13 1";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1195,7 +1199,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 26 6 0 \"Characters\\Dialogue\\Wizard:marriage_islandhouse\"/1100 IslandWest 38 38 0 \"Characters\\Dialogue\\Wizard:marriage_loc1\"/1400 IslandSouthEast 28 26 2/1800 {SGIValues.RandomMap_nPos(Random, "Magnus", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 26 6 0";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 26 6 0 \"Characters\\Dialogue\\Wizard:marriage_islandhouse\"/1100 IslandWest 38 38 0 \"Characters\\Dialogue\\Wizard:marriage_loc1\"/1400 IslandSouthEast 28 26 2/1800 {SGIValues.RandomMap_nPos(Random, "Magnus", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 26 6 0";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1207,7 +1211,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 7 11 1\"Characters\\Dialogue\\Olivia:marriage_islandhouse\"/1100 IslandFarmHouse 14 9 0 Olivia_Wine1 \"Characters\\Dialogue\\Olivia:marriage_loc1\"/1400 IslandSouth 31 24 2 Olivia_Yoga/1600 {SGIValues.RandomMap_nPos(Random, "Olivia", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 7 11 1";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 7 11 1\"Characters\\Dialogue\\Olivia:marriage_islandhouse\"/1100 IslandFarmHouse 14 9 0 Olivia_Wine1 \"Characters\\Dialogue\\Olivia:marriage_loc1\"/1400 IslandSouth 31 24 2 Olivia_Yoga/1600 {SGIValues.RandomMap_nPos(Random, "Olivia", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 7 11 1";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1219,7 +1223,7 @@ namespace SpousesIsland
                     e.Edit(asset =>
                     {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_Mon"] = $"620 FishShop 4 7 0/900 IslandSouth 1 11/940 IslandWest 77 43 0/1020 IslandFarmHouse 3 5 0 \"Characters\\Dialogue\\Sophia:marriage_islandhouse\"/1100 IslandWest 82 48 2/1400 IslandNorth 17 36 3 \"Characters\\Dialogue\\Sophia:marriage_loc2_scenery\"/1600 {SGIValues.RandomMap_nPos(Random, "Sophia", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 3 5 2";
+                        data["marriage_Mon"] = $"620 IslandFarmHouse 3 5 0 \"Characters\\Dialogue\\Sophia:marriage_islandhouse\"/1100 IslandWest 82 48 2/1400 IslandNorth 17 36 3 \"Characters\\Dialogue\\Sophia:marriage_loc2_scenery\"/1600 {SGIValues.RandomMap_nPos(Random, "Sophia", HasExGIM, Config.ScheduleRandom)}/a2150 IslandFarmHouse 3 5 2";
                         data["marriage_Tue"] = "GOTO marriage_Mon";
                         data["marriage_Wed"] = "GOTO marriage_Mon";
                         data["marriage_Thu"] = "GOTO marriage_Mon";
@@ -1240,8 +1244,6 @@ namespace SpousesIsland
                         data["marriage_Sun"] = "GOTO marriage_Mon";
                     });
             }
-            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus"))
-            { e.LoadFromModFile<Dictionary<string, string>>("assets/Spouses/Empty.json", AssetLoadPriority.Low); }
             if (Config.Allow_Abigail == true)
             {
                 if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail"))
@@ -1634,6 +1636,16 @@ namespace SpousesIsland
             {
                 e.LoadFromModFile<Map>("assets/Maps/FarmHouse_Custom.tbin", AssetLoadPriority.Medium);
             }
+            //adds warps regardless of config above
+            if (e.Name.IsEquivalentTo("Maps/IslandFarmHouse"))
+            {
+                e.Edit(asset =>
+                {
+                    var editor = asset.AsMap();
+                    Map map = editor.Data;
+                    map.Properties.Add("NPCWarp", "14 17 IslandWest 77 41");
+                });
+            }
             
             if (e.Name.IsEquivalentTo("Maps/Island_FieldOffice"))
             {
@@ -1650,7 +1662,6 @@ namespace SpousesIsland
             {
                 e.Edit(asset => {
                     var editor = asset.AsMap();
-                    this.Monitor.VerboseLog("Editing IslandN...");
                     Map sourceMap = Helper.ModContent.Load<Map>("assets/Maps/z_Island_N.tbin");
                     editor.PatchMap(sourceMap, patchMode: PatchMapMode.ReplaceByLayer);
                     Map map = editor.Data;
@@ -1774,7 +1785,8 @@ namespace SpousesIsland
                 e.Edit(asset => {
                     var editor = asset.AsMap();
                     Map map = editor.Data;
-                    map.Properties.Add("NPCWarp", "106 39 IslandSouth 0 10 106 40 IslandSouth 0 11 106 41 IslandSouth 0 12 106 42 IslandSouth 0 12 61 3 IslandWestCave1 6 11 96 32 IslandFarmCave 4 10 60 92 CaptainRoom 0 5 77 40 IslandFarmHouse 14 16 77 41 IslandFarmHouse 14 16");
+                    /*  77 41 IslandFarmHouse 14 16 was taken out, because that's the coord NPCs warp to (from islandfarmhouse). */
+                    map.Properties.Add("NPCWarp", "106 39 IslandSouth 0 10 106 40 IslandSouth 0 11 106 41 IslandSouth 0 12 106 42 IslandSouth 0 12 61 3 IslandWestCave1 6 11 96 32 IslandFarmCave 4 10 60 92 CaptainRoom 0 5 77 40 IslandFarmHouse 14 16");
                     
                     Tile BridgeBarrier = map.GetLayer("Back").Tiles[62, 16];
                     if (BridgeBarrier is not null)
@@ -1914,7 +1926,7 @@ namespace SpousesIsland
 
                                 if (c.controller.pathToEndPoint == null)
                                 {
-                                    this.Monitor.Log($"{c.Name} can't reach the bed! They won't go to sleep.", LogLevel.Debug);
+                                    this.Monitor.Log($"{c.Name} can't reach the bed! They won't go to sleep.", LogLevel.Trace);
                                 }
                             }
                         }
@@ -2013,6 +2025,10 @@ namespace SpousesIsland
                     }
                     this.Monitor.Log($"Is this character married?: \n{tempM}", LogLevel.Info);
                 }
+                else if (args[0] is "playerconfig" || args[0] is "pc")
+                {
+                    this.Monitor.Log($"Config: \n\n CustomChance: {Config.CustomChance}; \n\n ScheduleRandom = {Config.ScheduleRandom}; \n\n CustomRoom = {Config.CustomRoom}; \n\n HideSpouseRoom = {Config.HideSpouseRoom}; \n\n Childbedcolor = {Config.Childbedcolor}; \n\n NPCDevan = {Config.NPCDevan}; \n\n Allow_Children = {Config.Allow_Children};", LogLevel.Info);
+                }
                 else
                 {
                     this.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
@@ -2026,7 +2042,7 @@ namespace SpousesIsland
             {
                 this.Monitor.Log($"{RandomizedInt}", LogLevel.Info);
             }
-            if (args.Contains<string>("debug"))
+            else if (args.Contains<string>("debug"))
             {
                 if (!Context.IsWorldReady)
                 {
@@ -2038,6 +2054,23 @@ namespace SpousesIsland
                     this.Monitor.Log(Helper.Translation.Get("CLI.Day0") + $": {PreviousDayRandom}", LogLevel.Info);
                     this.Monitor.Log(Helper.Translation.Get("CLI.Day1") + $": {RandomizedInt}", LogLevel.Info);
                 }
+            }
+            else if (args[0] is "set" && args[1].All(char.IsDigit))
+            {
+                var value = int.Parse(args[1]);
+                if (value >= 0 && value <= 100)
+                {
+                    Config.CustomChance = value;
+                    this.Monitor.Log(Helper.Translation.Get($"CLI.ChangingCC") + Config.CustomChance + "%...", LogLevel.Info);
+                }
+                else
+                {
+                    this.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue.CC"), LogLevel.Error);
+                }
+            }
+            else
+            {
+                this.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
             }
         }
         internal void SGI_Reset(string command, string[] args)
