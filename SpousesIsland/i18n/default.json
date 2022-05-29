@@ -47,6 +47,8 @@
     "CLI.get.packs":"\nContent packs added:",
     "CLI.InvalidValue": "Please type a valid value. (allowed values: schedules, dialogues)",
     "CLI.MustReset":"Please relaunch the game to reload content packs.",
+    "CLI.ChangingCC": "Changing chance of visit to ",
+    "CLI.InvalidValue.CC": "Please type a valid value. (allowed values: 0 to 100)",
 
     "FW.contentpack.error":"Configuration file missing!",
     "FW.contentpack.duplicate":"{0} is trying to add a schedule for {1}. To avoid any conflicts, please untick '{1}' from Advanced config.",
