@@ -47,6 +47,8 @@
     "CLI.get.packs":"Paquetes/Mods agregados:",
     "CLI.InvalidValue": "Por favor, escribe un valor válido. (valores permitidos: schedules, dialogues)",
     "CLI.MustReset":"Para recargar los paquetes de contenido, por favor reinicia el juego.",
+    "CLI.ChangingCC": "Cambiando la probabilidad de visita a ",
+    "CLI.InvalidValue.CC": "Por favor, escribe un valor válido. (valores permitidos: 0 a 100)",
 
     "FW.contentpack.error":"¡No hay un archivo de configuración!",
     "FW.contentpack.duplicate":"{0} está intentando agregar contenido para {1}. Para evitar conflictos, por favor desactiva el nombre de {1} en configuración avanzada.",
