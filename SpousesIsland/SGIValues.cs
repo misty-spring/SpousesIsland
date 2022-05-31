@@ -92,7 +92,6 @@ namespace SpousesIsland
                 }
             }
         }
-
         public static List<string> SpousesAddedByMod()
         {
             List<string> SpousesAddedByMod = new ();
@@ -119,7 +118,7 @@ namespace SpousesIsland
         }
         internal static string RandomMap_nPos(Random ran, string spousename, bool ModInstalled, bool ActivatedConfig)
         {
-            int choice = ran.Next(1, 2);
+            int choice = ran.Next(1, 3);
             if (choice is 1 || ModInstalled is false || ActivatedConfig is false)
             {
                 string result = spousename switch
@@ -193,7 +192,7 @@ namespace SpousesIsland
                     "Custom_GiRBeach" => new Point(ran.Next(27, 35), ran.Next(6, 23)),
                     _ => new Point(0, 0)
                 };
-                string result = MapName + Position.ToString();
+                string result = $"{MapName} {Position.X} {Position.Y} {ran.Next(0,4)}";
                 return result;
             }
         }
