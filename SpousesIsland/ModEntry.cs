@@ -62,6 +62,9 @@ namespace SpousesIsland
         public string Child2_L3 { get; set; } = "IslandWest";
         public int Child2_X3 { get; set; } = 93;
         public int Child2_Y3 { get; set; } = 36;
+        //debug
+        public bool Verbose { get; set; } = false;
+        public bool Debug { get; set; } = false;
     }
     public class ModEntry : Mod
     {
@@ -71,19 +74,23 @@ namespace SpousesIsland
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             helper.Events.GameLoop.DayEnding += this.OnDayEnding;
+            Helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
             helper.Events.Content.LocaleChanged += this.OnLocaleChanged;
+
+            this.Config = this.Helper.ReadConfig<ModConfig>();
 
             //??
             int RandomizedInt = this.RandomizedInt;
             //commands
-            helper.ConsoleCommands.Add("sgi_help", helper.Translation.Get("CLI.help"), this.SGI_Help);
-            helper.ConsoleCommands.Add("sgi_chance", helper.Translation.Get("CLI.chance"), this.SGI_Chance);
-            helper.ConsoleCommands.Add("sgi_reset", helper.Translation.Get("CLI.reset"), this.SGI_Reset);
-            helper.ConsoleCommands.Add("sgi_list", helper.Translation.Get("CLI.list"), this.SGI_List);
-            helper.ConsoleCommands.Add("sgi_about", helper.Translation.Get("CLI.about"), this.SGI_About);
-
-            this.Config = this.Helper.ReadConfig<ModConfig>();
+            if (Config.Debug is true)
+            {
+                helper.ConsoleCommands.Add("sgi_help", helper.Translation.Get("CLI.help"), this.SGI_Help);
+                helper.ConsoleCommands.Add("sgi_chance", helper.Translation.Get("CLI.chance"), this.SGI_Chance);
+                helper.ConsoleCommands.Add("sgi_reset", helper.Translation.Get("CLI.reset"), this.SGI_Reset);
+                helper.ConsoleCommands.Add("sgi_list", helper.Translation.Get("CLI.list"), this.SGI_List);
+                helper.ConsoleCommands.Add("sgi_about", helper.Translation.Get("CLI.about"), this.SGI_About);
+            }
         }
 
         [XmlIgnore]
@@ -99,6 +106,10 @@ namespace SpousesIsland
             HasSVE = Commands.HasMod("FlashShifter.StardewValleyExpandedCP", this.Helper);
             HasC2N = Commands.HasMod("Loe2run.ChildToNPC", this.Helper);
             HasExGIM = Commands.HasMod("mistyspring.extraGImaps", this.Helper);
+            if (Config.Verbose == true)
+            {
+                this.Monitor.Log($"\n  HasSVE = {HasSVE}\n   HasC2N = {HasC2N}\n   HasExGIM = {HasExGIM}");
+            }
             RandomizedInt = Random.Next(1, 101);
             //empty lists preemptively
             if (SchedulesEdited.Count is not 0)
@@ -372,7 +383,7 @@ namespace SpousesIsland
             );
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: SpouseT,
+                text: Titles.SpouseT,
                 tooltip: SpouseD
             );
             configMenu.AddBoolOption(
@@ -468,7 +479,7 @@ namespace SpousesIsland
             );
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: SVET,
+                text: Titles.SVET,
                 tooltip: null
             );
             configMenu.AddBoolOption(
@@ -513,6 +524,25 @@ namespace SpousesIsland
                 getValue: () => this.Config.Allow_Victor,
                 setValue: value => this.Config.Allow_Victor = value
             );
+            configMenu.AddSectionTitle(
+                mod: this.ModManifest,
+                text: Titles.Debug,
+                tooltip: null
+            );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => this.Helper.Translation.Get("config.DebugComm.name"),
+                tooltip: () => this.Helper.Translation.Get("config.DebugComm.description"),
+                getValue: () => this.Config.Debug,
+                setValue: value => this.Config.Debug = value
+            );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => this.Helper.Translation.Get("config.Verbose.name"),
+                tooltip: () => this.Helper.Translation.Get("config.Verbose.description"),
+                getValue: () => this.Config.Verbose,
+                setValue: value => this.Config.Verbose = value
+            );
 
             ContentPackData data = new ContentPackData();
             //this.Helper.Data.WriteJsonFile("ContentTemplate.json", data);
@@ -550,10 +580,11 @@ namespace SpousesIsland
         {
             /*Format:
              * ("Word", if partial OK (e.g Word1), if subfolder OK (e.g Word/Sub/file)
+             * 
              * Everything is put inside this bool to make sure the game doesn't lag during 10min updates (bc for some reason it continues loading files post saveload)
              * "!Context.IsWorldReady || " taken out, it just checks for whether it can load
              */
-            if (CanDoHeavyLoad)
+            if (CanDoHeavyLoad is true)
             {
                 if (e.Name.StartsWith("Maps/", false, true))
                 {
@@ -1217,7 +1248,7 @@ namespace SpousesIsland
                         {
                             if (currentLang is "es")
                             {
-                                SGIData.DialoguesSpanish(e, Config);
+                                SGIData.DialoguesSpanish(e, EnabledSpouses);
                                 if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan.es-ES"))
                                 {
                                     e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.es-ES.json", AssetLoadPriority.Medium);
@@ -1225,7 +1256,7 @@ namespace SpousesIsland
                             }
                             if (currentLang is "en")
                             {
-                                SGIData.DialoguesEnglish(e, Config);
+                                SGIData.DialoguesEnglish(e, EnabledSpouses);
                                 if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan"))
                                 {
                                     e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.json", AssetLoadPriority.Medium);
@@ -1367,219 +1398,249 @@ namespace SpousesIsland
                 }
             }
         }
-    }
-    private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-    {
-        /*contentpatcher conditions
-         * gets api, makes a list with spouses mod has by default. then compares the relationship status of each one
-         * if it matches, it adds the value as "true" to dictionary. if not match, its added as false
-         */
-        var api = this.Helper.ModRegistry.GetApi<ContentPatcher.IContentPatcherAPI>("Pathoschild.ContentPatcher");
-
-        List<string> IntegratedSpouses = SGIValues.SpousesAddedByMod();
-        foreach (string s in IntegratedSpouses)
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            var a = new Dictionary<string, string>
-            {
-                [$"Relationship: {s}"] = "Married"
-            };
+            /*contentpatcher conditions
+             * gets api, makes a list with spouses mod has by default. then compares the relationship status of each one
+             * if it matches, it adds the value as "true" to dictionary. if not match, its added as false
+             */
+            var api = this.Helper.ModRegistry.GetApi<ContentPatcher.IContentPatcherAPI>("Pathoschild.ContentPatcher");
 
-            var conditions = api.ParseConditions(
-            manifest: this.ModManifest,
-            rawConditions: a,
-            formatVersion: new SemanticVersion("1.20.0")
-            );
-
-            if (conditions.IsMatch && conditions.IsValid)
+            List<string> IntegratedSpouses = SGIValues.SpousesAddedByMod();
+            foreach (string s in IntegratedSpouses)
             {
-                MarriedtoNPC.Add($"{s}", true);
-            }
-            else
-            {
-                MarriedtoNPC.Add($"{s}", false);
-            }
-        }
-
-        //set values that are needed for mod to work
-        Children = Game1.MasterPlayer.getChildren();
-        IsKrobusRoommate = MarriedtoNPC.GetValueOrDefault<string, bool>("Krobus");
-        IsLeahMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Leah");
-        IsElliottMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Elliott");
-        CCC = Game1.MasterPlayer.hasCompletedCommunityCenter();
-        SawDevan4H = Game1.MasterPlayer.eventsSeen.Contains(110371000);
-
-        //load starts here
-        foreach (keyvaluepair kvp in IntegratedSpouses)
-        {
-            bool LoadThisSpouse = Data.IsSpouseEnabled(kvp.Key, Config);
-            if (kvp.Value is true && LoadThisSpouse is true)
-            {
-                //T as Dictionary<string, string>;
-                Helper.GameContent.Load<Dictionary<string, string>>($"Characters/schedules/{kvp.Key}");
-                Helper.GameContent.Load<Dictionary<string, string>>($"Characters/Dialogue/{kvp.Key}");
-                if (kvp.Key is "Krobus")
+                var a = new Dictionary<string, string>
                 {
-                    Helper.GameContent.Load<Dictionary<string, string>>($"Characters/Dialogue/MarriageDialogueKrobus");
+                    [$"Relationship: {s}"] = "Married"
+                };
+
+                var conditions = api.ParseConditions(
+                manifest: this.ModManifest,
+                rawConditions: a,
+                formatVersion: new SemanticVersion("1.20.0")
+                );
+
+                if (conditions.IsMatch && conditions.IsValid)
+                {
+                    MarriedtoNPC.Add($"{s}", true);
+                }
+                else
+                {
+                    MarriedtoNPC.Add($"{s}", false);
+                }
+            }
+
+            //set values that are needed for mod to work
+            Children = Game1.MasterPlayer.getChildren();
+            IsKrobusRoommate = MarriedtoNPC.GetValueOrDefault<string, bool>("Krobus");
+            IsLeahMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Leah");
+            IsElliottMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Elliott");
+            CCC = Game1.MasterPlayer.hasCompletedCommunityCenter();
+            SawDevan4H = Game1.MasterPlayer.eventsSeen.Contains(110371000);
+
+            if (Config.Verbose == true)
+            {
+                this.Monitor.Log($"Children (count) = {Game1.MasterPlayer.getChildren().Count};\nIsKrobusRoommate = {MarriedtoNPC.GetValueOrDefault<string, bool>("Krobus")};\nIsLeahMarried = {MarriedtoNPC.GetValueOrDefault<string, bool>("Leah")};\nIsElliottMarried = {MarriedtoNPC.GetValueOrDefault<string, bool>("Elliott")};\nCCC = {Game1.MasterPlayer.hasCompletedCommunityCenter()};\nSawDevan4H = {Game1.MasterPlayer.eventsSeen.Contains(110371000)};");
+            }
+
+            foreach (KeyValuePair<string, bool> kvp in MarriedtoNPC)
+            {
+                bool LoadThisSpouse = SGIData.IsSpouseEnabled(kvp.Key, Config);
+                if (kvp.Value is true && LoadThisSpouse is true)
+                {
+                    EnabledSpouses.Add(kvp.Key);
+                    if (Config.Verbose == true)
+                    {
+                        this.Monitor.Log($"Added {kvp.Key} to EnabledSpouses list");
+                    }
                 }
             }
         }
-    }
-    private void OnDayEnding(object sender, DayEndingEventArgs e)
-    {
-        CanDoHeavyLoad = true;
-
-        PreviousDayRandom = RandomizedInt;
-        RandomizedInt = Random.Next(1, 101);
-        foreach (string str in SchedulesEdited)
+        private void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            Helper.GameContent.InvalidateCache($"Characters/schedules/{str}");
-        }
-        foreach (string s in MarriedtoNPC.Keys)
-        {
-            MarriedtoNPC.TryGetValue($"{s}", out bool IsTempMarried);
-            if (IsTempMarried is true)
+            CanDoHeavyLoad = true;
+            if (Config.Verbose == true)
             {
-                Helper.GameContent.InvalidateCache($"Characters/schedules/{s}");
+                this.Monitor.Log($"CanDoHeavyLoad set to true");
             }
-        }
-        if (IsKrobusRoommate is true)
-        {
-            Helper.GameContent.InvalidateCache($"Characters/Krobus");
-            Helper.GameContent.InvalidateCache($"Portraits/Krobus");
-        }
-        if (Children.Count >= 1 && HasC2N is true && Config.Allow_Children == true)
-        {
-            foreach (var child in Children)
-            {
-                Helper.GameContent.InvalidateCache($"Characters/schedules/{child.Name}");
-            }
-        }
-        if (Config.NPCDevan == true && Children.Count >= 1)
-        {
-            Helper.GameContent.InvalidateCache("Characters/schedules/Devan");
-        }
-    }
-    private void OnTimeChanged(object sender, TimeChangedEventArgs e)
-    {
 
-        if (e.NewTime >= 2200)
-        {
-            //spouse info
-            if (Config.CustomChance >= RandomizedInt)
+            PreviousDayRandom = RandomizedInt;
+            RandomizedInt = Random.Next(1, 101);
+            foreach (string str in SchedulesEdited)
             {
-                var sgv = new SGIValues();
-                var ifh = Game1.getLocationFromName("IslandFarmHouse");
-                foreach (NPC c in ifh.characters)
+                Helper.GameContent.InvalidateCache($"Characters/schedules/{str}");
+                if (Config.Verbose == true)
                 {
-                    if (c.isMarried())
+                    this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{str}\"");
+                }
+            }
+            foreach (string s in MarriedtoNPC.Keys)
+            {
+                MarriedtoNPC.TryGetValue($"{s}", out bool IsTempMarried);
+                if (IsTempMarried is true)
+                {
+                    Helper.GameContent.InvalidateCache($"Characters/schedules/{s}");
+                    if (Config.Verbose == true)
                     {
-                        if (Game1.IsMasterGame && e.NewTime >= 2200 && c.getTileLocationPoint() != sgv.getSpouseBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
-                        {
-                            //code from previous test copied ahead
-                            c.controller =
-                                new PathFindController(
-                                    c,
-                                    location: ifh,
-                                    sgv.getSpouseBedSpot(c.Name),
-                                    0,
-                                    (c, location) =>
-                                    {
-                                        c.doEmote(Character.sleepEmote);
-                                        sgv.spouseSleepEndFunction(c, location);
-                                    });
+                        this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{s}\"");
+                    }
+                }
+            }
+            if (IsKrobusRoommate is true)
+            {
+                Helper.GameContent.InvalidateCache($"Characters/Krobus");
+                Helper.GameContent.InvalidateCache($"Portraits/Krobus");
+                if (Config.Verbose == true)
+                {
+                    this.Monitor.Log($"Invalidated cache of \"Characters/schedules/Krobus\" and Portraits/Krobus");
+                }
+            }
+            if (Children.Count >= 1 && HasC2N is true && Config.Allow_Children == true)
+            {
+                foreach (var child in Children)
+                {
+                    Helper.GameContent.InvalidateCache($"Characters/schedules/{child.Name}");
+                    if (Config.Verbose == true)
+                    {
+                        this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{child.Name}\"");
+                    }
+                }
+            }
+            if (Config.NPCDevan == true && Children.Count >= 1)
+            {
+                Helper.GameContent.InvalidateCache("Characters/schedules/Devan");
+                if (Config.Verbose == true)
+                {
+                    this.Monitor.Log($"Invalidated cache of \"Characters/schedules/Devan\"");
+                }
+            }
+        }
+        private void OnDayStarted(object sender, DayStartedEventArgs e)
+        {
+            CanDoHeavyLoad = false;
+            if(Config.Verbose == true)
+            {
+                this.Monitor.Log($"CanDoHeavyLoad set to false");
+            }
+        }
+        private void OnTimeChanged(object sender, TimeChangedEventArgs e)
+        {
 
-                            if (c.controller.pathToEndPoint == null)
+            if (e.NewTime >= 2200)
+            {
+                //spouse info
+                if (Config.CustomChance >= RandomizedInt)
+                {
+                    var sgv = new SGIValues();
+                    var ifh = Game1.getLocationFromName("IslandFarmHouse");
+                    foreach (NPC c in ifh.characters)
+                    {
+                        if (c.isMarried())
+                        {
+                            if (Game1.IsMasterGame && e.NewTime >= 2200 && c.getTileLocationPoint() != sgv.getSpouseBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
                             {
-                                this.Monitor.Log($"{c.Name} can't reach the bed! They won't go to sleep.", LogLevel.Trace);
+                                if (Config.Verbose == true)
+                                {
+                                    this.Monitor.Log($"Pathing {c.Name} to {sgv.getSpouseBedSpot(c.Name)} in {ifh.Name}");
+                                }
+                                //code from previous test copied ahead
+                                c.controller =
+                                    new PathFindController(
+                                        c,
+                                        location: ifh,
+                                        sgv.getSpouseBedSpot(c.Name),
+                                        0,
+                                        (c, location) =>
+                                        {
+                                            c.doEmote(Character.sleepEmote);
+                                            sgv.spouseSleepEndFunction(c, location);
+                                        });
+
+                                if (c.controller.pathToEndPoint == null)
+                                {
+                                    this.Monitor.Log($"{c.Name} can't reach the bed! They won't go to sleep.", LogLevel.Trace);
+                                }
                             }
                         }
                     }
                 }
+                else
+                    return;
+            }
+        }
+        private void OnLocaleChanged(object sender, LocaleChangedEventArgs e)
+        {
+            if (Config.Verbose == true)
+            {
+                this.Monitor.Log($"Changing language to {LanguageInfo.GetLanguageCode()}");
+            }
+            currentLang = LanguageInfo.GetLanguageCode();
+        }
+
+        private ModConfig Config;
+        private static Random random;
+
+        /*   Internal (can only be accessed by current .cs) */
+        internal void SGI_About(string command, string[] args)
+        {
+            if (currentLang is "es")
+            {
+                this.Monitor.Log("Este mod permite que tu pareja vaya a la isla (compatible con ChildToNPC, SVE y otros). También permite crear paquetes de contenido / agregar rutinas personalizadas.\nMod creado por mistyspring (nexusmods)", LogLevel.Info);
             }
             else
-                return;
+            {
+                this.Monitor.Log("This mod allows your spouse to visit the Island (compatible with ChildToNPC, SVE, Free Love and a few others). It's also a framework, so you can add custom schedules.\nMod created by mistyspring (nexusmods)", LogLevel.Info);
+            }
         }
-        if (e.NewTime is 600 || e.OldTime is 600)
+        internal void SGI_List(string command, string[] args)
         {
-            CanDoHeavyLoad = false;
+            Debugging.List(this, args, Helper, Config);
         }
-    }
-    private void OnLocaleChanged(object sender, LocaleChangedEventArgs e)
-    {
-        currentLang = LanguageInfo.GetLanguageCode();
-    }
-
-    private ModConfig Config;
-    private static Random random;
-
-    /*   Internal (can only be accessed by current .cs) */
-    internal void SGI_About(string command, string[] args)
-    {
-        if (currentLang is "es")
+        internal void SGI_Chance(string command, string[] args)
         {
-            this.Monitor.Log("Este mod permite que tu pareja vaya a la isla (compatible con ChildToNPC, SVE y otros). También permite crear paquetes de contenido / agregar rutinas personalizadas.\nMod creado por mistyspring (nexusmods)", LogLevel.Info);
+            Debugging.Chance(this, args, Helper, Config);
         }
-        else
+        internal void SGI_Reset(string command, string[] args)
         {
-            this.Monitor.Log("This mod allows your spouse to visit the Island (compatible with ChildToNPC, SVE, Free Love and a few others). It's also a framework, so you can add custom schedules.\nMod created by mistyspring (nexusmods)", LogLevel.Info);
+            Debugging.Reset(this, args, Helper, Config);
         }
-    }
-    internal void SGI_List(string command, string[] args)
-    {
-        Debugging.List(this, args, Helper, Config);
-    }
-    internal void SGI_Chance(string command, string[] args)
-    {
-        Debugging.Chance(this, args, Helper, Config);
-    }
-    internal void SGI_Reset(string command, string[] args)
-    {
-        Debugging.Reset(this, args, Helper);
-    }
-    internal void SGI_Help(string command, string[] args)
-    {
-        this.Monitor.Log(this.Helper.Translation.Get("CLI.helpdescription"), LogLevel.Info);
-    }
-
-    internal Texture2D KbcSamples() => Helper.ModContent.Load<Texture2D>("assets/kbcSamples.png");
-
-    internal Dictionary<string, bool> MarriedtoNPC = new();
-    internal List<string> SchedulesEdited = new();
-    internal List<string> DialoguesEdited = new();
-    internal List<string> TranslationsAdded = new();
-    internal List<Child> Children = new();
-    internal string currentLang = LanguageInfo.GetLanguageCode();
-    internal string SpouseT()
-    {
-        var SpousesGrlTitle = this.Helper.Translation.Get("config.Vanillas.name");
-        return SpousesGrlTitle;
-    }
-    internal string SpouseD()
-    {
-        var SpousesDesc = this.Helper.Translation.Get("config.Vanillas.description");
-        return SpousesDesc;
-    }
-    internal string SVET()
-    {
-        var sve = "SVE";
-        return sve;
-    }
-    internal static Random Random
-    {
-        get
+        internal void SGI_Help(string command, string[] args)
         {
-            random ??= new Random(((int)Game1.uniqueIDForThisGame * 26) + (int)(Game1.stats.DaysPlayed * 36));
-            return random;
+            this.Monitor.Log(this.Helper.Translation.Get("CLI.helpdescription"), LogLevel.Info);
         }
+
+        internal Texture2D KbcSamples() => Helper.ModContent.Load<Texture2D>("assets/kbcSamples.png");
+        internal string SpouseD()
+        {
+            var SpousesDesc = this.Helper.Translation.Get("config.Vanillas.description");
+            return SpousesDesc;
+        }
+
+        internal Dictionary<string, bool> MarriedtoNPC = new();
+        internal List<string> SchedulesEdited = new();
+        internal List<string> DialoguesEdited = new();
+        internal List<string> TranslationsAdded = new();
+        internal List<string> EnabledSpouses = new();
+        internal List<Child> Children = new();
+        internal string currentLang = LanguageInfo.GetLanguageCode();
+        
+        internal static Random Random
+        {
+            get
+            {
+                random ??= new Random(((int)Game1.uniqueIDForThisGame * 26) + (int)(Game1.stats.DaysPlayed * 36));
+                return random;
+            }
+        }
+        internal bool IsLeahMarried;
+        internal bool IsElliottMarried;
+        internal bool IsKrobusRoommate;
+        internal bool SawDevan4H = false;
+        internal bool CCC;
+        internal bool HasSVE;
+        internal bool HasC2N;
+        internal bool HasExGIM;
+        internal bool CanDoHeavyLoad = true;
+        internal int PreviousDayRandom;
     }
-    internal bool IsLeahMarried;
-    internal bool IsElliottMarried;
-    internal bool IsKrobusRoommate;
-    internal bool SawDevan4H = false;
-    internal bool CCC;
-    internal bool HasSVE;
-    internal bool HasC2N;
-    internal bool HasExGIM;
-    internal bool CanDoHeavyLoad = true;
-    internal int PreviousDayRandom;
 }
