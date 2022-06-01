@@ -1,4 +1,4 @@
-﻿using StardewModdingAPI.Events;
+using StardewModdingAPI.Events;
 using System.Collections.Generic;
 
 namespace SpousesIsland
@@ -10,7 +10,8 @@ namespace SpousesIsland
             if (e.Name.StartsWith("Data/Festivals/spring", true, false))
             {
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/spring13"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -37,7 +38,8 @@ namespace SpousesIsland
 
                     });
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/spring24"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -61,10 +63,11 @@ namespace SpousesIsland
                         }
                     });
             }
-            if(e.Name.StartsWith("Data/Festivals/summer", true, false))
+            if (e.Name.StartsWith("Data/Festivals/summer", true, false))
             {
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/summer11"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -88,7 +91,8 @@ namespace SpousesIsland
                         }
                     });
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/summer28"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -102,10 +106,11 @@ namespace SpousesIsland
                         }
                     });
             }
-            if(e.Name.StartsWith("Data/Festivals/fall", true, false))
+            if (e.Name.StartsWith("Data/Festivals/fall", true, false))
             {
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/fall16"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -119,7 +124,8 @@ namespace SpousesIsland
                         }
                     });
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/fall27"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -133,10 +139,11 @@ namespace SpousesIsland
                         }
                     });
             }
-            if(e.Name.StartsWith("Data/Festivals/winter", true, false))
+            if (e.Name.StartsWith("Data/Festivals/winter", true, false))
             {
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/winter8"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -160,7 +167,8 @@ namespace SpousesIsland
                         }
                     });
                 if (e.NameWithoutLocale.IsEquivalentTo("Data/Festivals/winter25"))
-                    e.Edit(asset => {
+                    e.Edit(asset =>
+                    {
                         IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                         if (data.ContainsKey("Set-Up_additionalCharacters"))
                         {
@@ -175,7 +183,7 @@ namespace SpousesIsland
                     });
             }
         }
-        
+
         internal static void DialoguesSpanish(AssetRequestedEventArgs e, ModConfig Config)
         {
             if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail.es-ES") && Config.Allow_Abigail == true)
@@ -465,13 +473,13 @@ namespace SpousesIsland
                     data["marriage_loc3"] = "%Harvey is engrossed in a book.";
                 });
             if (e.Name.IsEquivalentTo("Characters/Dialogue/Krobus") && Config.Allow_Krobus == true)
-                    e.Edit(asset =>
-                    {
-                        IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data["marriage_islandhouse"] = "Good morning, @.$0#$b#The weather here is so damp, i feel right at home.$h#$e#And the sun is strong...$8";
-                        data["marriage_loc1"] = "You said there were caves here...i'll visit them later.$0";
-                        data["marriage_loc3"] = "I've never seen crystals like these!$0#$b#My people loved crystals, you know.$0#$e#...$2#$b#...You're right. Maybe there's others like me out there.#$b#Thank you, @.$h";
-                    });
+                e.Edit(asset =>
+                {
+                    IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                    data["marriage_islandhouse"] = "Good morning, @.$0#$b#The weather here is so damp, i feel right at home.$h#$e#And the sun is strong...$8";
+                    data["marriage_loc1"] = "You said there were caves here...i'll visit them later.$0";
+                    data["marriage_loc3"] = "I've never seen crystals like these!$0#$b#My people loved crystals, you know.$0#$e#...$2#$b#...You're right. Maybe there's others like me out there.#$b#Thank you, @.$h";
+                });
             if (e.Name.IsEquivalentTo("Characters/Dialogue/Leah") && Config.Allow_Leah == true)
                 e.Edit(asset =>
                 {
@@ -650,6 +658,53 @@ namespace SpousesIsland
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                     data.Add("Devan", "Ah, hello.$0#$b#Have you tried Gus' candy canes? They turned out great.$0#$b#He prepared for a while to find the best ingredients.$1");
                 });
+        }
+
+        internal static bool IsSpouseEnabled(string name, ModConfig Config)
+        {
+            switch (spouse)
+            {
+                case "Abigail":
+                    return Config.Allow_Abigail;
+                case "Alex":
+                    return Config.Allow_Alex;
+                case "Elliott":
+                    return Config.Allow_Elliott;
+                case "Emily":
+                    return Config.Allow_Emily;
+                case "Haley":
+                    return Config.Allow_Haley;
+                case "Harvey":
+                    return Config.Allow_Harvey;
+                case "Krobus":
+                    return Config.Allow_Krobus;
+                case "Leah":
+                    return Config.Allow_Leah;
+                case "Maru":
+                    return Config.Allow_Maru;
+                case "Penny":
+                    return Config.Allow_Penny;
+                case "Sam":
+                    return Config.Allow_Sam;
+                case "Sebastian":
+                    return Config.Allow_Sebastian;
+                case "Shane":
+                    return Config.Allow_Shane;
+                case "Claire":
+                    return Config.Allow_Claire;
+                case "Lance":
+                    return Config.Allow_Lance;
+                case "Olivia":
+                    return Config.Allow_Olivia;
+                case "Sophia":
+                    return Config.Allow_Sophia;
+                case "Victor":
+                    return Config.Allow_Victor;
+                case "Wizard":
+                    return Config.Allow_Magnus;
+                default:
+                    return false;
+            }
         }
     }
 }
