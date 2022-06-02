@@ -585,16 +585,32 @@ namespace SpousesIsland
             {
                 if(Config.CustomChance >= RandomizedInt)
                 {
-                    AssetRequest.ChangeSchedules(e, Random, Config, CustomSchedule);
+                    if (e.Name.StartsWith("Characters/schedules/", false, true))
+                    {
+                        AssetRequest.ChangeSchedules(this, e, Random, Config);
+                    }
+                    foreach (ContentPackData cpd in CustomSchedule.Values)
+                    {
+                        AssetRequest.ContentPackSchedule(this, e, Random, cpd);
+                    }
                 }
 
                 if (e.Name.StartsWith("Maps/", false, true))
                 {
-                    AssetRequest.Maps(e, Helper, Config);
+                    AssetRequest.Maps(e, Helper);
                 }
                 if (e.Name.StartsWith("Characters/", false, true))
                 {
-                    AssetRequest.Dialogue(e, Helper, Config.CustomChance);
+                    if (e.Name.StartsWith("Characters/", false, false))
+                    {
+                        AssetRequest.CharacterSheets(this, e, Helper, Config.CustomChance);
+                    }
+                    if (e.Name.StartsWith("Characters/Dialogue/", false, true)) { AssetRequest.Dialogue(this, e, Helper); }
+                    foreach (ContentPackData cpd in CustomSchedule.Values)
+                    {
+                        if (e.NameWithoutLocale.IsEquivalentTo($"Characters/Dialogue/{cpd.Spousename}"))
+                            AssetRequest.ContentPackDialogue(this, e, CustomSchedule, cpd);
+                    }
                 }
                 if (e.Name.StartsWith("Portraits/", false, true))
                 {
@@ -609,7 +625,74 @@ namespace SpousesIsland
                 }
                 if (Config.NPCDevan == true)
                 {
-                    AssetRequest.Devan(e);
+                    AssetRequest.Devan(this, e);
+                    if (e.Name.IsEquivalentTo("Maps/Saloon"))
+                    {
+                        if (HasSVE is false)
+                            e.Edit(asset => AssetRequest.SVESaloon(asset, Helper));
+                        else
+                            e.Edit(asset => AssetRequest.NormalSaloon(asset, Helper));
+                        if (SawDevan4H == true)
+                            e.Edit(asset => AssetRequest.PictureInRoom(asset, Helper));
+                    }
+                    if (e.Name.IsEquivalentTo("Characters/schedules/Devan"))
+                    {
+                        if (Children.Count is not 0)
+                        {
+                            if (Config.CustomChance >= RandomizedInt && Children.Count >= 1)
+                            {
+                                e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Babysit.json", AssetLoadPriority.Medium);
+                            }
+                            if (Config.CustomChance < RandomizedInt && Children.Count >= 1)
+                            {
+                                e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Normal.json", AssetLoadPriority.Medium);
+                            }
+                        }
+                        else
+                        {
+                            e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Normal.json", AssetLoadPriority.Medium);
+                        }
+                        if (CCC == true)
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data["Wed"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 CommunityCenter 26 17 0 \"Characters\\Dialogue\\Devan:CommunityCenter1\"/1600 CommunityCenter 16 20 0/1630 CommunityCenter 11 27 2 Devan_sit \"Characters\\Dialogue\\Devan:CommunityCenter2\"/1700 Town 26 21 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 Saloon 39 7 0/2210 Saloon 44 5 3 devan_sleep";
+                            });
+                        }
+                        if (IsLeahMarried is true && IsElliottMarried is false)
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Woods 8 9 0 \"Characters\\Dialogue\\Devan:statue\"/1600 ElliottHouse 5 8 1/1800 ElliottHouse 8 4 Devan_sit/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
+                            });
+                        }
+                        else if (IsLeahMarried is false && IsElliottMarried is true)
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 LeahHouse 6 7 0 \"Characters\\Dialogue\\Devan:leahHouse\"/1500 LeahHouse 13 4 2 Devan_sit \"Characters\\Dialogue\\Devan:leahHouse_2\"/1600 Woods 12 6 2 Devan_sit \"Characters\\Dialogue\\Devan:secretforest\"/1800 Woods 10 17 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
+                            });
+                        }
+                        else if (IsLeahMarried is true && IsElliottMarried is true)
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Woods 8 9 0 \"Characters\\Dialogue\\Devan:statue\"/1800 Woods 12 6 2 Devan_sit \"Characters\\Dialogue\\Devan:secretforest\"/1900 Woods 10 17 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
+                            });
+                        }
+                        if (HasSVE is true)
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data["Sat"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Forest 43 10 2 \"Characters\\Dialogue\\Devan:forest\"/1530 Forest 45 41 0/a1840 Forest 102 64 0 \"Characters\\Dialogue\\Devan:forest_2\"/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
+                            });
+                        }
+                    }
                 }
             }
         }
