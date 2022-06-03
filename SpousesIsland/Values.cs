@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Objects;
 using System;
@@ -8,6 +9,11 @@ namespace SpousesIsland
 {
     internal class SGIValues
     {
+        /// <summary>
+        /// Checks spouse name. If it coincides with an integrated one, return true (for warning)
+        /// </summary>
+        /// <param name="spouse"> The name of the spouse to compare.</param>
+        /// <returns></returns>
         internal static bool CheckSpouseName(string spouse)
         {
             switch (spouse)
@@ -37,7 +43,9 @@ namespace SpousesIsland
             }
         }
 
-        GameLocation ifh = Game1.getLocationFromName("IslandFarmHouse");
+        // Everything below is to path spouse sleep (in islandfarmhouse)
+
+        readonly GameLocation ifh = Game1.getLocationFromName("IslandFarmHouse");
         public Point getBedSpot(BedFurniture.BedType bed_type = BedFurniture.BedType.Any)
         {
             return GetBed(bed_type)?.GetBedSpot() ?? new Point(-1000, -1000);
@@ -72,7 +80,6 @@ namespace SpousesIsland
             }
             return null;
         }
-
         internal void spouseSleepEndFunction(Character c, GameLocation location)
         {
             if (c == null || c is not NPC)
@@ -92,6 +99,29 @@ namespace SpousesIsland
                 }
             }
         }
+        internal void MakeSpouseGoToBed(NPC c, GameLocation location)
+        {
+            if (c.isMarried())
+            {
+                if (Game1.IsMasterGame && Game1.timeOfDay >= 2200 && c.getTileLocationPoint() != getSpouseBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
+                {
+                    c.controller =
+                        new PathFindController(
+                            c,
+                            location: ifh,
+                            getSpouseBedSpot(c.Name),
+                            0,
+                            (c, location) =>
+                            {
+                                c.doEmote(Character.sleepEmote);
+                                spouseSleepEndFunction(c, location);
+                            }
+                    );
+                }
+            }
+        }
+
+        //returns a list with the spouses that the mod edits
         public static List<string> SpousesAddedByMod()
         {
             List<string> SpousesAddedByMod = new ();
@@ -116,6 +146,7 @@ namespace SpousesIsland
             SpousesAddedByMod.Add("Wizard");
             return SpousesAddedByMod;
         }
+        //returns a random map and position from a list
         internal static string RandomMap_nPos(Random ran, string spousename, bool ModInstalled, bool ActivatedConfig)
         {
             int choice = ran.Next(1, 3);
@@ -194,6 +225,29 @@ namespace SpousesIsland
                 };
                 string result = $"{MapName} {Position.X} {Position.Y} {ran.Next(0,4)}";
                 return result;
+            }
+        }
+
+        //?????test
+        public static bool MightBeDevan(AssetRequestedEventArgs e)
+        {
+            int Letters = 0;
+            var n = e.Name.ToString();
+            char[] name = "Devan".ToCharArray();
+            foreach (char c in name)
+            {
+                if (n.Contains(c))
+                {
+                    Letters++;
+                }
+            }
+            if (Letters is 5)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
