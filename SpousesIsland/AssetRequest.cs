@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpousesIsland.Framework;
 using StardewModdingAPI;
@@ -207,48 +207,13 @@ namespace SpousesIsland
                 }
             }
         }
-        internal static void Dialogue(ModEntry modEntry, AssetRequestedEventArgs e, IModHelper Helper)
-        {
-            if (e.Name.StartsWith("Characters/Dialogue/Marr", true, false))
-            {
-                if (e.Name.IsEquivalentTo("Characters/Dialogue/MarriageDialogueKrobus.es-ES"))
-                    e.Edit(asset =>
-                    {
-                        IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data.Add("funLeave_Krobus", "Intentaré ir fuera hoy...si voy temprano, tu gente no se dará cuenta$0.#$b#Pasar tiempo contigo me ha hecho ganar interés por las actividades de tu gente.$1");
-                    });
-                if (e.Name.IsEquivalentTo("Characters/Dialogue/MarriageDialogueKrobus"))
-                    e.Edit(asset =>
-                    {
-                        IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data.Add("funLeave_Krobus", "I'll go outside today...if i'm quick, your people won't notice.$0#$b#Thanks to you, i've become curious of humans' \"Entertainment activities\".$1");
-                    });
-            }
-            else
-            {
-                if (modEntry.currentLang is "es")
-                {
-                    SGIData.DialoguesSpanish(e, modEntry.EnabledSpouses);
-                    if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan.es-ES"))
-                    {
-                        e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.es-ES.json", AssetLoadPriority.Medium);
-                    };
-                }
-                if (modEntry.currentLang is "en")
-                {
-                    SGIData.DialoguesEnglish(e, modEntry.EnabledSpouses);
-                    if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan"))
-                    {
-                        e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.json", AssetLoadPriority.Medium);
-                    };
-                }
-            }
-        }
         internal static void ChangeSchedules(ModEntry modEntry, AssetRequestedEventArgs e, Random Random, ModConfig Config)
         {
             /*this is set at the top so it doesn't overwrite krobus data by accident*/
-            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus"))
-            { e.LoadFromModFile<Dictionary<string, string>>("assets/Spouses/Empty.json", AssetLoadPriority.Low); }
+            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus") && modEntry.CanEditSpouse.GetValueOrDefault("Krobus"))
+            { 
+                e.LoadFromModFile<Dictionary<string, string>>("assets/Spouses/Empty.json", AssetLoadPriority.Low); 
+            }
             //integrated data
             if (modEntry.HasC2N is true && Config.Allow_Children == true && modEntry.Children.Count is not 0)
             {
@@ -278,7 +243,7 @@ namespace SpousesIsland
                         data["Sun"] = "GOTO Mon";
                     });
             }
-            if (e.Name.IsEquivalentTo("Characters/schedules/Abigail") && modEntry.EnabledSpouses.Contains("Abigail"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Abigail") && modEntry.CanEditSpouse.GetValueOrDefault("Abigail"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -290,7 +255,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Alex") && modEntry.EnabledSpouses.Contains("Alex"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Alex") && modEntry.CanEditSpouse.GetValueOrDefault("Alex"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -302,7 +267,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Elliott") && modEntry.EnabledSpouses.Contains("Elliott"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Elliott") && modEntry.CanEditSpouse.GetValueOrDefault("Elliott"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -314,7 +279,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Emily") && modEntry.EnabledSpouses.Contains("Emily"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Emily") && modEntry.CanEditSpouse.GetValueOrDefault("Emily"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -326,7 +291,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Haley") && modEntry.EnabledSpouses.Contains("Haley"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Haley") && modEntry.CanEditSpouse.GetValueOrDefault("Haley"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -338,7 +303,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Harvey") && modEntry.EnabledSpouses.Contains("Harvey"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Harvey") && modEntry.CanEditSpouse.GetValueOrDefault("Harvey"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -351,7 +316,7 @@ namespace SpousesIsland
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
 
-            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus") && modEntry.EnabledSpouses.Contains("Krobus"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Krobus") && modEntry.CanEditSpouse.GetValueOrDefault("Krobus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -363,7 +328,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Leah") && modEntry.EnabledSpouses.Contains("Leah"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Leah") && modEntry.CanEditSpouse.GetValueOrDefault("Leah"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -375,7 +340,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Maru") && modEntry.EnabledSpouses.Contains("Maru"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Maru") && modEntry.CanEditSpouse.GetValueOrDefault("Maru"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -388,7 +353,7 @@ namespace SpousesIsland
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 }
             );
-            if (e.Name.IsEquivalentTo("Characters/schedules/Penny") && modEntry.EnabledSpouses.Contains("Penny"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Penny") && modEntry.CanEditSpouse.GetValueOrDefault("Penny"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -400,7 +365,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Sam") && modEntry.EnabledSpouses.Contains("Sam"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Sam") && modEntry.CanEditSpouse.GetValueOrDefault("Sam"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -412,7 +377,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Sebastian") && modEntry.EnabledSpouses.Contains("Sebastian"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Sebastian") && modEntry.CanEditSpouse.GetValueOrDefault("Sebastian"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -424,7 +389,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Shane") && modEntry.EnabledSpouses.Contains("Shane"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Shane") && modEntry.CanEditSpouse.GetValueOrDefault("Shane"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -437,7 +402,7 @@ namespace SpousesIsland
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
             //sve
-            if (e.Name.IsEquivalentTo("Characters/schedules/Claire") && modEntry.EnabledSpouses.Contains("Claire"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Claire") && modEntry.CanEditSpouse.GetValueOrDefault("Claire"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -449,7 +414,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Lance") && modEntry.EnabledSpouses.Contains("Lance"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Lance") && modEntry.CanEditSpouse.GetValueOrDefault("Lance"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -461,7 +426,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Wizard") && modEntry.EnabledSpouses.Contains("Magnus"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Wizard") && modEntry.CanEditSpouse.GetValueOrDefault("Magnus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -473,7 +438,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Olivia") && modEntry.EnabledSpouses.Contains("Olivia"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Olivia") && modEntry.CanEditSpouse.GetValueOrDefault("Olivia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -485,7 +450,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Sophia") && modEntry.EnabledSpouses.Contains("Sophia"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Sophia") && modEntry.CanEditSpouse.GetValueOrDefault("Sophia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -497,7 +462,7 @@ namespace SpousesIsland
                     data["marriage_Sat"] = "GOTO marriage_Mon";
                     data["marriage_Sun"] = "GOTO marriage_Mon";
                 });
-            if (e.Name.IsEquivalentTo("Characters/schedules/Victor") && modEntry.EnabledSpouses.Contains("Victor"))
+            if (e.Name.IsEquivalentTo("Characters/schedules/Victor") && modEntry.CanEditSpouse.GetValueOrDefault("Victor"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -587,7 +552,7 @@ namespace SpousesIsland
             {
                 e.LoadFromModFile<Texture2D>("assets/Devan/Character.png", AssetLoadPriority.Medium);
             };
-            if (e.Name.IsEquivalentTo("Characters/Harvey") && modEntry.EnabledSpouses.Contains("Harvey") && chance >= modEntry.RandomizedInt)
+            if (e.Name.IsEquivalentTo("Characters/Harvey") && modEntry.CanEditSpouse.GetValueOrDefault("Harvey") && chance >= modEntry.RandomizedInt)
             {
                 e.Edit(asset =>
                 {
@@ -596,7 +561,7 @@ namespace SpousesIsland
                     editor.PatchImage(Harvey, new Rectangle(0, 192, 64, 32), new Rectangle(0, 192, 64, 32), PatchMode.Replace);
                 });
             }
-            if (e.Name.IsEquivalentTo("Characters/Krobus") && modEntry.EnabledSpouses.Contains("Krobus") && chance >= modEntry.RandomizedInt)
+            if (e.Name.IsEquivalentTo("Characters/Krobus") && modEntry.CanEditSpouse.GetValueOrDefault("Krobus") && chance >= modEntry.RandomizedInt)
             {
                 e.LoadFromModFile<Texture2D>("assets/Spouses/Krobus_Outside_Character.png", AssetLoadPriority.Medium);
             }
@@ -638,106 +603,6 @@ namespace SpousesIsland
 
             Map PatchFix = Helper.ModContent.Load<Map>("assets/Maps/z_DevanRoom_FIX.tbin");
             editor.PatchMap(PatchFix, sourceArea: new Rectangle(0, 0, 4, 4), targetArea: new Rectangle(35, 7, 4, 4), patchMode: (PatchMapMode)PatchMode.Replace);
-        }
-
-        internal static void Devan(ModEntry modEntry, AssetRequestedEventArgs e)
-        {
-            if (e.Name.StartsWith("Data/", false, false))
-            {
-                modEntry.Monitor.LogOnce("Adding Devan", LogLevel.Trace);
-                if (e.Name.IsEquivalentTo("Data/animationDescriptions"))
-                    e.Edit(asset =>
-                    {
-                        IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data.Add("Devan_washing", "18/16 16 16 17 17 17/18");
-                        data.Add("Devan_plate", "23/20/23");
-                        data.Add("Devan_cook", "18/21 21 21 21 22 22 22 22/18");
-                        data.Add("Devan_bottle", "23/19/23");
-                        data.Add("Devan_spoon", "18/24 24 24 24 25 25 25 25/18");
-                        data.Add("Devan_broom", "0 23 23 31 31/26 26 26 27 27 27 28 28 28 29 29 29 28 28 28 27 27 27/31 31 23 23 0");
-                        data.Add("Devan_sleep", "34 34 34 34 35 35 35/32/35 35 35 35 35 34 34 34");
-                        data.Add("Devan_think", "34 34 34/33/34 34 34 34");
-                        data.Add("Devan_sit", "0 0 38 38 38 37 37/36/37 37 38 38 38 0 0");
-                        data.Add("shane_charlie", "29/28/29");
-                        data.Add("harvey_excercise_island", "24/24 24 25 25 26 27 27 27 27 27 26 25 25 24 24 24/24");
-                        data.Add("krobus_napping", "17/17/17");
-                    });
-                if (e.Name.IsEquivalentTo("Data/NPCExclusions"))
-                    e.Edit(asset =>
-                    {
-                        IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                        data.Add("Devan", "MovieInvite Socialize IslandEvent");
-                        data.Add("Babysitter", "All");
-                    });
-            }
-            if (e.Name.StartsWith("Data/Festivals/", false, false))
-            {
-                SGIData.AppendFestivalData(e);
-            }
-            if (modEntry.currentLang is "es")
-            {
-                if (e.Name.StartsWith("Data/", false, false))
-                {
-                    if (e.Name.IsEquivalentTo("Data/NPCGiftTastes.es-ES"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "¡Siempre sabes qué regalar, @! Es mi favorito./395 432 424 296/Gracias, @. Me gusta mucho./399 410 403 240/...No creo que me sirva mucho./86 84 80 446/...¿Qué mal broma es esta?/287 288 348 346 303 459 873/Gracias, lo guardaré./82 440 349 246/");
-                        });
-                    if (e.Name.IsEquivalentTo("Data/NPCDispositions.es-ES"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "adult/polite/outgoing/neutral/undefined/not-datable/null/Town/fall 3/Gus 'Jefe'/Saloon 44 5/Devan");
-                        });
-                    if (e.Name.IsEquivalentTo("Data/Mail.es-ES"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "@,^Encontré esto mientras compraba en Pierre's, y me acordé de ti. A lo mejor te sirve.   ^   -Devan%item object 270 1 424 1 256 2 419 1 264 1 400 1 254 1 %%[#]Un regalo de Devan");
-                        });
-                }
-                if (e.Name.StartsWith("Data/Events/", false, false))
-                {
-                    SGIData.EventsSpanish(e);
-                }
-                if (e.Name.StartsWith("Data/Festivals/", false, false))
-                {
-                    SGIData.FesSpanish(e);
-                }
-            }
-            if (modEntry.currentLang is "en")
-            {
-                if (e.Name.StartsWith("Data/", false, false))
-                {
-                    if (e.Name.IsEquivalentTo("Data/NPCGiftTastes"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "I love this! How did you know?/395 432 424 296/Thanks, @. This is great./399 410 403 240/...I'm not sure i can use this./86 84 80 446/...Ugh, is this a joke?/287 288 348 346 303 459 873/Thanks, i'll save it./82 440 349 246/");
-                        });
-                    if (e.Name.IsEquivalentTo("Data/NPCDispositions"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "adult/polite/outgoing/neutral/undefined/not-datable/null/Town/fall 3/Gus 'Boss'/Saloon 44 5/Devan");
-                        });
-                    if (e.Name.IsEquivalentTo("Data/Mail"))
-                        e.Edit(asset =>
-                        {
-                            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                            data.Add("Devan", "@,^I found this while buying groceries, and thought of you. I bet it'll be useful for your farm.   ^   -Devan%item object 270 1 424 1 256 2 419 1 264 1 400 1 254 1 %%[#]A Gift From Devan");
-                        });
-                }
-                if (e.Name.StartsWith("Data/Events/", false, false))
-                {
-                    SGIData.EventsEnglish(e);
-                }
-                if (e.Name.StartsWith("Data/Festivals/", false, false))
-                {
-                    SGIData.FesEnglish(e);
-                }
-            }
         }
     }
 }
