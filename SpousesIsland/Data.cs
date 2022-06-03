@@ -184,9 +184,9 @@ namespace SpousesIsland
             }
         }
 
-        internal static void DialoguesSpanish(AssetRequestedEventArgs e, ModConfig Config)
+        internal static void DialoguesSpanish(AssetRequestedEventArgs e, Dictionary<string, bool> cep)
         {
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail.es-ES") && Config.Allow_Abigail == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail.es-ES") && cep.GetValueOrDefault("Abigail"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -194,7 +194,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Crees que podemos entrar a este volcán?$0#$b#Willy dijo quedebemos quedarnos en la playa...$2#$b#Pero aún traje mi espada.$1";
                     data["marriage_loc3"] = "¿Has luchado contra esas babas, @?";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Alex.es-ES") && Config.Allow_Alex == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Alex.es-ES") && cep.GetValueOrDefault("Alex"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -202,7 +202,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Alex está haciendo ejercicio.";
                     data["marriage_loc3"] = "Phew, sienta bien un día en la playa con este calor.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Elliott.es-ES") && Config.Allow_Elliott == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Elliott.es-ES") && cep.GetValueOrDefault("Elliott"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -210,7 +210,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Elliott está leyendo.";
                     data["marriage_loc3"] = "Ah, la vista desde aquí es armoniosa$0.#$b#Puedo sentir una idea en camino...$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Emily.es-ES") && Config.Allow_Emily == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Emily.es-ES") && cep.GetValueOrDefault("Emily"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -218,7 +218,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Emily está concentrada pensando.";
                     data["marriage_loc3"] = "@, ¿Sientes eso?$0#$b#Estos cristales son muy poderosos.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Haley.es-ES") && Config.Allow_Haley == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Haley.es-ES") && cep.GetValueOrDefault("Haley"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -226,7 +226,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Hola, cariño.$0#$b#Amo el clima aquí.$1";
                     data["marriage_loc3"] = "%Haley está tomando fotos.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Harvey.es-ES") && Config.Allow_Harvey == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Harvey.es-ES") && cep.GetValueOrDefault("Harvey"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -234,7 +234,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "@, me quedaré adentro por un rato.$0#$b#Asegúrate de hidratarte en este clima, ¿está bien?$1";
                     data["marriage_loc3"] = "%Harvey está concentrado en un libro.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Krobus.es-ES") && Config.Allow_Krobus == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Krobus.es-ES") && cep.GetValueOrDefault("Krobus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -242,7 +242,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "@, dijiste que habían cuevas aquí... Iré a verlas más tarde.$0";
                     data["marriage_loc3"] = "¡Nunca he visto estos cristales!$0#$b#A mi gente le fascinaban.$0#$e#...$2#$b#...Es cierto. Puede que hayan otros como yo allí afuera.#$b#Gracias, @.$h";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Leah.es-ES") && Config.Allow_Leah == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Leah.es-ES") && cep.GetValueOrDefault("Leah"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -250,7 +250,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "La vista desde aquí es hermosa. Necesito dibujarla.$0";
                     data["marriage_loc3"] = "%Leah está dibujando.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Maru.es-ES") && Config.Allow_Maru == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Maru.es-ES") && cep.GetValueOrDefault("Maru"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -258,7 +258,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "¡@! ¿Has visto esto?$9#$b#Al parecer, no ha habido actividad volcánica en un tiempo.";
                     data["marriage_loc3"] = "El Profesor Snail nos ha contado sobre las tradiciones en Isla Gengibre.$0#$b#Sus historias orales son asombrosas.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Penny.es-ES") && Config.Allow_Penny == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Penny.es-ES") && cep.GetValueOrDefault("Penny"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -266,7 +266,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Oh, estoy leyendo el libro que traje la última vez.$0#$b#Es muy interesante.$1";
                     data["marriage_loc3"] = "Cariño, el Profesor Snail tiene anécdotas maravillosas sobre la isla.$0#$b#¡No sabía que tenían tradiciones tan interesantes!$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sam.es-ES") && Config.Allow_Sam == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sam.es-ES") && cep.GetValueOrDefault("Sam"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -274,7 +274,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Oye... ¿Alguna vez has entrado?$0#$b#...$0#$b#¿En serio?$8";
                     data["marriage_loc3"] = "Ey, @. Me siento bien aquí.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sebastian.es-ES") && Config.Allow_Sebastian == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sebastian.es-ES") && cep.GetValueOrDefault("Sebastian"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -282,7 +282,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Hombre, se parece mucho a 'Cave Saga X'...";
                     data["marriage_loc3"] = "No soy mucho de interacción social...$0#$b#Este lugar me sienta bien.$h";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Shane.es-ES") && Config.Allow_Shane == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Shane.es-ES") && cep.GetValueOrDefault("Shane"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -290,7 +290,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "A Charlie le gusta este lugar.$8";
                     data["marriage_loc3"] = "Hmm...no está tan mal.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Claire.es-ES") && Config.Allow_Claire == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Claire.es-ES") && cep.GetValueOrDefault("Claire"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -298,7 +298,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Claire está leyendo.";
                     data["marriage_loc3"] = "Las aves de este lugar...$0#$b#Puedo escucharlas cantando.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Lance.es-ES") && Config.Allow_Lance == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Lance.es-ES") && cep.GetValueOrDefault("Lance"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -306,7 +306,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "La caldera en este volcán contiene un poder inmenso.#$b#Sólo los magos más poderosos pueden usar los hechizos que requiere.";
                     data["marriage_loc3"] = "Las olas de esta playa...Me he acostumbrado a su sonido calmante.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Wizard.es-ES") && Config.Allow_Magnus == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Wizard.es-ES") && cep.GetValueOrDefault("Magnus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -314,7 +314,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Las criaturas de esta isla se han percatado de nuestra presencia. Están a la defensiva.#$b#Su poder arcano es inmenso...";
                     data["marriage_loc3"] = "Este lugar...sólo unos pocos pueden llevar a cabo los rituales de la forja.#$b#Incluso con tal experiencia, es imposible predecir sus resultados.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Olivia.es-ES") && Config.Allow_Olivia == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Olivia.es-ES") && cep.GetValueOrDefault("Olivia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -322,7 +322,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Este lugar es único.$1#$b#Recordaste que quería una casa en esta isla...¿cierto, cariño?$4";
                     data["marriage_loc3"] = "El océano aquí es espectacular. Me encantaría pintarlo algún día.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sophia.es-ES") && Config.Allow_Sophia == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sophia.es-ES") && cep.GetValueOrDefault("Sophia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -330,7 +330,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Oh, ¡@! Mira, hay unos peces aquí.$1#$b#Están comiendo algo.$1#$e#...H-hey, ten cuidado si vas al volcán de ahí arriba, ¿ok?$0";
                     data["marriage_loc3"] = "¿Esto? Es un manga que comencé a leer el otro día.$0#$b#¿Quieres verlo conmigo?$0";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Victor.es-ES") && Config.Allow_Victor == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Victor.es-ES") && cep.GetValueOrDefault("Victor"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -422,9 +422,9 @@ namespace SpousesIsland
                 });
         }
 
-        internal static void DialoguesEnglish(AssetRequestedEventArgs e, ModConfig Config)
+        internal static void DialoguesEnglish(AssetRequestedEventArgs e, Dictionary<string, bool> cep)
         {
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail") && Config.Allow_Abigail == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Abigail") && cep.GetValueOrDefault("Abigail"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -432,7 +432,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Do you think we can explore this volcano?$0#$b#Willy said we shouldn't get close..$2#$b#But I still brought my sword.$1";
                     data["marriage_loc3"] = "Do you ever think of fighting these slimes, @?";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Alex") && Config.Allow_Alex == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Alex") && cep.GetValueOrDefault("Alex"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -440,7 +440,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Alex is lifting weights.";
                     data["marriage_loc3"] = "Nothing's better than the beach on a hot day like this.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Elliott") && Config.Allow_Elliott == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Elliott") && cep.GetValueOrDefault("Elliott"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -448,7 +448,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Elliott is reading.";
                     data["marriage_loc3"] = "Ah, the view here is quite virtuous$0.#$b#I can feel an idea incoming...$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Emily") && Config.Allow_Emily == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Emily") && cep.GetValueOrDefault("Emily"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -456,7 +456,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Emily seems lost in her thoughts.";
                     data["marriage_loc3"] = "@, do you feel it?$0#$b#These crystals are full of powerful energy.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Haley") && Config.Allow_Haley == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Haley") && cep.GetValueOrDefault("Haley"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -464,7 +464,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Hi, honey. I'm so glad you're here.$0#$b#I love how sunny the weather is.$1";
                     data["marriage_loc3"] = "%Haley is taking pictures.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Harvey") && Config.Allow_Harvey == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Harvey") && cep.GetValueOrDefault("Harvey"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -472,7 +472,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "I'll stay inside for a while, @.$0#$b#Make sure you stay hydrated in this weather, alright?$1";
                     data["marriage_loc3"] = "%Harvey is engrossed in a book.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Krobus") && Config.Allow_Krobus == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Krobus") && cep.GetValueOrDefault("Krobus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -480,7 +480,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "You said there were caves here...i'll visit them later.$0";
                     data["marriage_loc3"] = "I've never seen crystals like these!$0#$b#My people loved crystals, you know.$0#$e#...$2#$b#...You're right. Maybe there's others like me out there.#$b#Thank you, @.$h";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Leah") && Config.Allow_Leah == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Leah") && cep.GetValueOrDefault("Leah"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -488,7 +488,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "The view here is inspiring, i just have to draw it.$0";
                     data["marriage_loc3"] = "%Leah is drawing.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Maru") && Config.Allow_Maru == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Maru") && cep.GetValueOrDefault("Maru"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -496,7 +496,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "@! Have you seen this?$9#$b#It seem there hasn't been volcanic activity in a while.";
                     data["marriage_loc3"] = "Professor Snail has been telling us about Ginger Island's traditions.$0#$b#Their oral history is amazing.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Penny") && Config.Allow_Penny == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Penny") && cep.GetValueOrDefault("Penny"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -504,7 +504,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Oh, I'm reading the book about a sailor i told you about.$0#$b#It's very interesting.$1";
                     data["marriage_loc3"] = "Honey, Professor Snail's stories about the island are amazing.$0#$b#I didn't know they had so many traditions!$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sam") && Config.Allow_Sam == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sam") && cep.GetValueOrDefault("Sam"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -512,7 +512,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Hey... have you ever gone inside?$0#$b#...$0#$b#Really?$8";
                     data["marriage_loc3"] = "I'm feeling pretty good here.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sebastian") && Config.Allow_Sebastian == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sebastian") && cep.GetValueOrDefault("Sebastian"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -520,7 +520,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Man, this looks just like in 'Cave Saga X'...";
                     data["marriage_loc3"] = "I'm not one for crowded places.$0#$b#This place is perfect.$h";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Shane") && Config.Allow_Shane == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Shane") && cep.GetValueOrDefault("Shane"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -528,7 +528,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Charlie seems to like this place.$8";
                     data["marriage_loc3"] = "Hmm...this place isn't so bad.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Claire") && Config.Allow_Claire == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Claire") && cep.GetValueOrDefault("Claire"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -536,7 +536,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "%Claire is reading a screenplay.";
                     data["marriage_loc3"] = "The birds here...$0#$b#There's so many of them. I can hear them chirping.$1";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Lance") && Config.Allow_Lance == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Lance") && cep.GetValueOrDefault("Lance"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -544,7 +544,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "The caldera in this volcano holds inmense arcane power.#$b#Only the most powerful of mages can cast the spells it requires.";
                     data["marriage_loc3"] = "The gentle waves of this beach...I've become accustomed to their sound.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Wizard") && Config.Allow_Magnus == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Wizard") && cep.GetValueOrDefault("Magnus"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -552,7 +552,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "The creatures of this island are aware of our presence. It has alerted them.#$b#Their arcane power is inmense...";
                     data["marriage_loc3"] = "The forge in this place...the rituals it requires are only mastered by a handful.#$b#Even with such mastery, the results are near impossible to predict.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Olivia") && Config.Allow_Olivia == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Olivia") && cep.GetValueOrDefault("Olivia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -560,7 +560,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Sautine City might have some competition...this place is just unique.$1#$b#You remembered i wanted a house in this island...didn't you, dear?$4";
                     data["marriage_loc3"] = "My, the ocean in this island is so clear. I would love to paint it some day.";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sophia") && Config.Allow_Sophia == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Sophia") && cep.GetValueOrDefault("Sophia"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -568,7 +568,7 @@ namespace SpousesIsland
                     data["marriage_loc1"] = "Oh, @! Look, there's some fishes in the water.$1#$b#They're nibbling at something.$1#$e#...H-hey, be careful if you go to that volcano over there, okay?$0";
                     data["marriage_loc3"] = "This? It's a manga i picked up the other day.$0#$b#Wanna read it together?$0";
                 });
-            if (e.Name.IsEquivalentTo("Characters/Dialogue/Victor") && Config.Allow_Victor == true)
+            if (e.Name.IsEquivalentTo("Characters/Dialogue/Victor") && cep.GetValueOrDefault("Victor"))
                 e.Edit(asset =>
                 {
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
@@ -662,7 +662,7 @@ namespace SpousesIsland
 
         internal static bool IsSpouseEnabled(string name, ModConfig Config)
         {
-            switch (spouse)
+            switch (name)
             {
                 case "Abigail":
                     return Config.Allow_Abigail;
