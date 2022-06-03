@@ -62,6 +62,7 @@ namespace SpousesIsland
         //debug
         public bool Verbose { get; set; } = false;
         public bool Debug { get; set; } = false;
+        public bool CheckDaily { get; set; } = false;
     }
     public class ModEntry : Mod
     {
@@ -73,7 +74,7 @@ namespace SpousesIsland
             helper.Events.GameLoop.DayEnding += this.OnDayEnding;
             Helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
-            helper.Events.Content.LocaleChanged += this.OnLocaleChanged;
+            helper.Events.GameLoop.ReturnedToTitle += this.OnReturnToTitle;
 
             this.Config = this.Helper.ReadConfig<ModConfig>();
 
@@ -105,19 +106,19 @@ namespace SpousesIsland
             HasExGIM = Commands.HasMod("mistyspring.extraGImaps", this.Helper);
             if (Config.Verbose == true)
             {
-                this.Monitor.Log($"\n  HasSVE = {HasSVE}\n   HasC2N = {HasC2N}\n   HasExGIM = {HasExGIM}");
+                this.Monitor.Log($"\n   HasSVE = {HasSVE}\n   HasC2N = {HasC2N}\n   HasExGIM = {HasExGIM}");
             }
             RandomizedInt = Random.Next(1, 101);
             //empty lists preemptively
             if (SchedulesEdited.Count is not 0)
             {
                 this.Monitor.Log("Resetting schedule list...", LogLevel.Trace);
-                SchedulesEdited.RemoveRange(0, SchedulesEdited.Count);
+                SchedulesEdited.Clear();
             }
             if (DialoguesEdited.Count is not 0)
             {
                 this.Monitor.Log("Resetting dialogue list...", LogLevel.Trace);
-                DialoguesEdited.RemoveRange(0, DialoguesEdited.Count);
+                DialoguesEdited.Clear();
             }
             // get Generic Mod Config Menu's API (if it's installed)
             var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
@@ -540,6 +541,13 @@ namespace SpousesIsland
                 getValue: () => this.Config.Verbose,
                 setValue: value => this.Config.Verbose = value
             );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => this.Helper.Translation.Get("config.CheckDaily.name"),
+                tooltip: () => this.Helper.Translation.Get("config.CheckDaily.description"),
+                getValue: () => this.Config.CheckDaily,
+                setValue: value => this.Config.CheckDaily = value
+            );
 
             ContentPackData data = new ContentPackData();
             //this.Helper.Data.WriteJsonFile("ContentTemplate.json", data);
@@ -581,9 +589,15 @@ namespace SpousesIsland
              * Everything is put inside this bool to make sure the game doesn't lag during 10min updates (bc for some reason it continues loading files post saveload)
              * "!Context.IsWorldReady || " taken out, it just checks for whether it can load
              */
+            //Maps left out experimentally. NPCDevan is outside bc their stuff doesnt all load otherwise
+            if (e.Name.StartsWith("Maps/", false, true))
+            {
+                AssetRequest.Maps(e, Helper);
+                AssetRequest.IslandMaps(this, e, Config);
+            }
             if (CanDoHeavyLoad is true)
             {
-                if(Config.CustomChance >= RandomizedInt)
+                if (Config.CustomChance >= RandomizedInt)
                 {
                     if (e.Name.StartsWith("Characters/schedules/", false, true))
                     {
@@ -595,17 +609,41 @@ namespace SpousesIsland
                     }
                 }
 
-                if (e.Name.StartsWith("Maps/", false, true))
-                {
-                    AssetRequest.Maps(e, Helper);
-                }
                 if (e.Name.StartsWith("Characters/", false, true))
                 {
                     if (e.Name.StartsWith("Characters/", false, false))
                     {
                         AssetRequest.CharacterSheets(this, e, Helper, Config.CustomChance);
                     }
-                    if (e.Name.StartsWith("Characters/Dialogue/", false, true)) { AssetRequest.Dialogue(this, e, Helper); }
+                    if (e.Name.StartsWith("Characters/Dialogue/", false, true)) 
+                    {
+                        if (e.Name.StartsWith("Characters/Dialogue/Marr", true, false))
+                        {
+                            if (e.Name.IsEquivalentTo("Characters/Dialogue/MarriageDialogueKrobus.es-ES"))
+                                e.Edit(asset =>
+                                {
+                                    IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                    data.Add("funLeave_Krobus", "Intentaré ir fuera hoy...si voy temprano, tu gente no se dará cuenta$0.#$b#Pasar tiempo contigo me ha hecho ganar interés por las actividades de tu gente.$1");
+                                });
+                            if (e.Name.IsEquivalentTo("Characters/Dialogue/MarriageDialogueKrobus"))
+                                e.Edit(asset =>
+                                {
+                                    IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                    data.Add("funLeave_Krobus", "I'll go outside today...if i'm quick, your people won't notice.$0#$b#Thanks to you, i've become curious of humans' \"Entertainment activities\".$1");
+                                });
+                        }
+                        else
+                        {
+                            if (LanguageInfo.GetLanguageCode() is "es")
+                            {
+                                SGIData.DialoguesSpanish(e, CanEditSpouse);
+                            }
+                            if (LanguageInfo.GetLanguageCode() is "en")
+                            {
+                                SGIData.DialoguesEnglish(e, CanEditSpouse);
+                            }
+                        }
+                    }
                     foreach (ContentPackData cpd in CustomSchedule.Values)
                     {
                         if (e.NameWithoutLocale.IsEquivalentTo($"Characters/Dialogue/{cpd.Spousename}"))
@@ -618,32 +656,36 @@ namespace SpousesIsland
                     {
                         e.LoadFromModFile<Texture2D>("assets/Devan/Portrait.png", AssetLoadPriority.Medium);
                     }
-                    if (e.Name.IsEquivalentTo("Portraits/Krobus") && EnabledSpouses.Contains("Krobus") && Config.CustomChance >= RandomizedInt)
+                    if (e.Name.IsEquivalentTo("Portraits/Krobus") && CanEditSpouse.GetValueOrDefault("Krobus") && Config.CustomChance >= RandomizedInt)
                     {
                         e.LoadFromModFile<Texture2D>("assets/Spouses/Krobus_Outside_Portrait.png", AssetLoadPriority.Medium);
                     }
                 }
-                if (Config.NPCDevan == true)
+            }
+            if (Config.NPCDevan == true)
+            {
+                this.Monitor.LogOnce("Adding Devan", LogLevel.Trace);
+
+                if (e.Name.IsEquivalentTo("Maps/Saloon"))
                 {
-                    AssetRequest.Devan(this, e);
-                    if (e.Name.IsEquivalentTo("Maps/Saloon"))
-                    {
-                        if (HasSVE is false)
-                            e.Edit(asset => AssetRequest.SVESaloon(asset, Helper));
-                        else
-                            e.Edit(asset => AssetRequest.NormalSaloon(asset, Helper));
-                        if (SawDevan4H == true)
-                            e.Edit(asset => AssetRequest.PictureInRoom(asset, Helper));
-                    }
+                    if (HasSVE is false)
+                        e.Edit(asset => AssetRequest.SVESaloon(asset, Helper));
+                    else
+                        e.Edit(asset => AssetRequest.NormalSaloon(asset, Helper));
+                    if (SawDevan4H == true)
+                        e.Edit(asset => AssetRequest.PictureInRoom(asset, Helper));
+                }
+                if (e.Name.StartsWith("Characters", false, true))
+                {
                     if (e.Name.IsEquivalentTo("Characters/schedules/Devan"))
                     {
                         if (Children.Count is not 0)
                         {
-                            if (Config.CustomChance >= RandomizedInt && Children.Count >= 1)
+                            if (Config.CustomChance >= RandomizedInt)
                             {
                                 e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Babysit.json", AssetLoadPriority.Medium);
                             }
-                            if (Config.CustomChance < RandomizedInt && Children.Count >= 1)
+                            else
                             {
                                 e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Normal.json", AssetLoadPriority.Medium);
                             }
@@ -693,65 +735,170 @@ namespace SpousesIsland
                             });
                         }
                     }
+                    if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan.es-ES"))
+                    {
+                        e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.es-ES.json", AssetLoadPriority.Medium);
+                    }
+                    if (e.Name.IsEquivalentTo("Characters/Dialogue/Devan"))
+                    {
+                        e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Dialogue.json", AssetLoadPriority.Medium);
+                    }
+                }
+                if (e.Name.StartsWith("Data/", false, true))
+                {
+                    if (e.Name.StartsWith("Data/Festivals/", false, false))
+                    {
+                        SGIData.AppendFestivalData(e);
+                        if (LanguageInfo.GetLanguageCode() is "es")
+                        {
+                            SGIData.FesSpanish(e);
+                        }
+                        if (LanguageInfo.GetLanguageCode() is "en")
+                        {
+                            SGIData.FesEnglish(e);
+                        }
+                    }
+                    if (e.Name.StartsWith("Data/", false, false))
+                    {
+                        //general
+                        if (e.Name.IsEquivalentTo("Data/animationDescriptions"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan_washing", "18/16 16 16 17 17 17/18");
+                                data.Add("Devan_plate", "23/20/23");
+                                data.Add("Devan_cook", "18/21 21 21 21 22 22 22 22/18");
+                                data.Add("Devan_bottle", "23/19/23");
+                                data.Add("Devan_spoon", "18/24 24 24 24 25 25 25 25/18");
+                                data.Add("Devan_broom", "0 23 23 31 31/26 26 26 27 27 27 28 28 28 29 29 29 28 28 28 27 27 27/31 31 23 23 0");
+                                data.Add("Devan_sleep", "34 34 34 34 35 35 35/32/35 35 35 35 35 34 34 34");
+                                data.Add("Devan_think", "34 34 34/33/34 34 34 34");
+                                data.Add("Devan_sit", "0 0 38 38 38 37 37/36/37 37 38 38 38 0 0");
+                                data.Add("shane_charlie", "29/28/29");
+                                data.Add("harvey_excercise_island", "24/24 24 25 25 26 27 27 27 27 27 26 25 25 24 24 24/24");
+                                data.Add("krobus_napping", "17/17/17");
+                            });
+                        }
+                        if (e.Name.IsEquivalentTo("Data/NPCExclusions"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "MovieInvite Socialize IslandEvent");
+                                data.Add("Babysitter", "All");
+                            });
+                        }
+                        //es
+                        if (e.Name.IsEquivalentTo("Data/NPCGiftTastes.es-ES"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "¡Siempre sabes qué regalar, @! Es mi favorito./395 432 424 296/Gracias, @. Me gusta mucho./399 410 403 240/...No creo que me sirva mucho./86 84 80 446/...¿Qué mal broma es esta?/287 288 348 346 303 459 873/Gracias, lo guardaré./82 440 349 246/");
+                            });
+                        }
+                        if (e.Name.IsEquivalentTo("Data/NPCDispositions.es-ES"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "adult/polite/outgoing/neutral/undefined/not-datable/null/Town/fall 3/Gus 'Jefe'/Saloon 44 5/Devan");
+                            });
+                        }
+                        if (e.Name.IsEquivalentTo("Data/Mail.es-ES"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "@,^Encontré esto mientras compraba en Pierre's, y me acordé de ti. A lo mejor te sirve.   ^   -Devan%item object 270 1 424 1 256 2 419 1 264 1 400 1 254 1 %%[#]Un regalo de Devan");
+                            });
+                        }
+                        //en
+                        if (e.Name.IsEquivalentTo("Data/NPCGiftTastes"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "I love this! How did you know?/395 432 424 296/Thanks, @. This is great./399 410 403 240/...I'm not sure i can use this./86 84 80 446/...Ugh, is this a joke?/287 288 348 346 303 459 873/Thanks, i'll save it./82 440 349 246/");
+                            });
+                        }
+                        if (e.Name.IsEquivalentTo("Data/NPCDispositions"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "adult/polite/outgoing/neutral/undefined/not-datable/null/Town/fall 3/Gus 'Boss'/Saloon 44 5/Devan");
+                            });
+                        }
+                        if (e.Name.IsEquivalentTo("Data/Mail"))
+                        {
+                            e.Edit(asset =>
+                            {
+                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                                data.Add("Devan", "@,^I found this while buying groceries, and thought of you. I bet it'll be useful for your farm.   ^   -Devan%item object 270 1 424 1 256 2 419 1 264 1 400 1 254 1 %%[#]A Gift From Devan");
+                            });
+                        }
+                    }
+                    if (e.Name.StartsWith("Data/Events/", false, false))
+                    {
+                        SGIData.EventsSpanish(e);
+                        SGIData.EventsEnglish(e);
+                    }
                 }
             }
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            /*contentpatcher conditions
-             * gets api, makes a list with spouses mod has by default. then compares the relationship status of each one
-             * if it matches, it adds the value as "true" to dictionary. if not match, its added as false
-             */
-            var api = this.Helper.ModRegistry.GetApi<ContentPatcher.IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            //if lists aren't empty, clear them
+            if (CanEditSpouse.Count is not 0)
+            {
+                CanEditSpouse.Clear();
+            }
 
-            List<string> IntegratedSpouses = SGIValues.SpousesAddedByMod();
             foreach (string s in IntegratedSpouses)
             {
-                var a = new Dictionary<string, string>
+                bool _LoadThisSpouse = SGIData.IsSpouseEnabled(s, Config);
+                NPC SN = Game1.getCharacterFromName(s, false, false);
+                bool _IsMarried = SN.isMarriedOrEngaged();
+                if (_IsMarried is true && _LoadThisSpouse is true)
                 {
-                    [$"Relationship: {s}"] = "Married"
-                };
-
-                var conditions = api.ParseConditions(
-                manifest: this.ModManifest,
-                rawConditions: a,
-                formatVersion: new SemanticVersion("1.20.0")
-                );
-
-                if (conditions.IsMatch && conditions.IsValid)
-                {
-                    MarriedtoNPC.Add($"{s}", true);
+                    CanEditSpouse.Add(s, true);
+                    if (Config.Verbose == true)
+                    {
+                        this.Monitor.Log($"Added {s} = true to EnabledSpouses list");
+                    }
                 }
                 else
                 {
-                    MarriedtoNPC.Add($"{s}", false);
+                    CanEditSpouse.Add(s, false);
+                    if (Config.Verbose == true)
+                    {
+                        this.Monitor.Log($"Added {s} = false to EnabledSpouses list");
+                    }
+
                 }
             }
 
-            //set values that are needed for mod to work
+            /*
+             * set values that are needed for mod to work
+             * First, get NPCs from name. Then, check if NPC is married/engaged (that value goes to a bool).
+             * Then the rest
+             */
+            NPC K = Game1.getCharacterFromName("Krobus", false, false);
+            NPC L = Game1.getCharacterFromName("Leah", true, false);
+            NPC E = Game1.getCharacterFromName("Elliott", true, false);
+            IsKrobusRoommate = K.isMarriedOrEngaged();
+            IsLeahMarried = L.isMarriedOrEngaged();
+            IsElliottMarried = E.isMarriedOrEngaged();
+            
             Children = Game1.MasterPlayer.getChildren();
-            IsKrobusRoommate = MarriedtoNPC.GetValueOrDefault<string, bool>("Krobus");
-            IsLeahMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Leah");
-            IsElliottMarried = MarriedtoNPC.GetValueOrDefault<string, bool>("Elliott");
             CCC = Game1.MasterPlayer.hasCompletedCommunityCenter();
             SawDevan4H = Game1.MasterPlayer.eventsSeen.Contains(110371000);
 
             if (Config.Verbose == true)
             {
-                this.Monitor.Log($"Children (count) = {Game1.MasterPlayer.getChildren().Count};\nIsKrobusRoommate = {MarriedtoNPC.GetValueOrDefault<string, bool>("Krobus")};\nIsLeahMarried = {MarriedtoNPC.GetValueOrDefault<string, bool>("Leah")};\nIsElliottMarried = {MarriedtoNPC.GetValueOrDefault<string, bool>("Elliott")};\nCCC = {Game1.MasterPlayer.hasCompletedCommunityCenter()};\nSawDevan4H = {Game1.MasterPlayer.eventsSeen.Contains(110371000)};");
-            }
-
-            foreach (KeyValuePair<string, bool> kvp in MarriedtoNPC)
-            {
-                bool LoadThisSpouse = SGIData.IsSpouseEnabled(kvp.Key, Config);
-                if (kvp.Value is true && LoadThisSpouse is true)
-                {
-                    EnabledSpouses.Add(kvp.Key);
-                    if (Config.Verbose == true)
-                    {
-                        this.Monitor.Log($"Added {kvp.Key} to EnabledSpouses list");
-                    }
-                }
+                this.Monitor.Log($"\nChildren (count) = {Children};\nIsKrobusRoommate = {IsKrobusRoommate};\nIsLeahMarried = {IsLeahMarried};\nIsElliottMarried = {IsElliottMarried};\nCCC = {CCC};\nSawDevan4H = {SawDevan4H};");
             }
         }
         private void OnDayEnding(object sender, DayEndingEventArgs e)
@@ -760,6 +907,36 @@ namespace SpousesIsland
             if (Config.Verbose == true)
             {
                 this.Monitor.Log($"CanDoHeavyLoad set to true");
+            }
+            if(Config.CheckDaily == true)
+            {
+                if (CanEditSpouse.Count is not 0)
+                {
+                    CanEditSpouse.Clear();
+                }
+                foreach (string s in IntegratedSpouses)
+                {
+                    bool _LoadThisSpouse = SGIData.IsSpouseEnabled(s, Config);
+                    NPC SN = Game1.getCharacterFromName(s, false, false);
+                    bool _IsMarried = SN.isMarriedOrEngaged();
+                    if (_IsMarried is true && _LoadThisSpouse is true)
+                    {
+                        CanEditSpouse.Add(s, true);
+                        if (Config.Verbose == true)
+                        {
+                            this.Monitor.Log($"Added {s} = true to EnabledSpouses list");
+                        }
+                    }
+                    else
+                    {
+                        CanEditSpouse.Add(s, false);
+                        if (Config.Verbose == true)
+                        {
+                            this.Monitor.Log($"Added {s} = false to EnabledSpouses list");
+                        }
+
+                    }
+                }
             }
 
             PreviousDayRandom = RandomizedInt;
@@ -772,15 +949,14 @@ namespace SpousesIsland
                     this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{str}\"");
                 }
             }
-            foreach (string s in MarriedtoNPC.Keys)
+            foreach (KeyValuePair<string, bool> kvp in CanEditSpouse)
             {
-                MarriedtoNPC.TryGetValue($"{s}", out bool IsTempMarried);
-                if (IsTempMarried is true)
+                if (kvp.Value is true)
                 {
-                    Helper.GameContent.InvalidateCache($"Characters/schedules/{s}");
+                    Helper.GameContent.InvalidateCache($"Characters/schedules/{kvp.Key}");
                     if (Config.Verbose == true)
                     {
-                        this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{s}\"");
+                        this.Monitor.Log($"Invalidated cache of \"Characters/schedules/{kvp.Key}\"");
                     }
                 }
             }
@@ -816,63 +992,37 @@ namespace SpousesIsland
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             CanDoHeavyLoad = false;
-            if(Config.Verbose == true)
+            if (Config.Verbose == true)
             {
                 this.Monitor.Log($"CanDoHeavyLoad set to false");
             }
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
         {
-
-            if (e.NewTime >= 2200)
+            if (e.NewTime >= 2200 && Config.CustomChance >= RandomizedInt)
             {
-                //spouse info
-                if (Config.CustomChance >= RandomizedInt)
+                var sgv = new SGIValues();
+                var ifh = Game1.getLocationFromName("IslandFarmHouse");
+                foreach (NPC c in ifh.characters)
                 {
-                    var sgv = new SGIValues();
-                    var ifh = Game1.getLocationFromName("IslandFarmHouse");
-                    foreach (NPC c in ifh.characters)
+                    if (Config.Verbose == true)
                     {
-                        if (c.isMarried())
-                        {
-                            if (Game1.IsMasterGame && e.NewTime >= 2200 && c.getTileLocationPoint() != sgv.getSpouseBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
-                            {
-                                if (Config.Verbose == true)
-                                {
-                                    this.Monitor.Log($"Pathing {c.Name} to {sgv.getSpouseBedSpot(c.Name)} in {ifh.Name}");
-                                }
-                                //code from previous test copied ahead
-                                c.controller =
-                                    new PathFindController(
-                                        c,
-                                        location: ifh,
-                                        sgv.getSpouseBedSpot(c.Name),
-                                        0,
-                                        (c, location) =>
-                                        {
-                                            c.doEmote(Character.sleepEmote);
-                                            sgv.spouseSleepEndFunction(c, location);
-                                        });
-
-                                if (c.controller.pathToEndPoint == null)
-                                {
-                                    this.Monitor.Log($"{c.Name} can't reach the bed! They won't go to sleep.", LogLevel.Trace);
-                                }
-                            }
-                        }
+                        this.Monitor.Log($"Pathing {c.Name} to bed in {ifh.Name}...");
+                    }
+                    try
+                    {
+                        sgv.MakeSpouseGoToBed(c, ifh);
+                    }
+                    catch(Exception ex)
+                    {
+                        this.Monitor.Log($"An error ocurred while pathing {c.Name} to bed: {ex}");
                     }
                 }
-                else
-                    return;
             }
         }
-        private void OnLocaleChanged(object sender, LocaleChangedEventArgs e)
+        private void OnReturnToTitle(object sender, ReturnedToTitleEventArgs e)
         {
-            if (Config.Verbose == true)
-            {
-                this.Monitor.Log($"Changing language to {LanguageInfo.GetLanguageCode()}");
-            }
-            currentLang = LanguageInfo.GetLanguageCode();
+            CanDoHeavyLoad = true;
         }
 
         private ModConfig Config;
@@ -881,7 +1031,7 @@ namespace SpousesIsland
         /*   Internal (can only be accessed by current .cs) */
         internal void SGI_About(string command, string[] args)
         {
-            if (currentLang is "es")
+            if (LocalizedContentManager.CurrentLanguageCode.ToString() is "es")
             {
                 this.Monitor.Log("Este mod permite que tu pareja vaya a la isla (compatible con ChildToNPC, SVE y otros). También permite crear paquetes de contenido / agregar rutinas personalizadas.\nMod creado por mistyspring (nexusmods)", LogLevel.Info);
             }
@@ -914,14 +1064,13 @@ namespace SpousesIsland
             return SpousesDesc;
         }
 
-        internal Dictionary<string, bool> MarriedtoNPC = new();
+        internal readonly List<string> IntegratedSpouses = SGIValues.SpousesAddedByMod();
+        internal Dictionary<string, bool> CanEditSpouse = new();
         internal List<string> SchedulesEdited = new();
         internal List<string> DialoguesEdited = new();
         internal List<string> TranslationsAdded = new();
-        internal List<string> EnabledSpouses = new();
         internal List<Child> Children = new();
-        internal string currentLang = LanguageInfo.GetLanguageCode();
-        
+
         internal static Random Random
         {
             get
