@@ -64,3 +64,5 @@ If you'd like to contribute translating to the mod, there's a few options:
 * Making a i18n .json file- this lets you translate commands. (for a template, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/docs/i18n_template.json). For the default i18n file, see [here](https://github.com/misty-spring/SpousesIsland/blob/main/SpousesIsland/i18n/default.json).) About this option: You can also upload the translation on nexus, or you can send it to me for direct implementation (credit for translation will be mantained).
 ## Known issues
 Children can't use NPC warps. However, this is a bug on ChildToNPC's side (which i can't do much about).
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G7CXX9P)
