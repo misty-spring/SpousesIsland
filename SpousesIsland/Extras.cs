@@ -1,35 +1,28 @@
-using SpousesIsland.Framework;
+﻿using SpousesIsland.Framework;
 using StardewModdingAPI;
+using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static StardewValley.LocalizedContentManager;
 
 namespace SpousesIsland
 {
-    public class LanguageInfo
-    {
-        internal static string GetLanguageCode()
-        {
-            return CurrentLanguageCode.ToString();
-        }
-    }
     public class Debugging
     {
-        internal static void Reset(ModEntry me, string[] args, IModHelper Helper)
+        internal static void Reset(ModEntry me, string[] args, ModConfig c)
         {
             if (!Context.IsWorldReady && !args.Contains("debug"))
             {
-                me.Monitor.Log(Helper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
                 return;
             }
             else if (args.Count<string>() > 1 && args[1] is not "debug")
             {
-                me.Monitor.Log(Helper.Translation.Get($"CLI.TooManyArguments"), LogLevel.Info);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.TooManyArguments"), LogLevel.Info);
             }
             else if (!args.Any() || args[0] is "help" || args[0] is "h")
             {
-                me.Monitor.Log(Helper.Translation.Get("CLI.reset.description"), LogLevel.Info);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.reset.description"), LogLevel.Info);
             }
             else
             {
@@ -38,10 +31,10 @@ namespace SpousesIsland
                     int ResetCounter = 0;
                     foreach (string str in ModEntry.CustomSchedule.Keys)
                     {
-                        Helper.GameContent.InvalidateCache($"Characters/schedules/{str}");
+                        ModEntry.ModHelper.GameContent.InvalidateCache($"Characters/schedules/{str}");
                         ResetCounter++;
                     }
-                    me.Monitor.Log($"Reloaded {ResetCounter} schedules.", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"Reloaded {ResetCounter} schedules.", LogLevel.Info);
                 }
                 else if (args[0] is "dialogues" || args[0] is "d")
                 {
@@ -49,40 +42,102 @@ namespace SpousesIsland
                     int TlCounter = 0;
                     foreach (ContentPackData cpd in ModEntry.CustomSchedule.Values)
                     {
-                        Helper.GameContent.InvalidateCache($"Characters/Dialogue/{cpd.Spousename}");
+                        ModEntry.ModHelper.GameContent.InvalidateCache($"Characters/Dialogue/{cpd.Spousename}");
                         foreach (DialogueTranslation tl in cpd.Translations)
                         {
-                            Helper.GameContent.InvalidateCache($"Characters/schedules/{cpd?.Spousename}{Commands.ParseLangCode(tl?.Key)}");
+                            ModEntry.ModHelper.GameContent.InvalidateCache($"Characters/schedules/{cpd?.Spousename}{Commands.ParseLangCode(tl?.Key)}");
                             TlCounter++;
                         }
                         ResetCounter++;
                     }
-                    me.Monitor.Log($"Reloaded {ResetCounter} default dialogues and {TlCounter} translations.", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"Reloaded {ResetCounter} default dialogues and {TlCounter} translations.", LogLevel.Info);
                 }
                 else if (args[0] is "packs" || args[0] is "p")
                 {
-                    me.Monitor.Log(Helper.Translation.Get($"CLI.MustReset"), LogLevel.Warn);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.MustReset"), LogLevel.Warn);
+                }
+                else if (args[0] is "spouse" || args[0] is "spouses" || args[0] is "sp")
+                {
+                    ModEntry.ModMonitor.Log("Doing this may cause issues. It's recommended to restart the game instead to avoid bugs or crashes.", LogLevel.Warn);
+                    ModEntry.ModMonitor.Log("Do you still want to continue? (click enter first, then type yes/no)", LogLevel.Info);
+                    var keychosen = Console.ReadLine();
+                    if (keychosen.ToLower() is "y" || keychosen.ToLower() is "yes")
+                    {
+                        ModEntry.ModMonitor.Log("Clearing Spouse info from mod...", LogLevel.Info);
+                        me.CanEditSpouse.Clear();
+
+                        ModEntry.ModMonitor.Log("Updating spouses list...", LogLevel.Info);
+                        foreach (string s in me.IntegratedSpouses)
+                        {
+                            bool _LoadThisSpouse = SGIData.IsSpouseEnabled(s, c);
+                            NPC SN = Game1.getCharacterFromName(s, false, false);
+                            if (SN is not null)
+                            {
+                                bool _IsMarried;
+                                if (SN.isMarriedOrEngaged() is true || SN.isRoommate() is true)
+                                {
+                                    _IsMarried = true;
+                                }
+                                else
+                                {
+                                    _IsMarried = false;
+                                }
+
+                                if (_IsMarried is true && _LoadThisSpouse is true)
+                                {
+                                    me.CanEditSpouse.Add(s, true);
+                                    if (c.Verbose == true)
+                                    {
+                                        ModEntry.ModMonitor.Log($"Added {s} = true to CanEditSpouse dict");
+                                    }
+                                }
+                                else
+                                {
+                                    me.CanEditSpouse.Add(s, false);
+                                    if (c.Verbose == true)
+                                    {
+                                        ModEntry.ModMonitor.Log($"Added {s} = false to CanEditSpouse dict");
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                me.CanEditSpouse.Add(s, false);
+                                if (c.Verbose == true)
+                                {
+                                    ModEntry.ModMonitor.Log($"Added {s} = false to CanEditSpouse dict");
+                                }
+
+                            }
+                        }
+                        ModEntry.ModMonitor.Log("Done!", LogLevel.Info);
+                    }
+                    else
+                    {
+                        ModEntry.ModMonitor.Log("Operation cancelled.", LogLevel.Info);
+                    }
                 }
                 else
                 {
-                    me.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
                 }
             }
         }
-        internal static void List(ModEntry me, string[] args, IModHelper Helper, ModConfig Config)
+        internal static void List(ModEntry me, string[] args, ModConfig Config)
         {
             if (!Context.IsWorldReady && !args.Contains("debug"))
             {
-                me.Monitor.Log(Helper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
                 return;
             }
             else if (args.Count<string>() > 1 && args[1] is not "debug")
             {
-                me.Monitor.Log(Helper.Translation.Get($"CLI.TooManyArguments"), LogLevel.Info);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.TooManyArguments"), LogLevel.Info);
             }
             else if (!args.Any() || args[0] is "help" || args[0] is null)
             {
-                me.Monitor.Log(Helper.Translation.Get("CLI.list.description"), LogLevel.Info);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.list.description"), LogLevel.Info);
             }
             else
             {
@@ -93,7 +148,7 @@ namespace SpousesIsland
                     {
                         tempsched = tempsched + $"\n   {s}";
                     }
-                    me.Monitor.Log($"\n{Helper.Translation.Get("CLI.get.schedules")}\n{tempsched}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"\n{ModEntry.ModHelper.Translation.Get("CLI.get.schedules")}\n{tempsched}", LogLevel.Info);
                 }
                 else if (args[0] is "dialogues" || args[0] is "d")
                 {
@@ -102,7 +157,7 @@ namespace SpousesIsland
                     {
                         tempdial = tempdial + $"\n   {s}";
                     }
-                    me.Monitor.Log($"\n{Helper.Translation.Get("CLI.get.dialogues")}\n{tempdial}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"\n{ModEntry.ModHelper.Translation.Get("CLI.get.dialogues")}\n{tempdial}", LogLevel.Info);
                 }
                 else if (args[0] is "packs" || args[0] is "p")
                 {
@@ -111,7 +166,7 @@ namespace SpousesIsland
                     {
                         tempkeys = tempkeys + $"\n   {s}";
                     }
-                    me.Monitor.Log($"{Helper.Translation.Get("CLI.get.packs")}\n{tempkeys}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"{ModEntry.ModHelper.Translation.Get("CLI.get.packs")}\n{tempkeys}", LogLevel.Info);
                 }
                 else if (args[0] is "translations" || args[0] is "translation" || args[0] is "tl")
                 {
@@ -120,48 +175,48 @@ namespace SpousesIsland
                     {
                         temptl = temptl + $"\n   {s}";
                     }
-                    me.Monitor.Log($"{Helper.Translation.Get("CLI.get.packs")}\n{temptl}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"{ModEntry.ModHelper.Translation.Get("CLI.get.packs")}\n{temptl}", LogLevel.Info);
                 }
                 else if (args[0] is "internal" || args[0] is "i")
                 {
-                    me.Monitor.Log($"Internal info: \n\n IsLeahMarried = {me.IsLeahMarried}; \n\n IsElliottMarried = {me.IsElliottMarried}; \n\n IsKrobusRoommate = {me.IsKrobusRoommate}; \n\n currentLang = {me.currentLang}; \n\n PreviousDayRandom = {me.PreviousDayRandom}; \n\n CCC = {me.CCC}; \n\n SawDevan4H = {me.SawDevan4H}; \n\n HasSVE = {me.HasSVE}; \n\n HasC2N = {me.HasC2N}; \n\n HasExGIM = {me.HasExGIM};", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"Internal info: \n\n IsLeahMarried = {me.IsLeahMarried}; \n\n IsElliottMarried = {me.IsElliottMarried}; \n\n IsKrobusRoommate = {me.IsKrobusRoommate}; \n\n PreviousDayRandom = {me.PreviousDayRandom}; \n\n CCC = {me.CCC}; \n\n SawDevan4H = {me.SawDevan4H}; \n\n HasSVE = {me.HasSVE}; \n\n HasC2N = {me.HasC2N}; \n\n HasExGIM = {me.HasExGIM}; \n\n", LogLevel.Info);
                 }
                 else if (args[0] is "married" || args[0] is "m" || args[0] is "im")
                 {
                     string tempM = "";
-                    foreach (KeyValuePair<string, bool> kvp in me.MarriedtoNPC)
+                    foreach (KeyValuePair<string, bool> kvp in me.CanEditSpouse)
                     {
                         tempM = tempM + $"\n   {kvp.Key}: {kvp.Value}";
                     }
-                    me.Monitor.Log($"Is this character married?: \n{tempM}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"Is this character married?: \n{tempM}", LogLevel.Info);
                 }
                 else if (args[0] is "playerconfig" || args[0] is "pc")
                 {
-                    me.Monitor.Log($"Config: \n\n CustomChance: {Config.CustomChance}; \n\n ScheduleRandom = {Config.ScheduleRandom}; \n\n CustomRoom = {Config.CustomRoom}; \n\n BOOLSHERE \n\n Childbedcolor = {Config.Childbedcolor}; \n\n NPCDevan = {Config.NPCDevan}; \n\n Allow_Children = {Config.Allow_Children};", LogLevel.Info);
+                    ModEntry.ModMonitor.Log($"Config: \n\n CustomChance: {Config.CustomChance}; \n\n ScheduleRandom = {Config.ScheduleRandom}; \n\n CustomRoom = {Config.CustomRoom}; \n\n BOOLSHERE \n\n Childbedcolor = {Config.Childbedcolor}; \n\n NPCDevan = {Config.NPCDevan}; \n\n Allow_Children = {Config.Allow_Children};", LogLevel.Info);
                 }
                 else
                 {
-                    me.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
                 }
             }
         }
-        internal static void Chance(ModEntry me, string[] args, IModHelper Helper, ModConfig Config)
+        internal static void Chance(ModEntry me, string[] args, ModConfig Config)
         {
             if (!args.Any())
             {
-                me.Monitor.Log($"{me.RandomizedInt}", LogLevel.Info);
+                ModEntry.ModMonitor.Log($"{me.RandomizedInt}", LogLevel.Info);
             }
             else if (args.Contains<string>("debug"))
             {
                 if (!Context.IsWorldReady)
                 {
-                    me.Monitor.Log(Helper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.nosaveloaded"), LogLevel.Error);
                     return;
                 }
                 else
                 {
-                    me.Monitor.Log(Helper.Translation.Get("CLI.Day0") + $": {me.PreviousDayRandom}", LogLevel.Info);
-                    me.Monitor.Log(Helper.Translation.Get("CLI.Day1") + $": {me.RandomizedInt}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.Day0") + $": {me.PreviousDayRandom}", LogLevel.Info);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get("CLI.Day1") + $": {me.RandomizedInt}", LogLevel.Info);
                 }
             }
             else if (args[0] is "set" && args[1].All(char.IsDigit))
@@ -170,17 +225,35 @@ namespace SpousesIsland
                 if (value >= 0 && value <= 100)
                 {
                     Config.CustomChance = value;
-                    me.Monitor.Log(Helper.Translation.Get($"CLI.ChangingCC") + Config.CustomChance + "%...", LogLevel.Info);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.ChangingCC") + Config.CustomChance + "%...", LogLevel.Info);
                 }
                 else
                 {
-                    me.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue.CC"), LogLevel.Error);
+                    ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.InvalidValue.CC"), LogLevel.Error);
                 }
             }
             else
             {
-                me.Monitor.Log(Helper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
+                ModEntry.ModMonitor.Log(ModEntry.ModHelper.Translation.Get($"CLI.InvalidValue"), LogLevel.Error);
             }
+        }
+    }
+    public class Titles
+    {
+        internal static string SpouseT()
+        {
+            var SpousesGrlTitle = "SDV";
+            return SpousesGrlTitle;
+        }
+        internal static string SVET()
+        {
+            var sve = "SVE";
+            return sve;
+        }
+        internal static string Debug()
+        {
+            var db = "Debug";
+            return db;
         }
     }
 }
