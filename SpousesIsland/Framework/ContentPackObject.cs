@@ -4,6 +4,6 @@ namespace SpousesIsland.Framework
 {
     internal class ContentPackObject
     {
-        public List<ContentPackData> data;
+        public List<IslandVisitData> data;
     }
 }
