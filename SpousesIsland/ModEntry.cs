@@ -9,6 +9,9 @@ using StardewValley;
 using StardewValley.Characters;
 using SpousesIsland.Framework;
 using Microsoft.Xna.Framework;
+using System.Linq;
+using HarmonyLib;
+using JsonAssets;
 
 namespace SpousesIsland
 {
@@ -37,6 +40,13 @@ namespace SpousesIsland
             {
                 helper.ConsoleCommands.Add("islandchance", helper.Translation.Get("CLI.chance"), Debugging.Chance);
             }
+
+            this.Monitor.Log($"Applying Harmony patch \"{nameof(Patches)}\": prefixing SDV method \"NPC.sayHiTo(Character)\".");
+            var harmony = new Harmony(this.ModManifest.UniqueID);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(StardewValley.NPC), nameof(StardewValley.NPC.tryToReceiveActiveObject)),
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.tryToReceiveTicket))
+                );
         }
 
         //these add and/or depend on config
@@ -72,6 +82,8 @@ namespace SpousesIsland
             });
 
             InfoChildren = ChildrenData.GetInformation(Config.ChildSchedules);
+
+            jsonAssets = Helper.ModRegistry.GetApi<IApi>("spacechase0.JsonAssets");
 
             // get Generic Mod Config Menu's API (if it's installed)
             var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
@@ -497,9 +509,18 @@ namespace SpousesIsland
             /* if hasnt unlocked island:
              * returns / doesnt apply these patches
              */
-            if (!BoatFixed)
+            if (!BoatFixed || !IslandHouse)
             {
                 return;
+            }
+
+
+            if (e.Name.Equals("Data/mail") && IslandHouse)
+            {
+                e.Edit(asset => {
+                    IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                    data.Add("Islandvisit_Qi", this.Helper.Translation.Get("Islandvisit_Qi"));
+                });
             }
 
             if (IslandToday && e.Name.StartsWith("Characters",false,true))
@@ -540,12 +561,6 @@ namespace SpousesIsland
                     }
                     Integrated.Schedules(e);
                 }
-
-                /* deprecated
-                foreach (IslandVisitData cpd in CustomSchedule.Values)
-                {
-                    ContentPacks.Schedule(e, cpd);
-                } */
             }
 
             if (e.Name.StartsWith("Characters/Dialogue/", false, true))
@@ -559,17 +574,7 @@ namespace SpousesIsland
                     
                 Integrated.Dialogues(e);
 
-                /* deprecated 
-                foreach (IslandVisitData cpd in CustomSchedule.Values)
-                {
-                    if (e.NameWithoutLocale.IsEquivalentTo($"Characters/Dialogue/{cpd.Spousename}"))
-                    {
-                        ContentPacks.Dialogue(e, cpd);
-                    }
-                }*/
             }
-
-            //ContentPacks.EditCustoms(e,CPSchedule); deprecated
         }
 
         //if SP, loadstagechanged will obtain required data. if MP, peercontext will.
@@ -599,17 +604,41 @@ namespace SpousesIsland
             PreviousDayRandom = RandomizedInt;
             RandomizedInt = Random.Next(1, 101);
             IslandToday = Config.CustomChance >= RandomizedInt;
+            IsFromTicket = false;
+
+            var ticketday = Game1.player.mailReceived.Contains("VisitTicket_day");
+            var ticketweek = Game1.player.mailReceived.Contains("VisitTicket_week");
 
             //if player used a visit ticket
-            if(Game1.player.mailReceived.Contains("VisitTicket_day") || Game1.player.mailReceived.Contains("VisitTicket_week"))
+            if (ticketday || ticketweek)
             {
                 RandomizedInt = 0;
                 IslandToday = true;
+                IsFromTicket = true;
 
+                //remove flags
                 Game1.player.RemoveMail("VisitTicket_day");
-                Game1.player.RemoveMail("VisitTicket_week");
 
-                helper.Data.WriteJsonFile("moddata.json", status);
+                //set them in mod file. ticketday set to true for future loading
+                status[Game1.player.userID.Value].DayVisit = ticketday;
+                status[Game1.player.userID.Value].WeekVisit = (ticketweek, status[Game1.player.userID.Value]?.WeekVisit.Item2 ?? 0);
+
+                //if true, check int value. if 7, reset. else, add 1
+                var week = status[Game1.player.userID.Value].WeekVisit;
+                if (week.Item1)
+                {
+                    if(week.Item2 == 7)
+                    {
+                        Game1.player.RemoveMail("VisitTicket_week");
+                        status[Game1.player.userID.Value].WeekVisit = (false, 0);
+                    }
+                    else
+                    {
+                        status[Game1.player.userID.Value].WeekVisit = (true, week.Item2 + 1);
+                    }
+                }
+
+                this.Helper.Data.WriteJsonFile("moddata.json", status);
             }
 
             //re-check values
@@ -675,21 +704,9 @@ namespace SpousesIsland
             RandomizedInt = Random.Next(1, 101);
         }
 
-/* CODE UP TO L.664 IS OK. NO CHANGES NEEDED*/
-        // do NOT edit unless there's bugs in mod!
         private void ClearValues()
         {
-            /* deprecated content 
-            //empty lists
-            this.Monitor.Log("Clearing SchedulesEdited...");
-            SchedulesEdited?.Clear();
-
-            this.Monitor.Log("Clearing DialoguesEdited...");
-            DialoguesEdited?.Clear();
-
-            this.Monitor.Log("Clearing MarriedAndAllowed...");
-            MarriedAndAllowed?.Clear();
-            */
+            status = null;
 
             this.Monitor.Log("Clearing Children...");
             Children?.Clear();
@@ -704,9 +721,21 @@ namespace SpousesIsland
         }
         private void GetRequiredData(Farmer player)
         {
+            //try to read file from moddata. if empty, check mail
+            //read here. 
+            ReadModData(player);
+
+            //now get user data
             var boatFix = player?.mailReceived?.Contains("willyBoatFixed");
             BoatFixed = boatFix ?? false;
             this.Monitor.Log($"BoatFixed = {BoatFixed};");
+
+            IslandHouse = player?.mailReceived?.Contains("Island_UpgradeHouse") ?? false;
+            bool QiMail = player?.mailReceived?.Contains("Islandvisit_Qi") ?? false;
+            if(!QiMail && IslandHouse)
+            {
+                player.mailbox.Add("Islandvisit_Qi");
+            }
 
             var married = Values.GetAllSpouses(player);
             foreach (var name in married)
@@ -729,11 +758,57 @@ namespace SpousesIsland
 
             this.Monitor.Log($"\nChildren (count) = {Children};\nCCC = {CCC};\nSawDevan4H = {SawDevan4H};", LogLevel.Debug);
         }
+        private void ReadModData(Farmer player)
+        {
+            var userID = player.userID.Value;
+            var file = Helper.Data.ReadJsonFile<Dictionary<string, ModStatus>>("moddata.json");
+            if(file == null)
+            {
+                status.Add(userID, new ModStatus(player));
+            }
+            else if (file.Keys.Any(id => id == userID))
+            {
+                if (file[userID].DayVisit)
+                {
+                    //set to true n remove
+                    IsFromTicket = true;
+                    IslandToday = true;
+                    RandomizedInt = 0;
+                    file[userID].DayVisit = false;
+                }
+                if (file[userID].WeekVisit.Item1)
+                {
+                    var wv = file[userID].WeekVisit;
+                    //check value
+                    if (wv.Item2 == 7)
+                    {
+                        file[userID].WeekVisit = (false, 0);
+                    }
+                    else
+                    {
+                        IsFromTicket = true;
+                        IslandToday = true;
+                        RandomizedInt = 0;
+                        file[userID].WeekVisit = (true, wv.Item2 + 1);
+                    }
+                }
+                else
+                {
+                    status = file;
+                }
+            }
+            else
+            {
+                file.Add(userID, new ModStatus(player));
+            }
 
-/* CODE UP TO HERE: PLANNED OUT, NEEDS TESTING */
+            status = file;
+        }
+
         /* Helpers + things the mod uses */
 
         private ModConfig Config;
+        public static IApi jsonAssets;
         private static Random random;
         internal static IModHelper Help { get; private set; }
         internal static ITranslationHelper TL { get; private set; }
@@ -751,15 +826,9 @@ namespace SpousesIsland
 
         internal static bool IsDebug = false;
         internal static bool IslandToday { get; private set; }
+        internal static bool IsFromTicket { get; private set; }
         internal static int RandomizedInt { get; private set; }
         internal static int PreviousDayRandom { get; private set; }
-
-        /* content pack related - DEPRECATED 
-        internal static List<string> SchedulesEdited { get; private set; } = new();
-        internal static List<string> DialoguesEdited { get; private set; } = new();
-        internal static List<string> TranslationsAdded { get; private set; } = new();
-        internal static Dictionary<string, IslandVisitData> CustomSchedule { get; private set; } = new();
-*/
 
         /* children related */
         internal static List<Child> Children { get; private set; } = new();
@@ -770,10 +839,11 @@ namespace SpousesIsland
         internal static bool SawDevan4H  = false;
         internal static bool CCC = false;
         internal static bool BoatFixed;
+        internal static bool IslandHouse = false;
         internal static bool HasSVE;
         internal static bool HasC2N;
         internal static bool HasExGIM;
         internal static bool notfurniture;
-        internal static ModStatus status {get; private set;}
+        internal static Dictionary<string, ModStatus> status { get; private set; } = new();
     }
 }

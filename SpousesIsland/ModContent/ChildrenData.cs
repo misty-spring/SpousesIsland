@@ -100,14 +100,6 @@ namespace SpousesIsland
 
                     e.Edit(asset => PatchSchedule(InfoChildren[indexedchild.ToString()], asset, indexedchild));
 
-                    /*if(IsFurniture)
-                    {
-                        e.Edit(asset => ChildSDV(InfoChildren[indexedchild], asset, indexedchild));
-                    }
-                    else
-                    {
-                        e.Edit(asset => ChildMOD(InfoChildren[indexedchild], asset, indexedchild));
-                    }*/
                 }
             }
         }
@@ -127,33 +119,6 @@ namespace SpousesIsland
             data["Sat"] = "GOTO Mon";
             data["Sun"] = "GOTO Mon";
         }
-
-        /* if bed is furniture - deprecated
-        internal static void ChildSDV(ChildSchedule ChildInfo, IAssetData asset, int index)
-        {
-            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-            data["Mon"] = $"620 IslandFarmHouse 20 {10 + index} 3/1100 {ChildInfo.L1} {ChildInfo.X1} {ChildInfo.Y1}/1400 {ChildInfo.L2} {ChildInfo.X2} {ChildInfo.Y2}/1700 {ChildInfo.L3} {ChildInfo.X3} {ChildInfo.Y3}/1900 IslandFarmHouse 15 {12 + index} 0";
-            data["Tue"] = "GOTO Mon";
-            data["Wed"] = "GOTO Mon";
-            data["Thu"] = "GOTO Mon";
-            data["Fri"] = "GOTO Mon";
-            data["Sat"] = "GOTO Mon";
-            data["Sun"] = "GOTO Mon";
-        }
-
-        //if bed is mod's - deprecated
-        internal static void ChildMOD(ChildSchedule ChildInfo, IAssetData asset, int index)
-        {
-            IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-            data["Mon"] = $"620 IslandFarmHouse 20 {10 + index} 3/1100 {ChildInfo.L1} {ChildInfo.X1} {ChildInfo.Y1}/1400 {ChildInfo.L2} {ChildInfo.X2} {ChildInfo.Y2}/1700 {ChildInfo.L3} {ChildInfo.X3} {ChildInfo.Y3}/1900 IslandFarmHouse 15 {12 + index} 0/2100 IslandFarmHouse {36 - index} 14 3";
-            data["Tue"] = "GOTO Mon";
-            data["Wed"] = "GOTO Mon";
-            data["Thu"] = "GOTO Mon";
-            data["Fri"] = "GOTO Mon";
-            data["Sat"] = "GOTO Mon";
-            data["Sun"] = "GOTO Mon";
-        }*/
-
     }
 
     internal class ChildSchedule
@@ -174,21 +139,15 @@ namespace SpousesIsland
             Z = c.Z;
             Dialogue = c.Dialogue;
         }
-        /*
-        public ChildSchedule(int index)
+
+        public ChildSchedule(string time, string location, int x, int y, int z)
         {
-            L1 = "IslandWest";
-            X1 = 75 - index;
-            Y1 = 46 - index;
-
-            L2 = "IslandSouth";
-            X2 = 15 + index;
-            Y2 = 32;
-
-            L3 = "IslandWest";
-            X3 = 93 + index;
-            Y3 = 36 - index;
-        }*/
+            Time = time;
+            Location = location;
+            X = x;
+            Y = y;
+            Z = z;
+        }
     }
 
 }

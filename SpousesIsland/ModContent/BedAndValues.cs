@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using StardewModdingAPI.Events;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Objects;
 using System;
@@ -88,7 +88,110 @@ namespace SpousesIsland
             }
         }
 
-        //returns a random map and position from a list
+        //kid sleep stuff
+        internal void MakeKidGoToBed(NPC c, GameLocation ifh)
+        {
+            if (Game1.IsMasterGame && Game1.timeOfDay >= 2200 && c.getTileLocationPoint() != getKidBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
+            {
+                c.controller =
+                    new PathFindController(
+                        c,
+                        location: ifh,
+                        getKidBedSpot(c.Name),
+                        0,
+                        (c, location) =>
+                        {
+                            c.doEmote(Character.sleepEmote);
+                            SleepEndFunction(c, location);
+                        }
+                );
+            }
+        }
+
+        internal Point getKidBedSpot(string name)
+        {
+            Point bed_spot = GetKidBed().GetBedSpot();
+            bed_spot.X++;
+            return bed_spot;
+        }
+
+        internal virtual BedFurniture GetKidBed()
+        {
+            return GetBed(BedFurniture.BedType.Child);
+        }
+
+        internal static bool HasAnyKidBeds()
+        {
+            var sgv = new BedCode();
+            var bed = sgv.GetBed(BedFurniture.BedType.Child);
+            if(bed is not null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+    }
+    internal class Values
+    {
+        /// <summary> 
+        /// Returns integrated spouse's "Allowed" config. If not integrated, returns false.
+        /// </summary>
+        internal static bool IntegratedAndEnabled(string name, ModConfig C)
+        {
+            bool result = name switch
+            {
+                "Abigail" => C.Allow_Abigail,
+                "Alex" => C.Allow_Alex,
+                "Elliott" => C.Allow_Elliott,
+                "Emily" => C.Allow_Emily,
+                "Haley" => C.Allow_Haley,
+                "Harvey" => C.Allow_Harvey,
+                "Krobus" => C.Allow_Krobus,
+                "Leah" => C.Allow_Leah,
+                "Maru" => C.Allow_Maru,
+                "Penny" => C.Allow_Penny,
+                "Sam" => C.Allow_Sam,
+                "Sebastian" => C.Allow_Sebastian,
+                "Shane" => C.Allow_Shane,
+                "Claire" => C.Allow_Claire,
+                "Lance" => C.Allow_Lance,
+                "Olivia" => C.Allow_Olivia,
+                "Sophia" => C.Allow_Sophia,
+                "Victor" => C.Allow_Victor,
+                "Wizard" => C.Allow_Magnus,
+                _ => false
+            };
+
+            return result;
+        }
+        
+        /// <summary> 
+        /// Obtains all married NPCs, for non-host in multiplayer.
+        /// </summary>
+        internal static List<string> GetAllSpouses(Farmer player)
+        {
+            List<string> Spouses = new();
+
+            foreach (var chara in player.friendshipData.Keys)
+            {
+                if (player.friendshipData[chara].IsMarried())
+                {
+                    Spouses.Add(chara);
+                }
+            }
+
+            return Spouses;
+        }
+
+        /// <summary>
+        /// Returns a random map and position. Requires Ginger Island Extra Locations
+        /// </summary>
+        /// <param name="spousename">The name of the character. Used as reference, depending on random result.</param>
+        /// <returns></returns>
         internal static string RandomMap_nPos(string spousename)
         {
             var Ran = Game1.random;
@@ -182,208 +285,140 @@ namespace SpousesIsland
             }
         }
 
-        //kid sleep stuff
-        internal void MakeKidGoToBed(NPC c, GameLocation ifh)
+        /// <summary>
+        /// Returns a random location from the entire island, regardless of character/name.
+        /// </summary>
+        /// <returns></returns>
+        public static string RandomFree()
         {
-            if (Game1.IsMasterGame && Game1.timeOfDay >= 2200 && c.getTileLocationPoint() != getKidBedSpot(c.Name) && (Game1.timeOfDay == 2200 || (c.controller == null && Game1.timeOfDay % 100 % 30 == 0)))
+            Random Ran = Game1.random;
+            var hasMod = ModEntry.HasExGIM;
+
+            if (!hasMod || Ran.Next(0,11) > 4)
             {
-                c.controller =
-                    new PathFindController(
-                        c,
-                        location: ifh,
-                        getKidBedSpot(c.Name),
-                        0,
-                        (c, location) =>
+                //only choose vanilla
+                string MapName = Ran.Next(0,11) switch
+                {
+                    0 => "IslandFarmHouse",
+                    1 => "IslandWest",
+                    2 => "IslandSouth",
+                    3 => "IslandSouthEast",
+                    4 => "IslandEast",
+                    5 => "IslandNorth",
+                    6 => "IslandFieldOffice",
+                    7 => "IslandFarmCave",  
+                    8 => "CaptainRoom",
+                    9 => "IslandWestCave1", 
+                    10 => "IsladndSouthEastCave",
+                    _ => null //if VolcanoDungeon0 is added: x 28 - 35, y 40 - 48
+                };
+
+                Point Position = MapName switch
+                {
+                    "IslandFarmHouse" => new Point(Ran.Next(5,14),Ran.Next(2,28)),
+                    "IslandWest" => Ran.Next(0,4) switch
                         {
-                            c.doEmote(Character.sleepEmote);
-                            SleepEndFunction(c, location);
+                            0 => new Point(Ran.Next(73,90),Ran.Next(12,18)),
+                            1 => new Point(Ran.Next(56,104),Ran.Next(79,87)),
+                            2 => new Point(Ran.Next(34,52),Ran.Next(69,74)),
+                            3 => new Point(Ran.Next(25,34),Ran.Next(60,70)),
+                            _ => new Point(0,0)
+                        },
+                    "IslandSouth" => new Point(Ran.Next(9,31),Ran.Next(12,35)),
+                    "IslandSouthEast" => new Point(Ran.Next(12,28),Ran.Next(16,28)),
+                    "IslandEast" => new Point(Ran.Next(12,30),Ran.Next(30,45)),
+                    "IslandNorth" => new Point(Ran.Next(25,61),Ran.Next(74,83)),
+                    "IslandFieldOffice" => new Point(Ran.Next(2,8),Ran.Next(4,9)),
+                    "IslandFarmCave" => new Point(Ran.Next(4,6),Ran.Next(5,11)),
+                    "CaptainRoom" => new Point(Ran.Next(1,5),Ran.Next(5,7)),
+                    "IslandWestCave1" => new Point(Ran.Next(2,11),Ran.Next(3,9)),
+                    "IsladndSouthEastCave" => new Point(Ran.Next(14,29),Ran.Next(8,11)),
+                    _ => new Point(0, 0)
+                };
+
+                //make a check that tile is placeable
+                if(MapName == "IslandFieldOffice" || MapName == "IslandSouthEast" ||MapName == "IslandEast" || MapName == "IslandFarmHouse" || MapName == "IslandWestCave1")
+                {
+                    //for loop here
+                    var buffer = 10;
+                    var location = Game1.getLocationFromName(MapName);
+                    var map = Game1.getLocationFromName(MapName).map;
+                    var r = Game1.random;
+
+                    if(!location.isTileLocationTotallyClearAndPlaceable(Position.X, Position.Y))
+                    {
+                        Point zero = Point.Zero;
+                        
+                        for (int i = 0; i < 30; i++) //get new area
+                        {
+                            zero = new Point(r.Next(map.Layers[0].LayerWidth), r.Next(map.Layers[0].LayerHeight));
+                            Rectangle rectangle = new Rectangle(zero.X - buffer, zero.Y - buffer, 1 + buffer * 2, 1 + buffer * 2);
+                            bool flag = false;
+                        
+                            for (int j = rectangle.X; j < rectangle.Right; j++)
+                            {
+                                for (int k = rectangle.Y; k < rectangle.Bottom; k++)
+                                {
+                                    flag = (location.getTileIndexAt(j, k, "Back") == -1 || !location.isTileLocationTotallyClearAndPlaceable(j, k) || location.isWaterTile(j, k));
+                                 
+                                    if (flag)
+                                    {
+                                        break;
+                                    }
+                                }   
+                            
+                                if (flag)
+                                {
+                                    break;
+                                }
+                            }
+                        
+                            if (!flag)
+                            {
+                                ModEntry.Mon.Log($"New position: {zero.X},{zero.Y}", LogLevel.Debug);
+
+                                Position = zero;
+                            }
                         }
-                );
-            }
-        }
+                    }
+                }
+                
+                string result = $"{MapName} {Position.X} {Position.Y} {Ran.Next(0, 4)}";
 
-        internal Point getKidBedSpot(string name)
-        {
-            Point bed_spot = GetKidBed().GetBedSpot();
-            bed_spot.X++;
-            return bed_spot;
-        }
-
-        internal virtual BedFurniture GetKidBed()
-        {
-            return GetBed(BedFurniture.BedType.Child);
-        }
-
-        internal static bool HasAnyKidBeds()
-        {
-            var sgv = new BedCode();
-            var bed = sgv.GetBed(BedFurniture.BedType.Child);
-            if(bed is not null)
-            {
-                return true;
+                return result;
             }
             else
             {
-                return false;
-            }
-        }
+                int RandomM = Ran.Next(1, 9);
 
-    }
-    internal class Values
-    {
-        /// <summary>
-        /// Checks spouse name. If it coincides with an integrated one, return true
-        /// </summary>
-        //currently not in use, IntegratedAndEnabled does both
-        internal static bool IsIntegrated(string spouse)
-        {
-            switch (spouse)
-            {
-                case "Abigail":
-                case "Alex":
-                case "Elliott":
-                case "Emily":
-                case "Haley":
-                case "Harvey":
-                case "Krobus":
-                case "Leah":
-                case "Maru":
-                case "Penny":
-                case "Sam":
-                case "Sebastian":
-                case "Shane":
-                case "Claire":
-                case "Lance":
-                case "Olivia":
-                case "Sophia":
-                case "Victor":
-                case "Wizard":
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary> 
-        /// Returns integrated spouse's "Allowed" config. If not integrated, returns false.
-        /// </summary>
-        internal static bool IntegratedAndEnabled(string name, ModConfig C)
-        {
-            bool result = name switch
-            {
-                "Abigail" => C.Allow_Abigail,
-                "Alex" => C.Allow_Alex,
-                "Elliott" => C.Allow_Elliott,
-                "Emily" => C.Allow_Emily,
-                "Haley" => C.Allow_Haley,
-                "Harvey" => C.Allow_Harvey,
-                "Krobus" => C.Allow_Krobus,
-                "Leah" => C.Allow_Leah,
-                "Maru" => C.Allow_Maru,
-                "Penny" => C.Allow_Penny,
-                "Sam" => C.Allow_Sam,
-                "Sebastian" => C.Allow_Sebastian,
-                "Shane" => C.Allow_Shane,
-                "Claire" => C.Allow_Claire,
-                "Lance" => C.Allow_Lance,
-                "Olivia" => C.Allow_Olivia,
-                "Sophia" => C.Allow_Sophia,
-                "Victor" => C.Allow_Victor,
-                "Wizard" => C.Allow_Magnus,
-                _ => false
-            };
-
-            return result;
-        }
-        
-        /// <summary> 
-        /// Obtains all married NPCs, for non-host in multiplayer.
-        /// </summary>
-        internal static List<string> GetAllSpouses(Farmer player)
-        {
-            List<string> Spouses = new();
-
-            foreach (var chara in player.friendshipData.Keys)
-            {
-                if (player.friendshipData[chara].IsMarried())
+                string MapName = RandomM switch
                 {
-                    Spouses.Add(chara);
-                }
+                    1 => "Custom_GiCave",
+                    2 => "Custom_GiForest",
+                    3 => "Custom_GiRiver",
+                    4 => "Custom_GiClearance",
+                    5 => "Custom_IslandSW",
+                    6 => "Custom_GiHut",
+                    7 => "Custom_GiForestEnd",
+                    8 => "Custom_GiRBeach",
+                    _ => null
+                };
+
+                Point Position = MapName switch
+                {
+                    "Custom_GiCave" => new Point(Ran.Next(9, 22), Ran.Next(10, 16)),
+                    "Custom_GiForest" => new Point(Ran.Next(11, 29), Ran.Next(21, 31)),
+                    "Custom_GiRiver" => new Point(Ran.Next(15, 34), Ran.Next(6, 11)),
+                    "Custom_GiClearance" => new Point(Ran.Next(11, 22), Ran.Next(13, 26)),
+                    "Custom_IslandSW" => new Point(Ran.Next(10, 37), Ran.Next(17, 24)),
+                    "Custom_GiHut" => new Point(Ran.Next(1, 7), Ran.Next(6, 8)),
+                    "Custom_GiForestEnd" => new Point(Ran.Next(9, 25), Ran.Next(25, 31)),
+                    "Custom_GiRBeach" => new Point(Ran.Next(27, 35), Ran.Next(6, 23)),
+                    _ => new Point(0, 0)
+                };
+                string result = $"{MapName} {Position.X} {Position.Y} {Ran.Next(0, 4)}";
+                return result;
             }
-
-            return Spouses;
-        }
-
-        /// <summary> 
-        /// Returns a list with the spouses the mod edits.
-        /// </summary>
-        //doesn't need to be used atm.
-        internal static List<string> SpousesAddedByMod()
-        {
-            List<string> SpousesAddedByMod = new()
-            {
-                "Abigail",
-                "Alex",
-                "Emily",
-                "Elliott",
-                "Haley",
-                "Harvey",
-                "Krobus",
-                "Leah",
-                "Maru",
-                "Penny",
-                "Sam",
-                "Sebastian",
-                "Shane",
-                "Claire",
-                "Lance",
-                "Olivia",
-                "Sophia",
-                "Victor",
-                "Wizard"
-            };
-
-            return SpousesAddedByMod;
-        }
-
-        internal static bool ShouldReturnHome(string who, int time, ModConfig C)
-        {
-            bool result = who switch
-            {
-                "Abigail" => C.Allow_Abigail,
-                "Alex" => C.Allow_Alex,
-                "Elliott" => C.Allow_Elliott,
-                "Emily" => C.Allow_Emily,
-                "Haley" => C.Allow_Haley,
-                "Harvey" => C.Allow_Harvey,
-                "Krobus" => C.Allow_Krobus,
-                "Leah" => C.Allow_Leah,
-                "Maru" => C.Allow_Maru,
-                "Penny" => C.Allow_Penny,
-                "Sam" => C.Allow_Sam,
-                "Sebastian" => C.Allow_Sebastian,
-                "Shane" => C.Allow_Shane,
-                "Claire" => C.Allow_Claire,
-                "Lance" => C.Allow_Lance,
-                "Olivia" => C.Allow_Olivia,
-                "Sophia" => C.Allow_Sophia,
-                "Victor" => C.Allow_Victor,
-                "Wizard" => C.Allow_Magnus,
-                _ => false
-            };
-
-            if (result == false)
-            {
-                return false;
-            }
-
-            if (time >= 2200)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

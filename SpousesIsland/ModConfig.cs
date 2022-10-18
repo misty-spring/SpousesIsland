@@ -1,3 +1,4 @@
+using SpousesIsland;
 using System.Collections.Generic;
 
 namespace SpousesIsland
@@ -20,26 +21,26 @@ namespace SpousesIsland
                 "default1", 
                 new ChildSchedule[]
                     {
-                        {"620", "IslandFarmHouse", 20, 10, 3}, 
-                        {"1100", "IslandWest", 74, 43 ,3}, 
-                        {"1400", "IslandWest", 83, 36, 3}, 
-                        {"1700","IslandWest", 91, 37, 2},
-                        {"a1900","IslandFarmHouse", 15, 12, 0},
-                        {"2000","IslandFarmHouse", 30, 15, 2},
-                        {"2100","IslandFarmHouse", 35, 14, 3}
+                        new ChildSchedule("620", "IslandFarmHouse", 20, 10, 3),
+                        new ChildSchedule("1100", "IslandWest", 74, 43 ,3),
+                        new ChildSchedule("1400", "IslandWest", 83, 36, 3),
+                        new ChildSchedule("1700","IslandWest", 91, 37, 2),
+                        new ChildSchedule("a1900","IslandFarmHouse", 15, 12, 0),
+                        new ChildSchedule("2000","IslandFarmHouse", 30, 15, 2),
+                        new ChildSchedule("2100","IslandFarmHouse", 35, 14, 3)
                     }
             },
             {
                 "default2",
                 new ChildSchedule[]
                     {
-                        {"620", "IslandFarmHouse", 19, 10, 3},
-                        {"1100", "IslandWest", 75, 46 ,3},
-                        {"1400", "IslandWest", 84, 38, 3},
-                        {"1700","IslandWest", 93, 36, 2},
-                        {"a1900","IslandFarmHouse", 15, 14, 0},
-                        {"2000","IslandFarmHouse", 27, 14, 2},
-                        {"2100","IslandFarmHouse", 36, 14, 2}
+                        new ChildSchedule("620", "IslandFarmHouse", 19, 10, 3),
+                        new ChildSchedule("1100", "IslandWest", 75, 46 ,3),
+                        new ChildSchedule("1400", "IslandWest", 84, 38, 3),
+                        new ChildSchedule("1700","IslandWest", 93, 36, 2),
+                        new ChildSchedule("a1900","IslandFarmHouse", 15, 14, 0),
+                        new ChildSchedule("2000","IslandFarmHouse", 27, 14, 2),
+                        new ChildSchedule("2100","IslandFarmHouse", 36, 14, 2)
                     }
             }
         };

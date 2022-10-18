@@ -59,18 +59,6 @@
     "CLI.ChangingCC": "Changing chance of visit to ",
     "CLI.InvalidValue.CC": "Please type a valid value. (allowed values: 0 to 100)",
 
-    "FW.contentpack.error":"Configuration file missing!",
-    "FW.contentpack.duplicate":"{0} is trying to add a schedule for {1}. To avoid any conflicts, please untick '{1}' from Advanced config.",
-    "FW.contentpack.noAP":"There's no arrival position in {cpd.Spousename}'s schedule!",
-    "FW.contentpack.noAD":"There's no arrival dialogue in {cpd.Spousename}'s schedule!",
-    "FW.contentpack.noLocName":"There's no name for the {0} map. Add the field and try again.",
-    "FW.contentpack.InvalidTime":"Make sure the arrival time of {0} is between 1030 and 2150.",
-    "FW.contentpack.noPosition":"There's no position for {1} in {0}.",
-    "FW.contentpack.noDialogue":"There's no dialogue for {1} in {0}.",
-    "FW.contentpack.oneOrMoreErrors":"One or more fields in {0} are not valid. The schedule won't be added.",
-
-    "asset.error.addingdialogue":"Something went wrong when editing {0}'s dialogue. Please check the log for more details.",
-
     /* characters data */
 
     "Krobus.GoOutside": "I'll go outside today...if i'm quick, your people won't notice.$0#$b#Thanks to you, i've become curious of humans' \"Entertainment activities\".$1",
@@ -233,5 +221,37 @@
     "Event.Saloon.B-5": "Ever since you two became friends, Devan seems happier.#$b#You've made Devan feel at home here.",
     "Event.Saloon.B-6": "It's quite refreshing.$1",
     "Event.Saloon.B-7": "Hey, the breeze outside is very refreshing.#$b#Did i take too long?#$e#...Hey, what's with that face?$6",
-    "Event.Saloon.B-end":"Not much. We were making small talk while waiting.#$b#I'd like to continue telling @ about when we tried the crab pots by ourselves."
+    "Event.Saloon.B-end":"Not much. We were making small talk while waiting.#$b#I'd like to continue telling @ about when we tried the crab pots by ourselves.",
+    
+    "Invite_Abigail":"",
+    "Invite_Alex":"",
+    "Invite_Elliott":"",
+    "Invite_Emily":"",
+    "Invite_Haley":"",
+    "Invite_Harvey":"",
+    "Invite_Krobus":"",
+    "Invite_Maru":"",
+    "Invite_Penny":"",
+    "Invite_Sam":"",
+    "Invite_Sebastian":"",
+    "Invite_Shane":"",
+
+    "Invite_Claire":"",
+    "Invite_Lance":"",
+    "Invite_Olivia":"",
+    "Invite_Sophia":"",
+    "Invite_Victor":"",
+    "Invite_Wizard":"",
+
+    "Invite_generic_0_1":"",
+    "Invite_generic_0_2":"",
+    "Invite_generic_0_3":"",
+    "Invite_generic_1_1":"",
+    "Invite_generic_1_2":"",
+    "Invite_generic_1_3":"",
+    "Invite_generic_2_1":"",
+    "Invite_generic_2_2":"",
+    "Invite_generic_2_3":"",
+
+    "Islandvisit_Qi": ""
 }

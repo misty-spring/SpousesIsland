@@ -59,16 +59,6 @@
     "CLI.ChangingCC": "Cambiando la probabilidad de visita a ",
     "CLI.InvalidValue.CC": "Por favor, escribe un valor válido. (valores permitidos: 0 a 100)",
 
-    "FW.contentpack.error":"¡No hay un archivo de configuración!",
-    "FW.contentpack.duplicate":"{0} está intentando agregar contenido para {1}. Para evitar conflictos, por favor desactiva el nombre de {1} en configuración avanzada.",
-    "FW.contentpack.noAP":"¡Falta 'ArrivalPosition' en el contenido de {cpd.Spousename}!",
-    "FW.contentpack.noAD":"¡Falta 'ArrivalDialogue' en el contenido de {cpd.Spousename}!",
-    "FW.contentpack.noLocName":"No hay un nombre de mapa en {0}. Agrega la información e intenta de nuevo.",
-    "FW.contentpack.InvalidTime":"Asegúrate de que la hora en {0} esté entre 1030 y 2150.",
-    "FW.contentpack.noPosition":"Falta 'position' en el contenido de {1} ({0}).",
-    "FW.contentpack.noDialogue":"Falta 'dialogue' en el contenido de {1} ({0}).",
-    "FW.contentpack.oneOrMoreErrors":"Uno o más campos en '{0}' contienen errores. Su paquete de contenido no será agregado.",
-
     "asset.error.addingdialogue":"Algo falló cuando se agregó el diálogo de {0}. Por favor, revisa ErrorLogs para más detalles.",
 
     /* characters data */
@@ -233,5 +223,37 @@
     "Event.Saloon.B-5": "Desde que te le acercaste, devan se ve más feliz.#$b#Creo que le has hecho sentirse en casa, en nuestro pequeño pueblo.",
     "Event.Saloon.B-6": "Me alegro que se lleven bien.$1",
     "Event.Saloon.B-7": "Oigan- el viento afuera está fresquito.#$b#¿Me demoré mucho?#$e#...¿Por qué ponen esa cara?$6",
-    "Event.Saloon.B-end":"No es por nada. Estábamos hablando mientras te fuiste.#$b#Me gustaría contarle más a @ sobre la vez que intentamos atrapar cangrejos."
-    }
+    "Event.Saloon.B-end":"No es por nada. Estábamos hablando mientras te fuiste.#$b#Me gustaría contarle más a @ sobre la vez que intentamos atrapar cangrejos.",
+    
+    "Invite_Abigail":"",
+    "Invite_Alex":"",
+    "Invite_Elliott":"",
+    "Invite_Emily":"",
+    "Invite_Haley":"",
+    "Invite_Harvey":"",
+    "Invite_Krobus":"",
+    "Invite_Maru":"",
+    "Invite_Penny":"",
+    "Invite_Sam":"",
+    "Invite_Sebastian":"",
+    "Invite_Shane":"",
+
+    "Invite_Claire":"",
+    "Invite_Lance":"",
+    "Invite_Olivia":"",
+    "Invite_Sophia":"",
+    "Invite_Victor":"",
+    "Invite_Wizard":"",
+
+    "Invite_generic_0_1":"",
+    "Invite_generic_0_2":"",
+    "Invite_generic_0_3":"",
+    "Invite_generic_1_1":"",
+    "Invite_generic_1_2":"",
+    "Invite_generic_1_3":"",
+    "Invite_generic_2_1":"",
+    "Invite_generic_2_2":"",
+    "Invite_generic_2_3":"",
+
+    "Islandvisit_Qi": ""
+}
