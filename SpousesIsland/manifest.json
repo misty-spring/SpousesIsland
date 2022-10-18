@@ -10,6 +10,6 @@
   "Dependencies": [
     { "UniqueID": "MadaraUchiha.NonDestructiveNPCs", "IsRequired": true },
     { "UniqueID":"Esca.CustomNPCExclusions", "IsRequired":true },
-    { "UniqueID": "Pathoschild.ContentPatcher", IsRequired: true}
+    { "UniqueID": "Pathoschild.ContentPatcher", "IsRequired": true}
  ]
 }
