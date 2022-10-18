@@ -309,7 +309,7 @@ namespace SpousesIsland
                     7 => "IslandFarmCave",  
                     8 => "CaptainRoom",
                     9 => "IslandWestCave1", 
-                    10 => "IsladndSouthEastCave",
+                    10 => "IslandSouthEastCave",
                     _ => null //if VolcanoDungeon0 is added: x 28 - 35, y 40 - 48
                 };
 
@@ -332,7 +332,7 @@ namespace SpousesIsland
                     "IslandFarmCave" => new Point(Ran.Next(4,6),Ran.Next(5,11)),
                     "CaptainRoom" => new Point(Ran.Next(1,5),Ran.Next(5,7)),
                     "IslandWestCave1" => new Point(Ran.Next(2,11),Ran.Next(3,9)),
-                    "IsladndSouthEastCave" => new Point(Ran.Next(14,29),Ran.Next(8,11)),
+                    "IslandSouthEastCave" => new Point(Ran.Next(14,29),Ran.Next(8,11)),
                     _ => new Point(0, 0)
                 };
 
