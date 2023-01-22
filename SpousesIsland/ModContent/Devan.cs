@@ -356,19 +356,21 @@ namespace SpousesIsland
                     var base2 = tl.Get("Event.Saloon.base2");
                     var base3 = tl.Get("Event.Saloon.base3");
                     var basechoice = tl.Get("Event.Saloon.baseChoice");
+                    var aEnd = tl.Get("Event.Saloon.A-end");
 
 
                     IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                    data.Add("110372000/f Devan 2000/p Devan/t 2000 2600", $"Saloon1/7 20/Devan 3 19 2 Elliott 2 20 1 Gus 10 18 2 Emily 15 17 0 Clint 19 23 3 Shane 21 17 2 Willy 17 22 2 farmer 4 21 0/skippable/showFrame Devan 36/pause 3000/speak Devan \"{base1}\"/pause 100/emote farmer 32/pause 500/speak Elliott \"{base2}\"/pause 500/speak Devan \"{base3}\"/question fork goWithDevan staywithElliott \"{basechoice}\"/fork goWithDevan 2000_goWithDevan/fork staywithElliott 2000_staywithElliott");
+                    data.Add("110372000/f Devan 2000/p Devan/t 2000 2600", $"Saloon1/7 20/Devan 3 19 2 Elliott 2 20 1 Gus 10 18 2 Emily 15 17 0 Clint 19 23 3 Shane 21 17 2 Willy 17 22 2 farmer 4 21 0/skippable/showFrame Devan 36/pause 3000/speak Devan \"{base1}\"/pause 100/emote farmer 32/pause 500/speak Elliott \"{base2}\"/pause 500/speak Devan \"{base3}\"/question fork goWithDevan staywithElliott \"{basechoice}\"/fork goWithDevan ChooseDevan/fork staywithElliott ChooseElliott/end dialogue Devan \"{aEnd}\"");
 
                     var a1 = tl.Get("Event.Saloon.A-1");
                     var a2 = tl.Get("Event.Saloon.A-2");
                     var a3 = tl.Get("Event.Saloon.A-3");
                     var a4 = tl.Get("Event.Saloon.A-4");
-                    var aEnd = tl.Get("Event.Saloon.A-end");
 
                     /* skippable/stopMusic/ */
-                    data.Add("2000_goWithDevan", $"changeLocation Town/viewport 45 72/globalFadeToClear 2000/pause 500/warp farmer 45 71 2/playSound doorClose/move farmer 0 1/move farmer -2 0/faceDirection farmer 2 continue/pause 1000/warp Devan 45 71/move Devan 0 1/playSound doorClose/pause 1500/speak Devan \"{a1}\"/pause 500/speak Devan \"{a2}\"/pause 1000/speak Devan \"{a3}\"/emote Devan 20/speak Devan \"{a4}\"/end dialogue Devan \"{aEnd}\"");
+                    data.Add("ChooseDevan", $"changeLocation Town/viewport 45 72/globalFadeToClear 2000/pause 500/warp farmer 45 71/playSound doorClose/move farmer 0 1 2/move farmer -2 0 2/faceDirection farmer 2/pause 1000/warp Devan 45 71/move Devan 0 1 2/playSound doorClose/pause 500/speak Devan \"{a1}\"/pause 500/speak Devan \"{a2}\"/pause 1000/speak Devan \"{a3}\"/emote Devan 20/speak Devan \"{a4}\"/end dialogue Devan \"{aEnd}\"");
+
+                    //orig (seemed to cause bugs so the event was redone from 0): "2000_goWithDevan", $"changeLocation Town/viewport 45 72/globalFadeToClear 2000/pause 500/warp farmer 45 71 2/playSound doorClose/move farmer 0 1/move farmer -2 0/faceDirection farmer 2 continue/pause 1000/warp Devan 45 71/move Devan 0 1/playSound doorClose/pause 1500/speak Devan \"{a1}\"/pause 500/speak Devan \"{a2}\"/pause 1000/speak Devan \"{a3}\"/emote Devan 20/speak Devan \"{a4}\""
 
                     var b1 = tl.Get("Event.Saloon.B-1");
                     var b2 = tl.Get("Event.Saloon.B-2");
@@ -380,7 +382,7 @@ namespace SpousesIsland
                     var bEnd = tl.Get("Event.Saloon.B-end");
 
                     //skippable/
-                    data.Add("2000_staywithElliott", $"speak Devan \"{b1}\"/pause 500/move Devan 3 0/move Devan 0 4/move Devan 8 0/move Devan 0 1/playSound doorClose/warp Devan -20 -20/pause 500/stopMusic/speak Elliott \"{b2}\"/pause 1000/speak Elliott \"{b3}.\"/pause 500/emote Elliott 40/pause 500/speak Elliott \"{b4}\"/pause 300/speak Elliott \"{b5}\"/pause 800/speak Elliott \"{b6}\"/pause 200/playSound doorClose/warp Devan 14 24/move Devan 0 -2/speak Devan \"{b7}\"/pause 100/emote farmer 40/emote Elliott 40/pause 500/speak Elliott \"{bEnd}\"/emote Devan 20/pause 200/move Devan 0 -1/move Devan -5 0/end");
+                    data.Add("ChooseElliott", $"speak Devan \"{b1}\"/pause 500/move Devan 3 0/move Devan 0 4/move Devan 8 0/move Devan 0 1/playSound doorClose/warp Devan -20 -20/pause 500/stopMusic/speak Elliott \"{b2}\"/pause 1000/speak Elliott \"{b3}.\"/pause 500/emote Elliott 40/pause 500/speak Elliott \"{b4}\"/pause 300/speak Elliott \"{b5}\"/pause 800/speak Elliott \"{b6}\"/pause 200/playSound doorClose/warp Devan 14 24/move Devan 0 -2/speak Devan \"{b7}\"/pause 100/emote farmer 40/emote Elliott 40/pause 500/speak Elliott \"{bEnd}\"/emote Devan 20/pause 200/move Devan 0 -1/move Devan -5 0"); //taken out: /end
                 });
         }
         /* Festival data */

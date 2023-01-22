@@ -1,5 +1,8 @@
-﻿using StardewModdingAPI;
+﻿using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewValley;
+using StardewValley.Locations;
 using System;
 using System.Collections.Generic;
 
@@ -84,7 +87,7 @@ namespace SpousesIsland
                     try
                     {
                         InfoExists = InfoChildren?.Count >= indexedchild;
-                        ModEntry.Mon.Log($"InfoExists (for {child.Name}) is {InfoExists}.");
+                        ModEntry.Mon.Log($"InfoExists (for {child.Name}) is {InfoExists}.", LogLevel.Debug);
                     }
                     catch(Exception ex)
                     {
@@ -123,13 +126,17 @@ namespace SpousesIsland
 
     internal class ChildSchedule
     {
-        public string Time { get; set; }
-        public string Location { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get;set; }
-        public string Dialogue { get; set; }
+        public string Time { get; set; } = "600";
+        public string Location { get; set; } = "null";
+        public int X { get; set; } = 0;
+        public int Y { get; set; } = 0;
+        public int Z { get;set; } = 0;
+        public string Dialogue { get; set; } = null;
 
+        public ChildSchedule()
+        {
+        }
+        
         public ChildSchedule(ChildSchedule c)
         {
             Time = c.Time;
@@ -150,4 +157,42 @@ namespace SpousesIsland
         }
     }
 
+    //specifically made for a single patch.
+    internal class C2NPC
+    {
+        internal static void WarpPatch(object sender, UpdateTickedEventArgs e)
+        {
+            if (!(Context.IsWorldReady))
+                return;
+
+            //only run twice per second to avoid lag
+            if (!(e.IsMultipleOf(60)) || !(ModEntry.IslandToday))
+                return;
+
+            //if time is between [time the kid arrives at]
+            if (ModEntry.ArrivalTime && ModEntry.MustPatchC2N)
+            {
+                //if any npc is standing in front of the door (FishShop) AND is a child npc, halt and warp to island south + continue schedule.
+                var colliding = ModEntry.FishShop_map?.doesPositionCollideWithCharacter(4, 4);
+
+                //check if it matches any child name
+                foreach(var child in ModEntry.Children)
+                {
+                    if(child.Name == colliding?.Name)
+                    {
+                        ModEntry.Mon.Log($"NPC {child?.Name} found matching in child list.");
+
+                        colliding?.Halt();
+
+                        var islandsouth = Game1.getLocationFromName("IslandSouth");
+                        var position = new Vector2(21, 43); //right next to boat 
+
+                        Game1.warpCharacter(colliding, islandsouth, position);
+                        colliding?.moveCharacterOnSchedulePath();
+                    }
+                }
+
+            }
+        }
+    }
 }

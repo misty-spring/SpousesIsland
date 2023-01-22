@@ -3,60 +3,12 @@ using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace SpousesIsland.Framework
+namespace SpousesIsland
 {
     internal class Information
     {
-        /// <summary>
-        /// Checks a translation's key. If it's one of the game's language codes, returns its filename/extension. If not, returns the language code as-is.
-        /// </summary>
-        internal static string ParseLangCode(string key)
-        {
-            switch (key.ToLower())
-            {
-                case "de":
-                    return ".de-DE";
-                case "en":
-                    return "";
-                case "es":
-                    return ".es-ES";
-                case "fr":
-                    return ".fr-FR";
-                case "hu":
-                    return ".hu-HU";
-                case "it":
-                    return ".it-IT";
-                case "ja":
-                    return ".ja-JP";
-                case "ko":
-                    return ".ko-KR";
-                case "pt":
-                    return ".pt-BR";
-                case "ru":
-                    return ".ru-RU";
-                case "tr":
-                    return ".tr-TR";
-                case "zh":
-                    return ".zh-CN";
-                case null:
-                    return "";
-                default:
-                    return $".{key}";
-            }
-        }
-
-        internal static bool ShouldReloadDevan(bool Leah, bool Elliott, bool CCC)
-        {
-            if (Leah is true || Elliott is true || CCC is true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
         internal static bool HasMod(string ModID)
         {
             if (ModEntry.Help.ModRegistry.Get(ModID) is not null)
@@ -67,6 +19,49 @@ namespace SpousesIsland.Framework
             {
                 return false;
             }
+        }
+        /// <summary>
+        /// Check if a mod's version is older OR equal.
+        /// </summary>
+        /// <param name="ModID">The UniqueID to check.</param>
+        /// <param name="version">The max version to account for.</param>
+        /// <returns>true or false depending on result.</returns>
+        internal static bool IsVersionOrLower(string ModID, string version)
+        {
+            //get both ISemanticVersions
+            var modversion = ModEntry.Help.ModRegistry.Get(ModID).Manifest.Version;
+            _ = SemanticVersion.TryParse(version, out ISemanticVersion max_version);
+
+            ModEntry.Mon.Log($"C2N version :{modversion.ToString()}, checking if it's newer than {version}..." );
+
+            //Previously used "IsOlderThan() || modversion == max_version", but this is less bug-prone.
+            return !(modversion.IsNewerThan(max_version));
+        }
+        internal static List<string> PlayerSpouses(string id)
+        {
+            var farmer = Game1.getFarmer(long.Parse(id));
+            List<string> spouses = PlayerSpouses(farmer);
+
+            return spouses;
+        }
+
+        internal static List<string> PlayerSpouses(Farmer farmer)
+        {
+            List<string> spouses = new();
+
+            foreach (string name in Game1.NPCGiftTastes.Keys)
+            {
+                if (name.StartsWith("Universal_"))
+                    continue;
+
+                var isMarried = farmer?.friendshipData[name]?.IsMarried() ?? false;
+                var isRoommate = farmer?.friendshipData[name]?.IsRoommate() ?? false;
+                if (isMarried || isRoommate)
+                {
+                    spouses.Add(name);
+                }
+            }
+            return spouses;
         }
     }
 }
