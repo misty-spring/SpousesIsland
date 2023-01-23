@@ -38,12 +38,13 @@ This mod only edits schedules on specific days (and uses unique dialogue keys), 
 
 ## For custom spouses
 ### How to use
-Edit the spouse's schedule via ContentPatcher, and add the following token: `mistyspring.spousesisland/IslandToday` as condition.
+Edit the spouse's schedule via ContentPatcher, and add the following token: `mistyspring.spousesisland/CanVisitIsland` as condition.
 
 You don't need to worry about pathing them to a bed: the mod will do this starting from 10pm. 
-(Just make sure their last schedule point is 'IslandFarmHouse').
+(Just make sure their last schedule point is 'IslandWest' or 'IslandFarmHouse').
 
-The schedule can be however you want. For example:
+The schedule can include any map in the island (except volcano).
+For example:
 ```
 {
   "Action": "EditData",
@@ -58,7 +59,7 @@ The schedule can be however you want. For example:
      "marriage_Sun" = "GOTO marriage_Mon";
      },
   "When": {
-     "mistyspring.spousesisland/IslandToday": "true"
+     "mistyspring.spousesisland/CanVisitIsland": "true"
     }
   },
 ```
@@ -72,6 +73,6 @@ The [json parser](https://smapi.io/json) will tell you of any problem within the
 If you'd like to contribute translating, you can send me the translation (either via nexusmods or as a pull request.) You can also post the translation on nexus as your own file.
 
 ## Known issues
-Children can't use NPC warps. However, this is a bug on ChildToNPC's side (which i can't do much about).
+Children only use player warps. I've worked around this on my mod's side, so they should be able to visit.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G7CXX9P)
