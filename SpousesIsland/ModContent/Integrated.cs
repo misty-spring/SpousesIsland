@@ -39,14 +39,9 @@ namespace SpousesIsland
             {
                 if (e.NameWithoutLocale.IsEquivalentTo("Maps/IslandFarmHouse"))
                 {
-                    if (Config.CustomRoom == true && (Config.Allow_Children == false || ModEntry.Children.Count is 0))
-                    {
-                        e.LoadFromModFile<Map>("assets/Maps/FarmHouse_Custom.tbin", AssetLoadPriority.Medium);
-                    }
 
                     if (Config.Allow_Children == true && ModEntry.Children.Count >= 1 && Config.UseFurnitureBed == false)
                     {
-                        e.LoadFromModFile<Map>($"assets/Maps/FarmHouse_kid_custom{Config.CustomRoom}.tbin", AssetLoadPriority.Medium);
                         e.Edit(asset =>
                         {
                             ModEntry.Mon.Log("Patching child bed onto IslandFarmHouse...", LogLevel.Trace);
@@ -476,7 +471,7 @@ namespace SpousesIsland
 
             if(ModEntry.IsDebug)
             {
-                ModEntry.Mon.Log($"targetwithoutpath = {targetwithoutpath};", LogLevel.Debug);
+                ModEntry.Mon.Log($"targetwithoutpath = {targetwithoutpath};", LogLevel.Trace);
             }
 
             if (!ModEntry.MarriedAndAllowed.Contains(targetwithoutpath))

@@ -106,7 +106,10 @@ namespace SpousesIsland
                 {
                     //tell player about it
 		    var alreadyinvited = String.Format(ModEntry.TL.Get("AlreadyInvited"), __instance.displayName);
-                    Game1.showRedMessage(Game1.parseText(alreadyinvited));
+                    //Game1.showRedMessage(Game1.parseText(alreadyinvited));
+                    var message = Game1.parseText(alreadyinvited);
+                    Game1.drawObjectDialogue(message);
+                    Game1.playSound("cancel");
                 }
                 //if different than current invitation
                 else if(scheduledDay || scheduledWeek)

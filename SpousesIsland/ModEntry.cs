@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 using GenericModConfigMenu;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Enums;
 using StardewValley;
-using StardewValley.Characters;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using HarmonyLib;
@@ -26,7 +24,6 @@ namespace SpousesIsland
             helper.Events.GameLoop.DayEnding += this.OnDayEnding;
             helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
             helper.Events.GameLoop.ReturnedToTitle += this.TitleReturn;
-            helper.Events.GameLoop.UpdateTicked += C2NPC.WarpPatch;
 
             //gets user data
             helper.Events.Multiplayer.PeerContextReceived += PeerContextReceived;
@@ -77,35 +74,66 @@ namespace SpousesIsland
             //choose random
             RandomizedInt = Random.Next(1, 101);
             IslandToday = Config.CustomChance >= RandomizedInt;
-
+            IslandToday = true;
             /* get all content packs installed - deprecated
             GetContentPacks(); */
 
             // get CP's api and register token
             var api = this.Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
-            api.RegisterToken(this.ModManifest, "CanVisitIsland", () =>
+            if(api is not null)
             {
-                // is island day
-                if (IslandToday)
-                    return new string[] { "true" };
+                api.RegisterToken(this.ModManifest, "CanVisitIsland", () =>
+                {
+                    // is island day
+                    if (IslandToday)
+                        return new string[] { "true" }; 
 
-                else
-                    return new string[] { "false" };
-            });
+                    else
+                        return new string[] { "false" };
+                });
 
-            api.RegisterToken(this.ModManifest, "Invited", () =>
-            {
-                // is island day NOT ticket
-                if (IslandToday && !IsFromTicket && LoadedBasicData)
-                    return Information.PlayerSpouses(Player_MP_ID);
-                //if ticket island
-                else if (IsFromTicket && LoadedBasicData)
-                    return Status[Player_MP_ID].Who.ToArray();
-                else
-                    return new string[] { "none" };
-            });
+                api.RegisterToken(this.ModManifest, "Invited", () =>
+                {
+                    // is island day NOT ticket
+                    if (IslandToday && !IsFromTicket && LoadedBasicData)
+                        return Information.PlayerSpouses(Player_MP_ID);
+                    //if ticket island
+                    else if (IsFromTicket && LoadedBasicData)
+                        return Status[Player_MP_ID].Who.ToArray();
+                    else
+                        return new string[] { "none" };
+                });
 
-            InfoChildren = ChildrenData.GetInformation(Config.ChildSchedules);
+                api.RegisterToken(this.ModManifest, "Devan", () =>
+                {
+                    // on, not seasonal
+                    if (Config.NPCDevan && Config.SeasonalDevan == false)
+                        return new string[] {"enabled"};
+                    // on, seasonal
+                    else if (Config.NPCDevan && Config.SeasonalDevan)
+                        return new string[] {"enabled","seasonal"};
+                    // off
+                    else
+                        return new string[] { "false" };
+                });
+
+                api.RegisterToken(this.ModManifest, "AllowChildren", () =>
+                {
+                    var CanGo = Config.UseFurnitureBed == false || (Config.UseFurnitureBed && BedCode.HasAnyKidBeds()) && Context.IsWorldReady;
+                
+                    // on, has bed
+                    if (Config.Allow_Children && CanGo)
+                        return new string[] {"true"};
+                    // doesnt
+                    else if (Config.Allow_Children && !CanGo)
+                        return new string[] {"false"};
+                    // off
+                    else
+                        return new string[] { "false" };
+                });
+            }
+
+            //InfoChildren = ChildrenData.GetInformation(Config.ChildSchedules);
 
             jsonAssets = Helper.ModRegistry.GetApi<IApi>("spacechase0.JsonAssets");
 
@@ -214,14 +242,14 @@ namespace SpousesIsland
                         texturePixelArea: null,
                         scale: 1
                     );
-                    }
+                    }/*
                     configMenu.AddBoolOption(
                     mod: this.ModManifest,
                     name: () => this.Helper.Translation.Get("config.UseModSchedule.name"),
                     tooltip: () => this.Helper.Translation.Get("config.UseModSchedule.description"),
                     getValue: () => this.Config.UseModSchedule,
                     setValue: value => this.Config.UseModSchedule = value
-                );
+                    );*/
                 }
                 
                 //adv. config page
@@ -413,117 +441,11 @@ namespace SpousesIsland
             {
                 this.Monitor.LogOnce("Adding Devan", LogLevel.Debug);
 
-                if (e.Name.IsEquivalentTo("Portraits/Devan"))
-                {
-                    if(Config.SeasonalDevan == true)
-                    {
-                        e.LoadFromModFile<Texture2D>($"assets/Devan/Portrait_{Game1.currentSeason}.png", AssetLoadPriority.Medium);
-                    }
-                    else
-                    {
-                        e.LoadFromModFile<Texture2D>("assets/Devan/Portrait.png", AssetLoadPriority.Medium);
-                    }
-                    
-                }
-                if (e.Name.IsEquivalentTo("Maps/Saloon"))
-                {
-                    if (HasSVE is false)
-                        e.Edit(asset => Devan.VanillaSaloon(asset));
-                    else
-                        e.Edit(asset => Devan.SVESaloon(asset));
-                    if (SawDevan4H == true)
-                        e.Edit(asset => Devan.PictureInRoom(asset));
-                }
-                if (e.Name.StartsWith("Characters", false, true))
-                {
-                    if (e.NameWithoutLocale.IsEquivalentTo("Characters/Devan"))
-                    {
-                        if(Config.SeasonalDevan == false)
-                        {
-                            e.LoadFromModFile<Texture2D>("assets/Devan/Character.png", AssetLoadPriority.Medium);
-                        }
-                        else
-                        {
-                            e.LoadFromModFile<Texture2D>($"assets/Devan/Character_{Game1.currentSeason}.png", AssetLoadPriority.Medium);
-                        }
-                    };
-                    if (e.Name.IsEquivalentTo("Characters/schedules/Devan"))
-                    {
-                        var IsLeahMarried = MarriedAndAllowed.Contains("Leah");
-                        var IsElliottMarried = MarriedAndAllowed.Contains("Elliott");
-                        
-                        if (Children is not null && IslandToday)
-                        {
-                            e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Babysit.json", AssetLoadPriority.Medium);
-                        }
-                        else
-                        {
-                            e.LoadFromModFile<Dictionary<string, string>>("assets/Devan/Schedule_Normal.json", AssetLoadPriority.Medium);
-                        }
-                        
-                        if (CCC == true)
-                        {
-                            e.Edit(asset =>
-                            {
-                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                                data["Wed"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 CommunityCenter 26 17 0 \"Characters\\Dialogue\\Devan:CommunityCenter1\"/1600 CommunityCenter 16 20 0/1630 CommunityCenter 11 27 2 Devan_sit \"Characters\\Dialogue\\Devan:CommunityCenter2\"/1700 Town 26 21 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 Saloon 39 7 0/2210 Saloon 44 5 3 devan_sleep";
-                            });
-                        }
-
-                        if (IsLeahMarried == true && IsElliottMarried == false)
-                        {
-                            e.Edit(asset =>
-                            {
-                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Woods 8 9 0 \"Characters\\Dialogue\\Devan:statue\"/1600 ElliottHouse 5 8 1/1800 ElliottHouse 8 4 Devan_sit/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
-                            });
-                        }
-                        else if (IsLeahMarried == false && IsElliottMarried == true)
-                        {
-                            e.Edit(asset =>
-                            {
-                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 LeahHouse 6 7 0 \"Characters\\Dialogue\\Devan:leahHouse\"/1500 LeahHouse 13 4 2 Devan_sit \"Characters\\Dialogue\\Devan:leahHouse_2\"/1600 Woods 12 6 2 Devan_sit \"Characters\\Dialogue\\Devan:secretforest\"/1800 Woods 10 17 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
-                            });
-                        }
-                        else if (IsLeahMarried == true && IsElliottMarried == true)
-                        {
-                            e.Edit(asset =>
-                            {
-                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                                data["Fri"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Woods 8 9 0 \"Characters\\Dialogue\\Devan:statue\"/1800 Woods 12 6 2 Devan_sit \"Characters\\Dialogue\\Devan:secretforest\"/1900 Woods 10 17 2/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
-                            });
-                        }
-
-                        if (HasSVE == true)
-                        {
-                            e.Edit(asset =>
-                            {
-                                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
-                                data["Sat"] = "640 Saloon 39 7 2/650 Saloon 35 8 2/700 Saloon 14 17 2 Devan_broom/810 Saloon 13 22 2 Devan_broom/920 Saloon 32 19 2 Devan_broom/1020 Saloon 42 19 2 Devan_broom/1100 Saloon 33 8 2 Devan_broom/1200 Saloon 24 19 Devan_broom/1300 Forest 43 10 2 \"Characters\\Dialogue\\Devan:forest\"/1530 Forest 45 41 0/a1840 Forest 102 64 0 \"Characters\\Dialogue\\Devan:forest_2\"/a2140 Saloon 31 19 1/2150 Saloon 31 8 2/2200 39 7 0/2210 Saloon 44 5 3 devan_sleep";
-                            });
-                        }
-                    }
-                    
-                    //will load a file using the locale code.
-                    if (e.NameWithoutLocale.IsEquivalentTo("Characters/Dialogue/Devan"))
-                    {
-                        //if theres a code, include it with a dot before it.
-                        string code = e.Name.LocaleCode == null ? null : "." + e.Name.LocaleCode;
-                        
-                        e.LoadFromModFile<Dictionary<string, string>>($"assets/Devan/Dialogue{code}.json", AssetLoadPriority.Medium);
-                    }
-                }
                 if (e.Name.StartsWith("Data/", false, true))
                 {
                     if (e.Name.StartsWith("Data/Festivals/", false, false))
                     {
                         Devan.AppendFestivalData(e);
-                        Devan.FesInternational(e);
-                    }
-                    else if (e.Name.StartsWith("Data/Events/", false, false))
-                    {
-                        Devan.EventsInternational(e);
                     }
                     else
                     {
@@ -550,45 +472,8 @@ namespace SpousesIsland
                 });
             }
 
-            if (IslandToday && e.Name.StartsWith("Characters",false,true))
-            {
-                //harvey edit
-                if (e.NameWithoutLocale.IsEquivalentTo("Characters/Harvey") && MarriedAndAllowed.Contains("Harvey"))
-                {
-                    e.Edit(asset =>
-                    {
-                        var editor = asset.AsImage();
-                        Texture2D Harvey = ModEntry.Help.ModContent.Load<Texture2D>("assets/Spouses/Harvey_anim.png");
-                        editor.PatchImage(Harvey, new Rectangle(0, 192, 64, 32), new Rectangle(0, 192, 64, 32), PatchMode.Replace);
-                    });
-                }
-
-                //krobus
-                if(e.Name.Name.Contains("Krobus") && MarriedAndAllowed.Contains("Krobus"))
-                {
-                    this.Monitor.Log("Krobus sprites will be edited.");
-
-                    if (e.NameWithoutLocale.IsEquivalentTo("Portraits/Krobus"))
-                    {
-                        e.LoadFromModFile<Texture2D>("assets/Spouses/Krobus_Outside_Portrait.png", AssetLoadPriority.Medium);
-                    }
-                    if (e.NameWithoutLocale.IsEquivalentTo("Characters/Krobus"))
-                    {
-                        e.LoadFromModFile<Texture2D>("assets/Spouses/Krobus_Outside_Character.png", AssetLoadPriority.Medium);
-                    }
-                }
-
-                if (e.Name.StartsWith("Characters/schedules/", false, true))
-                {
-                    
-                    if (HasC2N && Config.Allow_Children && Children is not null && Config.UseModSchedule)
-                    {
-                        this.Monitor.LogOnce("Child To NPC is in the mod folder. Adding compatibility...", LogLevel.Trace);
-                        ChildrenData.EditAllKidSchedules(Config.UseFurnitureBed, e);
-                    }
-                    Integrated.Schedules(e);
-                }
-            }
+            if (e.Name.StartsWith("Characters/schedules/", false, true))
+                Integrated.Schedules(e);
 
             if (e.Name.StartsWith("Characters/Dialogue/", false, true))
             {
@@ -610,6 +495,19 @@ namespace SpousesIsland
             if (e.NewStage == LoadStage.SaveLoadedBasicInfo)
             {
                 GetRequiredData(Game1.MasterPlayer);
+            }
+            if(e.NewStage == LoadStage.Ready)
+            {
+                //get kids
+                Children = Information.PlayerChildren(Game1.player);
+                //get for patching
+                MustPatchPF = Information.PlayerSpouses(Player_MP_ID); //add all spouses
+                if (!HasC2N)
+                    return;
+                foreach(var kid in Children)
+                {
+                    MustPatchPF.Add(kid.Name);
+                }
             }
         }
         private void PeerContextReceived(object sender, PeerContextReceivedEventArgs e)
@@ -727,36 +625,52 @@ namespace SpousesIsland
             }
 
             //re-check values
-            Children = Game1.player.getChildren();
-
-            if(CCC == false)
+            Children = Information.PlayerChildren(Game1.player);
+            //get for patching
+            MustPatchPF = Information.PlayerSpouses(Player_MP_ID); //add all spouses
+            if (!HasC2N)
+                return;
+            foreach (var kid in Children)
             {
-                CCC = Game1.player.hasCompletedCommunityCenter();
-            }
-            if(SawDevan4H == false)
-            {
-                SawDevan4H = Game1.player.eventsSeen.Contains(110371000);
+                MustPatchPF.Add(kid.Name);
             }
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
         {
-            //get map if null
-            FishShop_map ??= Game1.getLocationFromName("FishShop");
-
             //avoid running unnecessary code
             if(IslandToday == false)
-            {
                 return;
-            }
 
-            //if its around the time child NPCs go to the island
-            if(e.NewTime == 800)
+            //patch schedules manually
+            if (e.NewTime >= 2000)
             {
-                ArrivalTime = true;
-            }
-            if(e.NewTime == 1000)
-            {
-                ArrivalTime = false;
+                var farmHouse = Game1.getLocationFromName("IslandFarmHouse");
+                //var islandW = Game1.getLocationFromName("IslandWest");
+
+                foreach (var chara in MustPatchPF)
+                {
+                    var npc = Game1.getCharacterFromName(chara, false, false);
+
+                    //i still don't understand how schedulepath directions work internally. so let's use controller instead
+                    //Helper.Data.WriteJsonFile($"{chara}-path.json", npc.Schedule);
+
+                    var inIsland = npc?.currentLocation?.GetLocationContext() == GameLocation.LocationContext.Island;
+                    
+                    if (!inIsland || !(npc.controller.endPoint == Point.Zero))
+                    {
+                        continue;
+                    }
+
+                    npc.followSchedule = false;
+                    //get location from CONTROLLER location
+                    npc.Halt();
+                    npc.controller = null;
+                    npc.controller = new PathFindController
+                        (npc, farmHouse,
+                        Information.GetReturnPoint(npc), 0
+                        );
+                    Monitor.Log("Attempting to fix null endpoint in schedule...", LogLevel.Debug);
+                }
             }
 
             //if 10pm or later. code for npcs to sleep
@@ -780,7 +694,7 @@ namespace SpousesIsland
                         }
                     }
                     
-                    else if(!c.isMarried() && HasC2N == true)
+                    else if(!c.isMarried() && !c.isRoommate() && HasC2N == true)
                     {
                         this.Monitor.Log($"Pathing {c.Name} to kid bed in {ifh.Name}...");
                         try
@@ -815,8 +729,6 @@ namespace SpousesIsland
 
             //empty bools and int
             LoadedBasicData = false;
-            SawDevan4H = false;
-            CCC = false;
             PreviousDayRandom = 0;
             RandomizedInt = 0;
 
@@ -839,9 +751,9 @@ namespace SpousesIsland
 
             IslandHouse = player?.mailReceived?.Contains("Island_UpgradeHouse") ?? false;
             bool QiMail = player?.mailReceived?.Contains("Islandvisit_Qi") ?? false;
-            if(!QiMail && IslandHouse)
+            if (!QiMail && IslandHouse)
             {
-                player.mailbox.Add("Islandvisit_Qi");
+                player.mailForTomorrow.Add("Islandvisit_Qi");
             }
 
             var married = Values.GetAllSpouses(player);
@@ -855,18 +767,6 @@ namespace SpousesIsland
                     this.Monitor.Log($"{name} is married to player.", LogLevel.Debug);
                 }
             }
-
-            Children = player.getChildren();
-            CCC = player.hasCompletedCommunityCenter();
-            SawDevan4H = player.eventsSeen.Contains(110371000);
-
-            if (Config.SeasonalDevan)
-            {
-                Helper.GameContent.InvalidateCache("Portraits/Devan");
-                Helper.GameContent.InvalidateCache("Characters/Devan");
-            }
-
-            this.Monitor.Log($"\nChildren (count) = {Children.Count};\nCCC = {CCC};\nSawDevan4H = {SawDevan4H};", LogLevel.Debug);
         }
         private void ReadModData(Farmer player)
         {
@@ -940,23 +840,20 @@ namespace SpousesIsland
         internal static bool LoadedBasicData {get; private set;} = false;
 
         /* children related */
-        internal static List<Child> Children { get; private set; } = new();
+        internal static List<Character> Children { get; private set; } = new();
         internal static Dictionary<string,string> InfoChildren = new(); //this refers to info in relation to the mod (ie, schedule data for island visit). not actual info
-        internal static GameLocation FishShop_map = null;
-        internal static bool ArrivalTime = false;
         internal static bool MustPatchC2N = false;
 
         /* player data */
         internal static string Player_MP_ID;
         public static List<string> MarriedAndAllowed { get; private set; } = new();
-        internal static bool SawDevan4H  = false;
-        internal static bool CCC = false;
         internal static bool BoatFixed;
         internal static bool IslandHouse = false;
         internal static bool HasSVE;
         internal static bool HasC2N;
         internal static bool HasExGIM;
         internal static bool notfurniture;
+        internal static List<string> MustPatchPF { get; set; } = new();
 
         internal static Dictionary<string, ModStatus> Status { get; private set; } = new();
     }

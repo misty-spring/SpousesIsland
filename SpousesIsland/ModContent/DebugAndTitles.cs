@@ -26,7 +26,7 @@ namespace SpousesIsland
 
         internal static void GeneralInfo(string arg1, string[] arg2)
         {
-            ModEntry.Mon.Log($"\nIslandToday {ModEntry.IslandToday}\nIsFromTicket {ModEntry.IsFromTicket}\nChance {ModEntry.RandomizedInt}, PrevRandom {ModEntry.PreviousDayRandom}\nBoatFixed {ModEntry.BoatFixed}\nCom.Center {ModEntry.CCC}\n Children {ModEntry.Children.Count}\nFish Shop exists? {!ModEntry.FishShop_map?.IsFarm ?? false}", LogLevel.Info);
+            ModEntry.Mon.Log($"\nIslandToday {ModEntry.IslandToday}\nIsFromTicket {ModEntry.IsFromTicket}\nChance {ModEntry.RandomizedInt}, PrevRandom {ModEntry.PreviousDayRandom}\nBoatFixed {ModEntry.BoatFixed}\nChildren {ModEntry.Children.Count}", LogLevel.Info);
         }
 
         internal static void GetStatus(string arg1, string[] arg2)
