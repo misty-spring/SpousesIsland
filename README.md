@@ -40,8 +40,8 @@ This mod only edits schedules on specific days (and uses unique dialogue keys), 
 ### How to use
 Edit the spouse's schedule via ContentPatcher, and add the following token: `mistyspring.spousesisland/CanVisitIsland` as condition.
 
-You don't need to worry about pathing them to a bed: the mod will do this starting from 10pm. 
-(Just make sure their last schedule point is 'IslandWest' or 'IslandFarmHouse').
+You don't need to worry about pathing them to a bed: the mod will do this (starting from 10pm). 
+Just make sure their __last schedule point__ is __`IslandWest 77 41 0`__- the mod will handle the rest!
 
 The schedule can include any map in the island (except volcano).
 For example:
@@ -50,7 +50,7 @@ For example:
   "Action": "EditData",
   "Target": "Characters/schedules/<your-spouse-name>",
   "Entries": {
-     "marriage_Mon": "700 IslandFarmHouse 16 9 0/900 IslandFarmHouse 20 15 0/1200 IslandWest 39 41 0/1400 IslandWest 39 45 3/1500 IslandWest 85 39 2/1700 IslandSouth 12 27 2/a2300 IslandFarmHouse 16 9 0"
+     "marriage_Mon": "700 IslandFarmHouse 16 9 0/900 IslandFarmHouse 20 15 0/1200 IslandWest 39 41 0/1400 IslandWest 39 45 3/1500 IslandWest 85 39 2/1700 IslandSouth 12 27 2/a21500 IslandWest 77 41 0"
      "marriage_Tue": "GOTO marriage_Mon", 
      "marriage_Wed" = "GOTO marriage_Mon",
      "marriage_Thu" = "GOTO marriage_Mon",
