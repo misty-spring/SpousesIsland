@@ -52,11 +52,11 @@ For example:
   "Entries": {
      "marriage_Mon": "700 IslandFarmHouse 16 9 0/900 IslandFarmHouse 20 15 0/1200 IslandWest 39 41 0/1400 IslandWest 39 45 3/1500 IslandWest 85 39 2/1700 IslandSouth 12 27 2/a21500 IslandWest 77 41 0"
      "marriage_Tue": "GOTO marriage_Mon", 
-     "marriage_Wed" = "GOTO marriage_Mon",
-     "marriage_Thu" = "GOTO marriage_Mon",
-     "marriage_Fri" = "GOTO marriage_Mon",
-     "marriage_Sat" = "GOTO marriage_Mon",
-     "marriage_Sun" = "GOTO marriage_Mon";
+     "marriage_Wed": "GOTO marriage_Mon",
+     "marriage_Thu": "GOTO marriage_Mon",
+     "marriage_Fri": "GOTO marriage_Mon",
+     "marriage_Sat": "GOTO marriage_Mon",
+     "marriage_Sun": "GOTO marriage_Mon";
      },
   "When": {
      "mistyspring.spousesisland/CanVisitIsland": "true"
