@@ -1,4 +1,3 @@
-```
 "DynamicTokens": [
         //random (used for spouse schedule)
         {
@@ -65,4 +64,3 @@
             }
         }
     ]
-```
