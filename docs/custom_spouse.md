@@ -5,7 +5,7 @@ You must know [how the game's schedules work.](https://stardewvalleywiki.com/Mod
 
 Edit the spouse's schedule via ContentPatcher, and add the following token: `mistyspring.spousesisland/CanVisitIsland` as condition.
 
-Starting from 10pm, the mod will path spouses to the bed. Just make sure their __last schedule point__ is `IslandWest 77 41 0`- the mod will handle the rest!
+Starting from 10pm, the mod will path spouses to the bed. Just make sure their __last schedule point__ is `IslandWest 77 41 0`, followed by `IslandFarmhouse <x> <y>`- the mod will handle things!
 
 The schedule can include any map in the island (except volcano).
 
